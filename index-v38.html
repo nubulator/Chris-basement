@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chris' Basement V3.8</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{--blue:#35b8ff;--orange:#ff9b38;--panel:#091725}
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#040b13;color:#f1f7ff;font-family:Arial,Helvetica,sans-serif}
+body{background:radial-gradient(ellipse at top,#1c3145 0%,#06111e 55%,#02060b 100%)}
+#app{height:100vh;height:100dvh;display:grid;grid-template-rows:minmax(52px,10.5%) minmax(0,1fr) 20px;gap:6px;padding:6px;overflow:hidden}
+header{display:flex;align-items:center;justify-content:space-between;padding:4px 14px;border:2px solid var(--orange);border-radius:10px;background:repeating-linear-gradient(0deg,#19202a 0 14px,#0c141e 15px 17px);min-height:0}
+h1{font-size:clamp(21px,3.3vw,50px);letter-spacing:.07em;margin:0;color:#fff;text-shadow:0 0 13px var(--blue)}
+header .small{font-size:clamp(10px,1vw,16px);text-align:right;color:#a8dfff}
+main{min-height:0;display:grid;grid-template-columns:minmax(0,54fr) minmax(75px,10fr) minmax(0,36fr);gap:7px}
+.panel{border:2px solid #2476a4;border-radius:10px;background:linear-gradient(#0d1e30,#06101c);min-height:0;overflow:hidden;box-shadow:0 0 9px #087fc844}
+.sports{display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:7px;gap:6px}
+.heading{display:flex;align-items:center;justify-content:space-between;gap:5px;color:var(--orange);font-weight:bold;font-size:clamp(12px,1.45vw,21px);min-height:24px}
+#scorelist{display:grid;grid-template-rows:repeat(4,minmax(0,1fr));gap:6px;min-height:0}
+.game{min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:2px;border:1px solid #24567c;border-radius:7px;background:#0d2135;padding:4px 7px;overflow:hidden}
+.game .league{font-size:clamp(9px,.85vw,13px);color:#9dd8ff;display:flex;justify-content:space-between}
+.teams{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:5px;font-weight:bold;font-size:clamp(12px,1.45vw,21px)}
+.team{display:flex;align-items:center;gap:5px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.team img{width:clamp(20px,2.1vw,32px);height:clamp(20px,2.1vw,32px);object-fit:contain}
+.scores{text-align:right;white-space:nowrap}
+.odds{font-size:clamp(9px,.92vw,14px);color:#ffd6a4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bottom{font-size:clamp(9px,.82vw,12px);color:#a2bcd0}
+.sponsors{display:flex;flex-direction:column;gap:5px;padding:5px;justify-content:space-evenly;border-color:#c76e2d}
+.sign{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;text-align:center;border:1px solid #ff9b3866;border-radius:6px;background:radial-gradient(#2a1b15,#0b0b10);padding:2px;overflow:hidden;font-size:clamp(10px,1.1vw,17px);font-weight:900;line-height:1.05;letter-spacing:-.02em;text-shadow:0 0 8px currentColor}
+.sign:nth-child(1){color:#f5bb65}.sign:nth-child(2){color:#a7dcf5}.sign:nth-child(3){color:#ef4545}
+.weather{display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:5px;padding:7px}
+.wxhead{display:flex;justify-content:space-between;align-items:center;gap:5px;font-size:clamp(11px,1.15vw,18px)}
+#temp{font-weight:bold;color:#ffd29e}.radarbox{position:relative;min-height:0;border:1px solid #37698a;border-radius:6px;overflow:hidden;background:#152433}
+#map{height:100%;width:100%}.mapbtn{position:absolute;z-index:500;right:5px;top:5px;border:1px solid #7fc8ee;border-radius:5px;background:#102c43;color:white;padding:5px;font-size:clamp(10px,.9vw,13px);cursor:pointer}
+#mapnote{position:absolute;z-index:450;left:5px;bottom:5px;background:#081622c9;padding:3px 5px;border-radius:3px;font-size:10px}
+.forecast{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;min-height:54px}
+.day{border:1px solid #295879;background:#102438;border-radius:5px;text-align:center;padding:5px 1px;font-size:clamp(10px,.85vw,13px)}
+.day strong{display:block;color:#ffe1b7;font-size:clamp(11px,1vw,16px)}
+footer{display:flex;justify-content:space-between;align-items:center;color:#7da9c7;font-size:10px;overflow:hidden;white-space:nowrap}
+#mapoverlay{display:none;position:fixed;inset:0;z-index:1000;background:#040a10;padding:12px}
+#mapoverlay.active{display:grid;grid-template-rows:40px minmax(0,1fr)}
+#mapbig{min-height:0}.close{justify-self:end;padding:5px 15px;background:#17344c;color:white;border:1px solid #63c7ff;border-radius:5px;cursor:pointer}
+.leaflet-container{background:#152433}
+@media(max-width:850px){#app{grid-template-rows:50px minmax(0,1fr) 15px;gap:4px;padding:4px}main{gap:4px;grid-template-columns:minmax(0,52fr) minmax(56px,10fr) minmax(0,38fr)}.sports,.weather{padding:4px;gap:3px}.game{padding:3px}.heading{font-size:12px}.forecast{gap:2px}.day{font-size:9px;padding:2px 0}.team img{width:19px;height:19px}}
+</style></head>
+<body><div id="app">
+<header><h1>🚧 CHRIS' BASEMENT</h1><div class="small"><div id="season">SPORTS • WEATHER • LIVE</div><div id="clock"></div></div></header>
+<main>
+<section class="panel sports"><div class="heading"><span>LIVE SCOREBOARD</span><span id="page">Loading…</span></div><div id="scorelist"></div><div class="bottom" id="sportstatus">ESPN game data • Rotates every 15 seconds</div></section>
+<aside class="panel sponsors" aria-label="Sponsors"><div class="sign">CAPTAIN<br>MORGAN</div><div class="sign">TWISTED<br>TEA<br>LIGHT</div><div class="sign">Diet<br>Coke</div></aside>
+<section class="panel weather"><div class="wxhead"><strong>BLACKLICK / COLUMBUS</strong><span id="temp">Weather loading…</span></div><div class="radarbox"><div id="map"></div><button class="mapbtn" id="expand">⛶ Expand</button><div id="mapnote">RainViewer radar • map &amp; city labels</div></div><div class="forecast" id="forecast"><div class="day">Forecast loading…</div></div></section>
+</main><footer><span>CHRIS' BASEMENT • V3.8</span><span id="updated">Live feeds require internet</span></footer></div>
+<div id="mapoverlay"><button class="close" id="close">Close radar ✕</button><div id="mapbig"></div></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const lat=40.01,lon=-82.81;
+function clock(){const now=new Date();$('clock').textContent=now.toLocaleString('en-US',{weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});let m=now.getMonth(),d=now.getDate(),s='SPORTS • WEATHER • LIVE';if(m===9)s='HALLOWEEN SEASON';else if(m===10)s='FALL / THANKSGIVING';else if(m===11&&d<=25)s='CHRISTMAS SEASON';else if((m===11&&d>=26)||(m===0&&d<=2))s='NEW YEAR';else if(m===0||m===1)s='WINTER SPORTS';else if(m>=5&&m<=7)s='SUMMER SPORTS';$('season').textContent=s}clock();setInterval(clock,30000);
+let games=[],offset=0;
+const feeds=[['NFL','football/nfl',''],['NCAA FOOTBALL','football/college-football',''],['NBA','basketball/nba',''],['NCAA TOP 25','basketball/mens-college-basketball',''],['NHL','hockey/nhl','']];
+function isTop25(c){return (c?.competitors||[]).some(t=>{let r=Number(t?.curatedRank?.current||t?.rank||999);return r>=1&&r<=25})}
+function teamMatch(c,words){return (c?.competitors||[]).some(t=>words.some(w=>(t.team?.displayName||'').toLowerCase().includes(w)))}
+function pickLeague(label,event,c){let today=new Date().toLocaleDateString('en-CA');let date=new Date(event.date).toLocaleDateString('en-CA');if(date!==today)return false;
+ if(label==='NBA')return teamMatch(c,['cleveland cavaliers']);
+ if(label==='NHL')return teamMatch(c,['columbus blue jackets']);
+ if(label==='NCAA TOP 25')return isTop25(c)||teamMatch(c,['ohio state']);
+ if(label==='NCAA FOOTBALL')return isTop25(c)||(c.competitors||[]).some(t=>{let g=(t.team?.conferenceId||'')+'';return g==='5'})||teamMatch(c,['ohio state','michigan','penn state','oregon','indiana','wisconsin','iowa','nebraska','purdue','illinois','northwestern','minnesota','maryland','rutgers','ucla','usc','washington','michigan state']);
+ return true}
+function oddsText(c){const o=c.odds?.[0];if(!o)return 'No line available';let a=[];if(o.details)a.push('Spread: '+o.details);else if(o.spread!==undefined)a.push('Spread: '+o.spread);if(o.overUnder!==undefined&&o.overUnder!==null)a.push('O/U '+o.overUnder);if(o.moneyline?.home?.close?.odds)a.push('ML H '+o.moneyline.home.close.odds);if(o.moneyline?.away?.close?.odds)a.push('A '+o.moneyline.away.close.odds);return a.join('  •  ')||'No line available'}
+async function loadScores(){let collected=[];await Promise.all(feeds.map(async ([label,path])=>{try{const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/'+path+'/scoreboard?limit=300',{cache:'no-store'});if(!r.ok)throw Error(r.status);const j=await r.json();for(const e of j.events||[]){const c=e.competitions?.[0];if(c&&pickLeague(label,e,c))collected.push({label,e,c})}}catch(err){console.warn('ESPN',label,err)}}));
+ collected.sort((a,b)=>{let aLive=a.e.status?.type?.state==='in'?0:1,bLive=b.e.status?.type?.state==='in'?0:1;return aLive-bLive||new Date(a.e.date)-new Date(b.e.date)});
+ if(collected.length){games=collected;offset=0;$('sportstatus').textContent='ESPN data • Updated '+new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})+' • Rotates every 15 seconds';renderGames()}else if(!games.length){$('sportstatus').textContent='No matching games today, or ESPN feed unavailable';renderGames()}}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderGames(){let list=$('scorelist');if(!games.length){list.innerHTML=Array.from({length:4},()=>'<div class="game" style="display:flex;align-items:center;justify-content:center;color:#a3c7df">No selected game available</div>').join('');$('page').textContent='0 games';return}
+ let n=Math.min(4,games.length),page=Math.floor(offset/4)+1,total=Math.ceil(games.length/4);$('page').textContent=`${page}/${total} • ${games.length} games`;
+ let subset=Array.from({length:4},(_,i)=>games[(offset+i)%games.length]);
+ list.innerHTML=subset.map(({label,e,c})=>{let t=c.competitors||[];let home=t.find(x=>x.homeAway==='home')||t[0],away=t.find(x=>x.homeAway==='away')||t[1];let status=e.status?.type?.shortDetail||e.status?.type?.description||'';let showScore=e.status?.type?.state!=='pre';let mk=x=>x?`<span class="team">${x.team?.logo?`<img src="${esc(x.team.logo)}" alt="">`:''}<span>${esc(x.team?.shortDisplayName||x.team?.displayName||'TBD')}</span></span>`:'<span>TBD</span>';
+ return `<div class="game"><div class="league"><span>${esc(label)}</span><span>${esc(status)}</span></div><div class="teams"><div>${mk(away)}${mk(home)}</div><div class="scores">${showScore?esc(away?.score||'0')+'<br>'+esc(home?.score||'0'):'VS'}</div></div><div class="odds">${esc(oddsText(c))}</div></div>`}).join('')}
+setInterval(()=>{if(games.length>4){offset=(offset+4)%games.length;renderGames()}},15000);
+loadScores();setInterval(loadScores,120000);
+async function weather(){try{let u=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&temperature_unit=fahrenheit&timezone=America%2FNew_York&forecast_days=4`;let r=await fetch(u);let j=await r.json();$('temp').textContent=Math.round(j.current.temperature_2m)+'°F';$('forecast').innerHTML=j.daily.time.map((day,i)=>{let wd=new Date(day+'T12:00:00').toLocaleDateString('en-US',{weekday:'short'});return `<div class="day"><b>${wd}</b><strong>${Math.round(j.daily.temperature_2m_max[i])}° / ${Math.round(j.daily.temperature_2m_min[i])}°</strong><span>Rain ${j.daily.precipitation_probability_max[i]??0}%</span></div>`}).join('')}catch(e){$('temp').textContent='Weather unavailable'}}weather();setInterval(weather,900000);
+let small,big,radarLayer,radarBig,radarUrl=null;
+function createMap(id,zoom){let m=L.map(id,{center:[lat,lon],zoom,zoomControl:true,attributionControl:true});L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,attribution:'© OpenStreetMap © CARTO'}).addTo(m);L.circleMarker([lat,lon],{radius:5,color:'#ffffff',fillColor:'#ff9b38',fillOpacity:1,weight:2}).addTo(m).bindPopup('Blacklick / Columbus');return m}
+function radarTiles(path){return `https://tilecache.rainviewer.com${path}/256/{z}/{x}/{y}/2/1_1.png`}
+async function loadRadar(){if(typeof L==='undefined'){$('mapnote').textContent='Map library unavailable — internet required';return}try{if(!small)small=createMap('map',7);let r=await fetch('https://api.rainviewer.com/public/weather-maps.json',{cache:'no-store'});if(!r.ok)throw Error(r.status);let data=await r.json(),frames=data.radar?.past||[];if(!frames.length)throw Error('No radar frames');let latest=frames[frames.length-1];radarUrl=radarTiles(latest.path);if(radarLayer)small.removeLayer(radarLayer);radarLayer=L.tileLayer(radarUrl,{opacity:.75,maxNativeZoom:7,maxZoom:19,attribution:'Radar © RainViewer'}).addTo(small);if(big){if(radarBig)big.removeLayer(radarBig);radarBig=L.tileLayer(radarUrl,{opacity:.75,maxNativeZoom:7,maxZoom:19,attribution:'Radar © RainViewer'}).addTo(big)}$('mapnote').textContent='RainViewer • latest radar • tap to expand'}catch(e){$('mapnote').textContent='Radar temporarily unavailable • map still active';console.warn(e)}}
+loadRadar();setInterval(loadRadar,300000);
+$('expand').onclick=()=>{if(!small)return;$('mapoverlay').classList.add('active');if(!big)big=createMap('mapbig',8);if(radarUrl){if(radarBig)big.removeLayer(radarBig);radarBig=L.tileLayer(radarUrl,{opacity:.75,maxNativeZoom:7,maxZoom:19,attribution:'Radar © RainViewer'}).addTo(big)}setTimeout(()=>big.invalidateSize(),80)};
+$('close').onclick=()=>$('mapoverlay').classList.remove('active');
+document.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='Backspace')$('mapoverlay').classList.remove('active')});
+</script></body></html>
