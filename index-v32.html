@@ -1,0 +1,93 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Chris' Basement Sports Center V3.2</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0a101c;color:#f3f6fc;font:16px Arial,sans-serif;overflow:hidden}body.christmas{--accent:#24ae77}body.halloween{--accent:#f48729}body.thanksgiving{--accent:#c8793b}body.classic{--accent:#d83845}:root{--accent:#d83845}#app{height:100vh;display:grid;grid-template-rows:10% 81% 9%;background:radial-gradient(ellipse at top,#243149,#090e17 75%)}header{display:flex;justify-content:space-between;align-items:center;padding:0 2%;border-bottom:3px solid var(--accent)}h1{font-size:clamp(22px,3vw,55px);margin:0;letter-spacing:2px}h1 span{color:var(--accent)}.controls{display:flex;align-items:center;gap:14px;font-size:clamp(12px,1.2vw,20px)}select{background:#202e43;color:white;padding:7px;border:1px solid #66788c;border-radius:5px}main{min-height:0;display:grid;grid-template-columns:77% 23%;gap:10px;padding:10px}.board{display:grid;grid-template-rows:6% 94%;min-height:0}.heading{background:#26354e;border-left:5px solid var(--accent);padding:5px 12px;font-weight:bold;font-size:clamp(14px,1.5vw,28px)}#games{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(4,minmax(0,1fr));gap:8px;padding-top:8px;min-height:0}.game{background:linear-gradient(110deg,#202d41,#121b2b);border:1px solid #35465e;border-radius:8px;padding:.55vh .85vw;display:flex;flex-direction:column;justify-content:center}.game.favorite{border-left:5px solid #ffc55c}.meta{color:#afc0d5;font-size:clamp(11px,1vw,20px);display:flex;justify-content:space-between;margin-bottom:1vh}.teams{display:flex;justify-content:space-between;gap:8px;font-size:clamp(18px,1.9vw,38px);font-weight:800}.score{color:#ffca74;white-space:nowrap;font-size:1.18em}.teamline{display:flex;align-items:center;gap:.6vw;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.teamline img{width:clamp(23px,2.2vw,48px);height:clamp(23px,2.2vw,48px);object-fit:contain;flex-shrink:0}.teamname{overflow:hidden;text-overflow:ellipsis}.meta{margin-bottom:.3vh}.odds{font-size:clamp(10px,.9vw,18px);color:#c5d5e8;margin-top:.35vh;white-space:nowrap}.rank{color:#ffcb70;margin-right:.25em}.side{display:grid;grid-template-rows:19% 48% 23% 10%;gap:7px;min-height:0}.panel{background:#172237;border:1px solid #36485f;border-radius:8px;padding:10px;overflow:hidden}.panel h2{color:#ffc66b;font-size:clamp(13px,1.15vw,23px);margin:0 0 8px}.panel p{margin:5px 0;font-size:clamp(12px,1.2vw,23px)}iframe{width:100%;height:calc(100% - 26px);border:0;border-radius:5px}.sponsors{display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(10px,.9vw,18px);color:#c5d1df}footer{display:flex;align-items:center;overflow:hidden;background:#111b2c;border-top:3px solid var(--accent)}footer strong{height:100%;background:var(--accent);padding:0 20px;display:flex;align-items:center;white-space:nowrap;font-size:clamp(14px,1.6vw,30px)}.ticker{flex:1;overflow:hidden}.ticker span{display:inline-block;white-space:nowrap;padding-left:100%;font-size:clamp(15px,1.5vw,29px);font-weight:bold;animation:marquee 65s linear infinite}@keyframes marquee{to{transform:translateX(-100%)}}.status{color:#8cebb0}#forecast{font-size:clamp(11px,1vw,19px);line-height:1.65}@media(max-width:800px){main{grid-template-columns:70% 30%}#games{grid-template-columns:1fr;grid-template-rows:repeat(4,minmax(0,1fr))}.game:nth-child(n+5){display:none}}
+ .sponsors{flex-direction:column;gap:4px;padding:5px!important}.sponsor-label{font-size:clamp(9px,.7vw,13px);color:#b8c6d8}.sponsor-brands{display:flex;justify-content:center;align-items:center;gap:clamp(4px,.6vw,14px);flex-wrap:wrap}.sponsor-brands b{font-size:clamp(9px,.85vw,17px);white-space:nowrap;letter-spacing:-.4px}.captain{color:#e9b878}.tea{color:#f4d45b}.coke{color:#e7edf8;font-style:italic;text-shadow:1px 1px #b62d36}.teamline img{width:clamp(20px,2.4vw,42px);height:clamp(20px,2.4vw,42px);object-fit:contain;flex-shrink:0}.teamline{display:flex;align-items:center;gap:7px;min-width:0}.teamname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.odds{min-height:1.2em}footer{min-height:0} .ticker span{animation-duration:55s} 
+:root{--neonblue:#25baff;--neonorange:#ff8228}
+#app{background:radial-gradient(ellipse at 20% 0%,#293451 0%,#0a1020 60%);grid-template-rows:13% 78% 9%}
+header{background:linear-gradient(110deg,#140f1d,#101a30);border-bottom:3px solid var(--neonorange);box-shadow:0 3px 16px #ff751d66}
+h1{display:flex;align-items:center;gap:1vw;font-style:italic;font-size:clamp(22px,3.15vw,62px);line-height:1.03}
+h1 .neontitle{color:#d9f7ff;text-shadow:0 0 4px #fff,0 0 12px #009fff,0 0 24px #009fff}
+h1 .neontitle span{color:#ffd8a4;text-shadow:0 0 4px #fff,0 0 12px #ff6a00,0 0 24px #ff6a00}
+.cone{width:clamp(46px,6vw,110px);height:90%;display:flex;align-items:center;flex-shrink:0;filter:drop-shadow(0 0 9px #ff6a00)}
+.cone svg{height:100%;max-width:100%}
+main{grid-template-columns:minmax(0,73%) minmax(0,27%);gap:12px}
+.heading{background:#101a31;color:#fff;font-style:italic;border:1px solid #28aaff;border-radius:9px;box-shadow:inset 0 0 12px #0099ff55,0 0 10px #0088ff77}
+.game{border-color:#2c91ce;box-shadow:inset 0 0 13px #0069b42b;border-radius:10px}
+.game.favorite{border-left:5px solid #ff9b35;box-shadow:0 0 9px #ff8b3866}
+.panel{border-color:#ff8b39;box-shadow:0 0 9px #ff6b2d55}
+.panel:nth-child(2){border-color:#35a8ff;box-shadow:0 0 10px #168dff66}
+.panel h2{color:#ffae55;text-shadow:0 0 9px #f76a30}
+footer{border-top:3px solid #ff8d38;box-shadow:0 -2px 12px #ff8d3866}
+footer strong{background:#132a4b;color:#aee5ff;text-shadow:0 0 8px #008fff}
+.sponsors{background:linear-gradient(110deg,#1a1424,#2b1c22)}
+.sponsor-brands b{font-size:clamp(10px,1vw,20px)}
+@media(max-width:800px){#app{grid-template-rows:12% 79% 9%}main{grid-template-columns:70% 30%}h1{font-size:clamp(18px,3vw,36px)}.cone{width:42px}}
+</style></head><body class="classic"><div id="app"><header><h1><span class="cone" aria-label="Traffic cone mascot"><svg viewBox="0 0 90 110" xmlns="http://www.w3.org/2000/svg"><path d="M14 96 L36 10 Q45 0 54 10 L76 96 Z" fill="#ff861d" stroke="#ffbb55" stroke-width="4"/><path d="M26 66 H64 L70 83 H20Z" fill="#f4f8ff"/><path d="M33 39 H57 L62 53 H28Z" fill="#f4f8ff"/><rect x="6" y="92" width="78" height="12" rx="5" fill="#fa8d1b" stroke="#ffce72" stroke-width="3"/><path d="M29 29 Q45 20 61 29 L57 40 H33Z" fill="#080e1d"/><path d="M32 57 Q45 69 59 57" stroke="#15141b" stroke-width="3" fill="none"/></svg></span><span class="neontitle">CHRIS’ <span>BASEMENT</span></span> <small id="holiday"></small></h1><div class="controls"><span class="status" id="status">Connecting…</span><span id="clock"></span><select id="theme"><option value="auto">Auto holiday</option><option value="classic">Classic</option><option value="halloween">Halloween</option><option value="thanksgiving">Thanksgiving</option><option value="christmas">Christmas</option></select></div></header><main><section class="board"><div class="heading">LIVE SPORTS CENTER <small id="updated" style="float:right;font-size:.7em;font-weight:normal">Loading scores…</small></div><div id="games"><div class="game">Loading live games…</div></div></section><aside class="side"><div class="panel"><h2>COLUMBUS WEATHER</h2><p id="weather">Loading current conditions…</p></div><div class="panel"><h2>OHIO LIVE WEATHER RADAR</h2><iframe title="Live Ohio radar from Windy" src="https://embed.windy.com/embed2.html?lat=40.1&lon=-82.9&zoom=6&level=surface&overlay=radar&product=radar&menu=&message=&marker=&calendar=&pressure=&type=map&location=coordinates&detail=&metricWind=mph&metricTemp=%C2%B0F"></iframe></div><div class="panel"><h2>4-DAY FORECAST</h2><div id="forecast">Loading forecast…</div></div><div class="panel sponsors"><span class="sponsor-label">Proudly sponsored by</span><span class="sponsor-brands"><b class="captain">CAPTAIN MORGAN</b><b class="tea">TWISTED TEA LIGHT</b><b class="coke">Diet Coke</b></span></div></aside></main><footer><strong>LIVE SPORTS TICKER</strong><div class="ticker"><span id="ticker">Chris’ Basement • Buckeyes • Browns • Cavaliers • Live sports and weather</span></div></footer></div>
+<script>
+const $=id=>document.getElementById(id);let games=[],page=0;
+function setTheme(){let t=$('theme').value,m=new Date().getMonth()+1;if(t==='auto')t=m===10?'halloween':m===11?'thanksgiving':m===12?'christmas':'classic';document.body.className=t;$('holiday').textContent=({christmas:'❄',halloween:'🎃',thanksgiving:'🍂',classic:''})[t]}$('theme').value=localStorage.getItem('theme')||'auto';$('theme').onchange=()=>{localStorage.setItem('theme',$('theme').value);setTheme()};setTheme();
+function tick(){ $('clock').textContent=new Date().toLocaleString('en-US',{timeZone:'America/New_York',weekday:'short',hour:'numeric',minute:'2-digit'})}tick();setInterval(tick,1000);
+function safe(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function display(){
+ if(!games.length){$('games').innerHTML='<div class="game">No qualifying games available right now. Retrying automatically.</div>';$('ticker').textContent='Chris’ Basement • NCAA Football: Top 25 + Big Ten • Men’s Hoops: Top 25 + Ohio State • NFL • NBA • MLB • NHL';return}
+ let n=innerWidth<=800?4:8,pages=Math.ceil(games.length/n);page%=pages;
+ $('games').innerHTML=games.slice(page*n,page*n+n).map(g=>`<div class="game ${g.fav?'favorite':''}"><div class="meta"><span>${safe(g.league)} ${g.live?'● LIVE':''}</span><span>${safe(g.status)}</span></div><div class="teams"><span style="min-width:0"><span class="teamline"><img src="${safe(g.awayLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.ar?`<span class="rank">#${g.ar}</span>`:''}${safe(g.away)}</span></span><span class="teamline"><img src="${safe(g.homeLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.hr?`<span class="rank">#${g.hr}</span>`:''}${safe(g.home)}</span></span></span><span class="score">${safe(g.as)}<br>${safe(g.hs)}</span></div><div class="odds">${safe(g.odds)}</div></div>`).join('');
+ $('updated').textContent=`${games.length} games • page ${page+1}/${pages}`;
+ $('ticker').textContent=games.map(g=>`${g.league}: ${g.away} ${g.as} — ${g.home} ${g.hs} (${g.status})${g.odds?' • '+g.odds:''}`).join('     ✦     ')
+}
+const leagues=[
+ ['NFL','football/nfl',''],
+ ['NCAA FOOTBALL','football/college-football',''],
+ ['NCAA FOOTBALL','football/college-football','&groups=80'],
+ ['NCAA FOOTBALL','football/college-football','&groups=5'],
+ ['NBA','basketball/nba',''],
+ ['NCAA MEN','basketball/mens-college-basketball',''],
+ ['NCAA MEN','basketball/mens-college-basketball','&groups=50'],
+ ['MLB','baseball/mlb',''],
+ ['NHL','hockey/nhl','']
+];
+function rank(x){let r=Number(x?.curatedRank?.current||x?.rank||x?.team?.rank||0);return r>=1&&r<=25?r:0}
+function bigTen(x){let t=x?.team||{};let name=(t.displayName||t.name||'').toLowerCase();if(['ohio state','michigan','michigan state','penn state','wisconsin','minnesota','iowa','nebraska','illinois','northwestern','indiana','purdue','rutgers','maryland','oregon','washington','ucla','usc'].some(v=>name===v||name===v+' buckeyes'||name.startsWith(v+' ')))return true;return /big ten/i.test([t?.conference?.name,t?.conference?.shortName,t?.groups?.name,t?.groups?.shortName,x?.conference?.name].filter(Boolean).join(' '))||String(t?.conferenceId||x?.conferenceId||'')==='5'}
+function readGame(e,league,query){
+ let c=e.competitions?.[0],a=c?.competitors?.find(x=>x.homeAway==='away'),h=c?.competitors?.find(x=>x.homeAway==='home');if(!a||!h)return null;
+ let away=a.team?.shortDisplayName||a.team?.displayName||'TBD',home=h.team?.shortDisplayName||h.team?.displayName||'TBD',st=e.status?.type||{},ar=rank(a),hr=rank(h);
+ let od=c.odds?.[0],spread=od?.details||od?.spread,ou=od?.overUnder;
+ let odds=spread!=null||ou!=null?`LINE: ${spread??'—'}  •  O/U: ${ou??'—'}`:'';
+ return {id:String(e.id),league,away,home,awayLogo:a.team?.logo||'',homeLogo:h.team?.logo||'',as:a.score??'',hs:h.score??'',ar,hr,odds,status:st.shortDetail||'Scheduled',live:st.state==='in',final:st.state==='post',date:Date.parse(e.date),fav:/Ohio State|Buckeyes|Cleveland Browns|Cleveland Cavaliers|Cleveland Guardians|Columbus Blue Jackets/i.test(away+' '+home),bigTen:bigTen(a)||bigTen(h),top25:!!(ar||hr),fromTop25:false,fromBigTen:false};
+}
+async function sports(){
+ let results=await Promise.allSettled(leagues.map(async([league,path,query])=>{
+  let r=await fetch(`https://site.api.espn.com/apis/site/v2/sports/${path}/scoreboard?limit=300${query}`,{cache:'no-store'});if(!r.ok)throw Error(r.status);
+  let j=await r.json();return (j.events||[]).map(e=>readGame(e,league,query)).filter(Boolean)
+ }));
+ let fresh=results.filter(x=>x.status==='fulfilled').flatMap(x=>x.value);
+ let byId=new Map();
+ for(let g of fresh){let key=g.league+':'+g.id,old=byId.get(key);
+  if(!old){byId.set(key,g);continue}
+  // Prefer whichever response has rankings and published odds.
+  let best=(Number(g.top25)+Number(g.odds.includes('LINE: N/A')===false))>(Number(old.top25)+Number(old.odds.includes('LINE: N/A')===false))?g:old;
+  byId.set(key,{...best,top25:g.top25||old.top25,fromTop25:g.fromTop25||old.fromTop25,bigTen:g.bigTen||old.bigTen,fromBigTen:g.fromBigTen||old.fromBigTen})
+ }
+ let now=Date.now();
+ const ohioDay=d=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
+ const today=ohioDay(new Date());
+ let qualifying=[...byId.values()].filter(g=>{
+  if(g.league==='NCAA FOOTBALL')return g.top25||g.bigTen||g.fav;
+  if(g.league==='NCAA MEN')return g.top25||/Ohio State|Buckeyes/i.test(g.away+' '+g.home);
+  if(g.league==='NBA')return /Cleveland Cavaliers|Cavaliers|Cleveland Cavs/i.test(g.away+' '+g.home);
+  if(g.league==='NHL')return /Columbus Blue Jackets|Blue Jackets/i.test(g.away+' '+g.home);
+  return true;
+ });
+ games=qualifying.filter(g=>{
+   if(g.league==='NFL')return ohioDay(new Date(g.date))===today;
+   if(g.league==='NBA'||g.league==='NHL')return ohioDay(new Date(g.date))===today;
+   return g.live||g.final&&now-g.date<24*3600000||!g.final&&g.date-now<48*3600000;
+ });
+ if(!games.length)games=qualifying.filter(g=>g.league!=='NFL'&&g.league!=='NBA'&&g.league!=='NHL'&&Math.abs(g.date-now)<7*86400000);
+ games.sort((a,b)=>Number(b.fav)-Number(a.fav)||Number(b.live)-Number(a.live)||Number(a.final)-Number(b.final)||Math.abs(a.date-now)-Math.abs(b.date-now));
+ $('status').textContent=fresh.length?'● SCORES CONNECTED':'● SCORES UNAVAILABLE';
+ $('status').style.color=fresh.length?'#8cebb0':'#ffab87';page=0;display()
+}
+async function weather(){try{let r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=39.9612&longitude=-82.9988&current=temperature_2m,relative_humidity_2m,precipitation&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&temperature_unit=fahrenheit&timezone=America%2FNew_York&forecast_days=4');if(!r.ok)throw Error();let j=await r.json();$('weather').textContent=`${Math.round(j.current.temperature_2m)}°F • Humidity ${j.current.relative_humidity_2m}% • Precipitation ${j.current.precipitation} mm`;$('forecast').innerHTML=j.daily.time.map((d,i)=>`${new Date(d+'T12:00').toLocaleDateString('en-US',{weekday:'short'})}: ${Math.round(j.daily.temperature_2m_max[i])}° / ${Math.round(j.daily.temperature_2m_min[i])}° • Rain ${j.daily.precipitation_probability_max[i]}%`).join('<br>')}catch(e){$('weather').textContent='Weather unavailable — retrying';$('forecast').textContent='Forecast temporarily unavailable'}}
+sports();weather();setInterval(sports,60000);setInterval(weather,600000);setInterval(()=>{page++;display()},15000);setInterval(setTheme,3600000);
+</script></body></html>
