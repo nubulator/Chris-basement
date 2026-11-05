@@ -1078,7 +1078,7 @@ main>.board{grid-column:1!important;grid-row:1 / -1!important;min-height:0!impor
 main>.sponsor-column{grid-column:2!important;grid-row:1 / 4!important;min-height:0!important}
 main>.side{display:contents!important}
 main>.side>.panel:first-child{grid-column:3!important;grid-row:1!important;min-height:0!important}
-main>.side>.panel:nth-child(2){grid-column:3!important;grid-row:3!important;min-height:0!important}
+main>.side>#basement-radar-panel{grid-column:3!important;grid-row:3!important;min-height:0!important}
 #basement-forecast-panel{grid-column:3!important;grid-row:2!important;min-height:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;padding:clamp(4px,.45vw,9px)!important}
 #basement-forecast-panel h2{font-size:clamp(11px,1vw,18px)!important;margin:0 0 2px!important}
 #basement-forecast-panel .fun-forecast{display:flex!important;align-items:center!important;flex:1!important;min-height:0!important;width:100%!important;overflow:hidden!important;white-space:normal!important}
@@ -1098,7 +1098,7 @@ main>.sponsor-column .sponsor-sign img{max-width:100%!important;object-fit:conta
 function arrange(){const main=document.querySelector('main'),side=main&&main.querySelector('.side'),fun=document.getElementById('fun-zone'),forecast=fun&&fun.querySelector('.fun-forecast');if(!main||!side||!fun||!forecast)return;
 let panel=document.getElementById('basement-forecast-panel');
 if(!panel){panel=document.createElement('div');panel.id='basement-forecast-panel';panel.className='panel';const heading=document.createElement('h2');heading.textContent='4-DAY FORECAST';panel.appendChild(heading);side.insertBefore(panel,side.children[1]);}
-panel.appendChild(forecast);main.appendChild(fun);
+panel.appendChild(forecast);const radar=side.querySelector('.radar-preview');if(radar)radar.closest('.panel').id='basement-radar-panel';main.appendChild(fun);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',arrange);else arrange();
 })();</script></body></html>
