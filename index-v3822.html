@@ -1147,4 +1147,27 @@ trigger.addEventListener('click',()=>{let opening=!menu.classList.contains('open
 document.addEventListener('click',e=>{if(!wrapper.contains(e.target)&&menu.classList.contains('open')){menu.classList.remove('open');trigger.setAttribute('aria-expanded','false')}});
 select.addEventListener('change',sync);sync();
 }if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
-})();</script></body></html>
+})();</script><style id="tv-layout-repair-20261105">
+/* Reserve non-overlapping header zones on 16:9 televisions. */
+header{display:grid!important;grid-template-columns:minmax(0,28%) minmax(0,44%) minmax(0,28%)!important;align-items:center!important;overflow:visible!important;position:relative!important}
+header h1{grid-column:1!important;position:relative!important;inset:auto!important;transform:none!important;margin:0!important;min-width:0!important;z-index:2!important}
+header #decor{grid-column:2!important;position:relative!important;inset:auto!important;transform:none!important;width:100%!important;max-width:100%!important;text-align:center!important;white-space:normal!important;overflow:hidden!important;z-index:2!important;pointer-events:none!important}
+header .controls{grid-column:3!important;position:relative!important;inset:auto!important;transform:none!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;min-width:0!important;z-index:4!important}
+header #clock{position:relative!important;inset:auto!important;transform:none!important;white-space:nowrap!important}
+header .header-right{position:relative!important;inset:auto!important;transform:none!important;width:auto!important;max-width:100%!important;min-width:0!important;display:flex!important;flex-direction:column!important;align-items:flex-end!important;gap:2px!important}
+header #dashboard-refresh{font-size:clamp(9px,.72vw,13px)!important;padding:2px 5px!important}
+header #status{font-size:clamp(9px,.75vw,14px)!important;white-space:nowrap!important}
+header .holiday-custom{max-width:100%!important}
+header .holiday-trigger{max-width:100%!important;min-width:0!important;font-size:clamp(10px,.8vw,15px)!important;padding:4px 7px!important;overflow:hidden!important;text-overflow:ellipsis!important}
+header .holiday-menu{z-index:20000!important}
+header #holiday{display:none!important}
+</style><style id="basement-weather-order-repair">
+/* Give forecast its own full-width row, between conditions and radar. */
+main>.side{display:grid!important;grid-template-rows:minmax(0,19%) minmax(0,16%) minmax(0,39%) minmax(0,26%)!important}
+#basement-forecast-panel{grid-row:2!important;min-height:0!important}
+main>.side .radar-panel{grid-row:3!important;min-height:0!important}
+#fun-zone{grid-row:4!important;min-height:0!important}
+#fun-zone .fun-bottom{display:none!important}
+#fun-feature{overflow:hidden!important}
+#fun-feature .fun-headline{font-size:clamp(17px,1.7vw,30px)!important;line-height:1.13!important;overflow-wrap:break-word!important}
+</style><script id="basement-weather-order-script">(function(){function run(){let side=document.querySelector('main>.side'),fun=document.getElementById('fun-zone');if(!side||!fun)return;let forecast=document.getElementById('basement-forecast-panel');if(!forecast){forecast=document.createElement('div');forecast.id='basement-forecast-panel';forecast.className='panel';forecast.innerHTML='<h2>6-DAY FORECAST</h2>';let old=document.querySelector('#fun-zone .fun-forecast');if(old){forecast.appendChild(old);old.style.display='block';old.style.width='100%';old.style.height='auto';} }let radar=document.getElementById('radarMap')?.closest('.panel');if(radar){radar.classList.add('radar-panel');side.insertBefore(forecast,radar);side.insertBefore(radar,fun)}else side.insertBefore(forecast,fun);let h=forecast.querySelector('h2');if(h)h.textContent='6-DAY FORECAST';}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run()})();</script></body></html>
