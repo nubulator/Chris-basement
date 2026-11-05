@@ -671,7 +671,7 @@ function display(){
  let pages=leagueFilter==='ALL'?1+Math.ceil(filtered.length/n):Math.max(1,Math.ceil(filtered.length/n));
  page=((page%pages)+pages)%pages;
  let current=leagueFilter==='ALL'&&page===0?myTeams:filtered.slice((leagueFilter==='ALL'?page-1:page)*n,(leagueFilter==='ALL'?page:page+1)*n);
- $('games').innerHTML=current.map(g=>`<div class="game ${g.fav?'favorite':''}" ${leagueFilter==='ALL'&&page===0?`style="--team-watermark:url('${safe(favoriteTeams.find(t=>t.name===g.league)?.logo||g.awayLogo)}')"`:``}><div class="meta"><span>${safe(g.league)} ${g.live?'● LIVE':''}</span><span>${safe(g.status)}</span></div><div class="teams"><span style="min-width:0"><span class="teamline"><img src="${safe(g.awayLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.ar?`<span class="rank">#${g.ar}</span>`:''}${safe(g.away)}</span></span><span class="teamline"><img src="${safe(g.homeLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.hr?`<span class="rank">#${g.hr}</span>`:''}${safe(g.home)}</span></span></span><span class="score">${!g.live&&!g.final?'VS':safe(g.as)+'<br>'+safe(g.hs)}</span></div></div>`).join('');
+ $('games').innerHTML=current.map(g=>`<div class="game ${g.fav?'favorite':''}" ${leagueFilter==='ALL'&&page===0?`style="--team-watermark:url('${safe(favoriteTeams.find(t=>t.name===g.league)?.logo||g.awayLogo)}')"`:``}><div class="meta"><span>${safe(g.league)} ${g.live?'● LIVE':''}</span><span>${safe(g.status)}</span></div><div class="teams"><span style="min-width:0"><span class="teamline"><img src="${safe(g.awayLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.ar?`<span class="rank">#${g.ar}</span>`:''}${safe(g.away)}</span></span><span class="teamline"><img src="${safe(g.homeLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.hr?`<span class="rank">#${g.hr}</span>`:''}${safe(g.home)}</span></span></span><span class="score">${!g.live&&!g.final?'VS':safe(g.as)+'<br>'+safe(g.hs)}</span></div>${leagueFilter==='ALL'&&page===0&&g.id?'<div class="basement-game-location">📍 '+safe(g.venue||('Home: '+g.home))+'</div>':''}</div>`).join('');
  $('updated').textContent=leagueFilter==='ALL'&&page===0?'MY TEAMS • next games':`${filtered.length} ${leagueFilter==='ALL'?'games':leagueFilter+' games'} • page ${page+1}/${pages}`;
  updateLeagueButtons();if(dailyLineOpen)renderDailyLine();
  $('ticker').textContent=games.concat(myTeams.filter(g=>g.id)).map(g=>`${g.league}: ${g.away} ${!g.live&&!g.final?'VS':g.as+' —'} ${g.home} ${g.live||g.final?g.hs:''} (${g.status})${g.odds?' • '+g.odds:''}`).join('     ✦     ')
@@ -699,7 +699,7 @@ function readGame(e,league,query){
  let away=a.team?.shortDisplayName||a.team?.displayName||'TBD',home=h.team?.shortDisplayName||h.team?.displayName||'TBD',st=e.status?.type||{},ar=rank(a),hr=rank(h);
  let od=c.odds?.[0],spread=od?.details||od?.spread,ou=od?.overUnder;
  let odds=spread!=null||ou!=null?`LINE: ${spread??'—'}  •  O/U: ${ou??'—'}` :'';
- return {id:String(e.id),league,away,home,awayLogo:a.team?.logo||a.team?.logos?.[0]?.href||teamLogo(league,a.team),homeLogo:h.team?.logo||h.team?.logos?.[0]?.href||teamLogo(league,h.team),as:a.score??'',hs:h.score??'',ar,hr,odds,status:st.shortDetail||'Scheduled',live:st.state==='in',final:st.state==='post',date:Date.parse(e.date),fav:/Ohio State|Buckeyes|Cleveland Browns|Cleveland Cavaliers|Cleveland Guardians|Columbus Blue Jackets/i.test(away+' '+home),bigTen:bigTen(a)||bigTen(h),top25:!!(ar||hr),fromTop25:false,fromBigTen:false};
+ return {id:String(e.id),league,away,home,awayLogo:a.team?.logo||a.team?.logos?.[0]?.href||teamLogo(league,a.team),homeLogo:h.team?.logo||h.team?.logos?.[0]?.href||teamLogo(league,h.team),as:a.score??'',hs:h.score??'',ar,hr,odds,venue:[c?.venue?.fullName,c?.venue?.address?.city,c?.venue?.address?.state].filter(Boolean).join(' · '),status:st.shortDetail||'Scheduled',live:st.state==='in',final:st.state==='post',date:Date.parse(e.date),fav:/Ohio State|Buckeyes|Cleveland Browns|Cleveland Cavaliers|Cleveland Guardians|Columbus Blue Jackets/i.test(away+' '+home),bigTen:bigTen(a)||bigTen(h),top25:!!(ar||hr),fromTop25:false,fromBigTen:false};
 }
 
 const favoriteTeams=[
@@ -986,7 +986,9 @@ setInterval(refreshDay,10000);
  const track=document.getElementById('garage-ap-track');
  const sources=[
   {name:'AP NEWS',feed:'https://flipboard.com/@associatedpress/top-stories-u7govdf1z.rss',fallback:'https://news.google.com/rss/search?q=when%3A24h%20site%3Aapnews.com&hl=en-US&gl=US&ceid=US%3Aen'},
-  {name:'ENTERTAINMENT',feed:'https://variety.com/feed/',fallback:'https://news.google.com/rss/search?q=when%3A24h%20site%3Avariety.com&hl=en-US&gl=US&ceid=US%3Aen'}
+  {name:'ENTERTAINMENT',feed:'https://variety.com/feed/',fallback:'https://news.google.com/rss/search?q=when%3A24h%20site%3Avariety.com&hl=en-US&gl=US&ceid=US%3Aen'},
+  {name:'SPORTS',feed:'https://www.espn.com/espn/rss/news',fallback:'https://news.google.com/rss/search?q=when%3A24h%20sports%20scores%20news&hl=en-US&gl=US&ceid=US%3Aen'},
+  {name:'MARKETS',feed:'https://finance.yahoo.com/news/rssindex',fallback:'https://news.google.com/rss/search?q=when%3A24h%20stock%20market%20stocks%20dow%20nasdaq&hl=en-US&gl=US&ceid=US%3Aen'}
  ];
  const maxAge=48*60*60*1000;
  function normalize(items,source){
@@ -1021,7 +1023,7 @@ setInterval(refreshDay,10000);
   }else{
    items.forEach((item,i)=>{
     if(i){let sep=document.createElement('span');sep.className='news-separator';sep.textContent='◆';track.appendChild(sep)}
-    const tag=document.createElement('strong');tag.textContent=item.source+'  ';tag.style.color=item.source==='ENTERTAINMENT'?'#ffd18e':'#ff92c4';track.appendChild(tag);
+    const tag=document.createElement('strong');tag.textContent=item.source+'  ';tag.style.color=({ENTERTAINMENT:'#ffd18e',SPORTS:'#8ee8ff',MARKETS:'#b8f29d'})[item.source]||'#ff92c4';track.appendChild(tag);
     const title=document.createElement('span');title.textContent=item.title.replace(/\s+-\s+(AP News|Associated Press|Variety)$/i,'');track.appendChild(title);
    });
   }
@@ -1029,9 +1031,9 @@ setInterval(refreshDay,10000);
   track.style.animation='garage-news-scroll '+Math.max(85,items.length*14)+'s linear infinite';
  }
  async function update(){
-  const [ap,ent]=await Promise.all(sources.map(retrieve));
+  const groups=await Promise.all(sources.map(retrieve));
   const combined=[];
-  for(let i=0;i<Math.max(ap.length,ent.length);i++){if(ap[i])combined.push(ap[i]);if(ent[i])combined.push(ent[i])}
+  for(let i=0;i<Math.max(...groups.map(g=>g.length),0);i++)for(const group of groups){if(group[i])combined.push(group[i])}
   render(combined);
  }
  update();setInterval(update,20*60*1000);
@@ -1281,4 +1283,13 @@ var close=m.querySelector('.radar-top button');if(close)close.addEventListener('
 document.querySelectorAll('.radar-preview iframe,.radar-modal iframe').forEach(function(f){f.setAttribute('loading','lazy');f.setAttribute('fetchpriority','low');if(f.closest('.radar-preview')){f.setAttribute('tabindex','-1')}});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready);else ready();
-})();</script></body></html>
+})();</script><style id="basement-my-teams-beach-news-v41">
+/* Favorite-game venue sits in unused space below the matchup. */
+#games .game.favorite .basement-game-location{font-size:clamp(11px,.94vw,18px)!important;color:#ffe7ae!important;font-weight:700!important;text-align:right!important;padding:3px 8px 0!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;text-shadow:0 1px 4px #000!important}
+#basement-forecast-panel{position:relative!important;isolation:isolate!important;background:#08152d!important}
+#basement-forecast-panel::before{content:""!important;position:absolute!important;inset:0!important;z-index:0!important;pointer-events:none!important;background-image:linear-gradient(90deg,rgba(0,8,22,.57),rgba(0,8,22,.38)),url("data:image/webp;base64,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")!important;background-size:cover!important;background-position:center 48%!important}
+#basement-forecast-panel>*{position:relative!important;z-index:1!important}
+#basement-forecast-panel .fun-forecast{background:transparent!important}
+#basement-forecast-panel #forecast{text-shadow:0 1px 3px #000,0 0 5px #000!important}
+#garage-ap-track{font-size:clamp(19px,1.94vw,35px)!important}
+</style></body></html>
