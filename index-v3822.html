@@ -1044,4 +1044,14 @@ setInterval(refreshDay,10000);
 #dashboard-refresh{appearance:none;background:linear-gradient(180deg,#245580,#102941);color:#ecf9ff;border:1px solid #74caff;border-radius:7px;padding:5px 9px;font-size:clamp(9px,.85vw,14px);font-weight:800;letter-spacing:.02em;white-space:nowrap;cursor:pointer;box-shadow:0 0 7px #117cc755;min-height:28px}
 #dashboard-refresh:focus,#dashboard-refresh:hover{outline:2px solid #fff2a2;outline-offset:2px;background:#1e6792}
 #dashboard-refresh:disabled{opacity:.7}
-</style><script id="dashboard-refresh-script-v1">(function(){function init(){const btn=document.getElementById('dashboard-refresh');if(!btn)return;btn.addEventListener('click',function(){btn.disabled=true;btn.textContent='↻ LOADING';const url=new URL(window.location.href);url.searchParams.set('refresh',String(Date.now()));window.location.replace(url.toString())})}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init()})();</script></body></html>
+</style><script id="dashboard-refresh-script-v1">(function(){function init(){const btn=document.getElementById('dashboard-refresh');if(!btn)return;btn.addEventListener('click',function(){btn.disabled=true;btn.textContent='↻ LOADING';const url=new URL(window.location.href);url.searchParams.set('refresh',String(Date.now()));window.location.replace(url.toString())})}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init()})();</script><style id="tv-layout-refinement-20261105">
+/* Two compact rows of header controls: prevents top/bottom clipping on Fire TV. */
+header{overflow:hidden!important;align-items:center!important}
+header .controls{min-width:0!important;align-self:center!important;transform:none!important}
+header .header-right{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;grid-template-rows:auto auto!important;gap:3px 5px!important;align-items:center!important;justify-items:stretch!important;min-width:0!important;width:100%!important;max-width:none!important;transform:none!important}
+header .header-right #theme{grid-column:1!important;grid-row:1!important;width:100%!important;min-width:0!important;max-width:none!important;height:clamp(23px,3vh,34px)!important;padding:1px 4px!important}
+header .header-right #dashboard-refresh{grid-column:2!important;grid-row:1!important;min-height:0!important;height:clamp(23px,3vh,34px)!important;padding:2px 6px!important;font-size:clamp(9px,.75vw,13px)!important}
+header .header-right #status{grid-column:1 / -1!important;grid-row:2!important;text-align:right!important;line-height:1.1!important;min-height:0!important;font-size:clamp(9px,.78vw,13px)!important}
+header h1,header #decor{transform:none!important}
+
+</style></body></html>
