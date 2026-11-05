@@ -1238,4 +1238,22 @@ header #decor{left:30%!important;right:27%!important;top:0!important;bottom:0!im
 header #decor .holiday-words{font-size:clamp(20px,2.45vw,47px)!important;white-space:nowrap!important}
 header #decor .holiday-icons{font-size:clamp(17px,1.8vw,35px)!important}
 header h1,header .controls{position:relative;z-index:3}
-</style></body></html>
+</style><style id="basement-theme-preview-v14">
+header #decor{left:28.5%!important;right:28.5%!important}
+#basement-theme-options button{position:relative;overflow:hidden;text-shadow:0 1px 4px #0008;transition:transform .12s,border-color .12s;display:flex;align-items:center;justify-content:center;gap:.45em;min-height:clamp(65px,8vh,105px);padding:10px 14px!important}
+#basement-theme-options button .theme-emoji{font-size:1.3em;line-height:1}
+#basement-theme-options button .theme-name{font-size:1em;line-height:1.05}
+#basement-theme-options button[data-value="auto"]{background:linear-gradient(115deg,#15456f,#673f9b,#1d7a78);color:#fff}
+#basement-theme-options button[data-value="classic"]{background:linear-gradient(115deg,#281529,#6c2435,#aa6930);color:#ffe5a8;font-family:Georgia,serif}
+#basement-theme-options button[data-value="winter"]{background:linear-gradient(115deg,#173a72,#387cc7,#b0e8ff);color:#fff}
+#basement-theme-options button[data-value="spring"]{background:linear-gradient(115deg,#216b47,#6ba94a,#f7b9d9);color:#fff}
+#basement-theme-options button[data-value="summer"]{background:linear-gradient(115deg,#ed9131,#ffcc42,#4cadd5);color:#262040}
+#basement-theme-options button[data-value="fall"]{background:linear-gradient(115deg,#6d301b,#bc6125,#d7a43d);color:#fff;font-family:Georgia,serif}
+#basement-theme-options button[data-value="halloween"]{background:linear-gradient(115deg,#210e34,#6d2682,#e7751c);color:#ffe29c;font-family:Georgia,serif}
+#basement-theme-options button[data-value="thanksgiving"]{background:linear-gradient(115deg,#72331b,#b8672d,#e4b65c);color:#fff;font-family:Georgia,serif}
+#basement-theme-options button[data-value="christmas"]{background:linear-gradient(115deg,#075038,#b41f37,#075038);color:#fff;font-family:Georgia,serif}
+#basement-theme-options button[data-value="newyear"]{background:linear-gradient(115deg,#171833,#4a3686,#b69b43);color:#ffe8a2}
+#basement-theme-options button[data-value="valentine"]{background:linear-gradient(115deg,#9e174b,#ee6a9c,#9e174b);color:#fff}
+#basement-theme-options button[data-value="easter"]{background:linear-gradient(115deg,#aa84d8,#f2a9c7,#92c4a6);color:#25213d}
+#basement-theme-options button.selected{outline:4px solid #fff!important;outline-offset:-7px!important;border-color:#ffe26a!important;box-shadow:0 0 0 4px #ffba22,0 0 24px #ffdc70!important}
+</style><script id="basement-theme-preview-v14-script">(function(){function init(){const root=document.getElementById('basement-theme-options');if(!root)return;const emoji={auto:'✨',classic:'🎸',winter:'❄️',spring:'🌷',summer:'☀️',fall:'🍁',halloween:'🎃',thanksgiving:'🦃',christmas:'🎄',newyear:'🎆',valentine:'❤️',easter:'🐰',groundhog:'🐿️',stpatricks:'☘️',memorial:'🇺🇸',july4:'🎆'};for(const b of root.querySelectorAll('button')){const key=b.dataset.value||'';const label=b.textContent.replace(/^[^A-Za-z0-9]+/,'').trim();b.innerHTML='<span class="theme-emoji"></span><span class="theme-name"></span>';b.querySelector('.theme-emoji').textContent=emoji[key]||'✨';b.querySelector('.theme-name').textContent=label;}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init()})();</script></body></html>
