@@ -1070,4 +1070,35 @@ header #decor{grid-template-columns:minmax(0,1.15fr) minmax(0,3.5fr) minmax(0,1.
 header #decor .holiday-words{font-size:clamp(21px,2.55vw,46px)!important;line-height:1.05!important;letter-spacing:-.045em!important;white-space:nowrap!important}
 header #decor .season-art{font-size:clamp(19px,2.3vw,42px)!important;line-height:1!important;white-space:nowrap!important}
 header #decor::before,header #decor::after,header #decor .sparkle,header #decor .spark,header #decor .twinkle{display:none!important}
-</style><script id="basement-hide-fall-sparkles-v3">(function(){function clean(){if(!document.body.classList.contains('fall'))return;const decor=document.getElementById('decor');if(!decor)return;for(const el of decor.querySelectorAll('.season-art')){const cleaned=el.textContent.replace(/[✨⭐🌟💫✦✧⋆★☆]/gu,'').trim();if(cleaned!==el.textContent)el.textContent=cleaned}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',clean);else clean();const decor=document.getElementById('decor');if(decor)new MutationObserver(clean).observe(decor,{childList:true,subtree:true});})();</script><style id="basement-fun-header-next-v1">.fun-top-actions{display:flex;align-items:center;justify-content:flex-end;gap:clamp(8px,.9vw,18px);margin-left:auto;white-space:nowrap}.fun-top #fun-counter{font-size:clamp(12px,1vw,20px)!important}.fun-top #fun-next{font-size:clamp(10px,.8vw,16px)!important;padding:clamp(3px,.35vw,7px) clamp(7px,.65vw,13px)!important;line-height:1.2!important}.fun-bottom{justify-content:flex-start!important}.fun-bottom .fun-forecast{width:100%!important}</style></body></html>
+</style><script id="basement-hide-fall-sparkles-v3">(function(){function clean(){if(!document.body.classList.contains('fall'))return;const decor=document.getElementById('decor');if(!decor)return;for(const el of decor.querySelectorAll('.season-art')){const cleaned=el.textContent.replace(/[✨⭐🌟💫✦✧⋆★☆]/gu,'').trim();if(cleaned!==el.textContent)el.textContent=cleaned}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',clean);else clean();const decor=document.getElementById('decor');if(decor)new MutationObserver(clean).observe(decor,{childList:true,subtree:true});})();</script><style id="basement-fun-header-next-v1">.fun-top-actions{display:flex;align-items:center;justify-content:flex-end;gap:clamp(8px,.9vw,18px);margin-left:auto;white-space:nowrap}.fun-top #fun-counter{font-size:clamp(12px,1vw,20px)!important}.fun-top #fun-next{font-size:clamp(10px,.8vw,16px)!important;padding:clamp(3px,.35vw,7px) clamp(7px,.65vw,13px)!important;line-height:1.2!important}.fun-bottom{justify-content:flex-start!important}.fun-bottom .fun-forecast{width:100%!important}</style><style id="basement-wide-fun-layout-v1">
+/* Sports remain left; narrow sponsor strip, stacked weather/forecast/radar,
+   and a wide Fun Zone spanning sponsor + weather columns. */
+main{display:grid!important;grid-template-columns:minmax(0,53fr) minmax(0,8fr) minmax(0,39fr)!important;grid-template-rows:minmax(0,17fr) minmax(0,14fr) minmax(0,40fr) minmax(0,29fr)!important;column-gap:clamp(3px,.4vw,8px)!important;row-gap:clamp(3px,.4vh,7px)!important;min-height:0!important}
+main>.board{grid-column:1!important;grid-row:1 / -1!important;min-height:0!important}
+main>.sponsor-column{grid-column:2!important;grid-row:1 / 4!important;min-height:0!important}
+main>.side{display:contents!important}
+main>.side>.panel:first-child{grid-column:3!important;grid-row:1!important;min-height:0!important}
+main>.side>.panel:nth-child(2){grid-column:3!important;grid-row:3!important;min-height:0!important}
+#basement-forecast-panel{grid-column:3!important;grid-row:2!important;min-height:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;padding:clamp(4px,.45vw,9px)!important}
+#basement-forecast-panel h2{font-size:clamp(11px,1vw,18px)!important;margin:0 0 2px!important}
+#basement-forecast-panel .fun-forecast{display:flex!important;align-items:center!important;flex:1!important;min-height:0!important;width:100%!important;overflow:hidden!important;white-space:normal!important}
+#basement-forecast-panel .fun-forecast>b{display:none!important}
+#basement-forecast-panel #forecast{font-size:clamp(12px,1.1vw,21px)!important;line-height:1.18!important;white-space:normal!important;overflow:hidden!important;text-overflow:clip!important}
+main>#fun-zone{grid-column:2 / 4!important;grid-row:4!important;min-height:0!important;min-width:0!important}
+main>#fun-zone #fun-feature{padding:clamp(3px,.4vw,9px) clamp(12px,1.2vw,25px)!important;gap:clamp(2px,.25vw,6px)!important}
+main>#fun-zone .fun-category{font-size:clamp(12px,1vw,20px)!important}
+main>#fun-zone .fun-headline{font-size:clamp(22px,2.15vw,42px)!important;line-height:1.08!important}
+main>#fun-zone .fun-detail{font-size:clamp(15px,1.4vw,27px)!important;line-height:1.12!important}
+main>#fun-zone .fun-top{min-height:clamp(28px,3.5vh,44px)!important}
+main>.sponsor-column .sponsor-heading{font-size:clamp(8px,.72vw,14px)!important}
+main>.sponsor-column .sponsor-sign img{max-width:100%!important;object-fit:contain!important}
+@media(max-width:800px){main{grid-template-columns:minmax(0,52fr) minmax(0,9fr) minmax(0,39fr)!important}}
+</style>
+<script id="basement-wide-fun-layout-script-v1">(function(){
+function arrange(){const main=document.querySelector('main'),side=main&&main.querySelector('.side'),fun=document.getElementById('fun-zone'),forecast=fun&&fun.querySelector('.fun-forecast');if(!main||!side||!fun||!forecast)return;
+let panel=document.getElementById('basement-forecast-panel');
+if(!panel){panel=document.createElement('div');panel.id='basement-forecast-panel';panel.className='panel';const heading=document.createElement('h2');heading.textContent='4-DAY FORECAST';panel.appendChild(heading);side.insertBefore(panel,side.children[1]);}
+panel.appendChild(forecast);main.appendChild(fun);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',arrange);else arrange();
+})();</script></body></html>
