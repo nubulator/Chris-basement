@@ -1264,4 +1264,21 @@ main>#fun-zone .fun-headline{color:#f1f1e7!important;text-shadow:1px 1px 1px rgb
 main>#fun-zone .fun-detail{color:#e2e9dc!important}
 main>#fun-zone .fun-category{color:#f0d9ad!important}
 header h1 .neontitle{font-size:clamp(27px,3.25vw,61px)!important}
-</style></body></html>
+</style><style id="radar-click-and-load-v27">
+.radar-preview{position:relative!important;cursor:pointer!important}
+.radar-preview::after{content:"";position:absolute;inset:0;z-index:900!important;cursor:pointer!important;background:transparent!important;pointer-events:none!important}
+.radar-preview iframe,.radar-preview .leaflet-container{pointer-events:none!important}
+.radar-modal.open{display:flex!important;z-index:2147483000!important}
+.radar-modal.open .leaflet-container{pointer-events:auto!important}
+</style>
+<script id="radar-interaction-and-startup-v27">(function(){
+function ready(){
+var p=document.querySelector('.radar-preview'),m=document.getElementById('radarModal');if(!p||!m)return;
+p.setAttribute('role','button');p.setAttribute('tabindex','0');
+p.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();if(typeof window.openRadar==='function')window.openRadar();else {m.classList.add('open');m.setAttribute('aria-hidden','false')}},true);
+p.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopImmediatePropagation();window.openRadar()}},true);
+var close=m.querySelector('.radar-top button');if(close)close.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();m.classList.remove('open');m.setAttribute('aria-hidden','true')},true);
+document.querySelectorAll('.radar-preview iframe,.radar-modal iframe').forEach(function(f){f.setAttribute('loading','lazy');f.setAttribute('fetchpriority','low');if(f.closest('.radar-preview')){f.setAttribute('tabindex','-1')}});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready);else ready();
+})();</script></body></html>
