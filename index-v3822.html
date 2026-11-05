@@ -677,8 +677,14 @@ async function loadMyTeams(){
  display();
 }
 async function sports(){
+ // Request the actual Eastern sports day explicitly: ESPN's default scoreboard
+ // sometimes returns only the current league week or a limited game subset.
+ const sportsDate=new Date(Date.now()-3*3600000);
+ const easternParts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(sportsDate);
+ const getPart=k=>easternParts.find(p=>p.type===k)?.value||'';
+ const dateParam=getPart('year')+getPart('month')+getPart('day');
  let results=await Promise.allSettled(leagues.map(async([league,path,query])=>{
-  let r=await fetch(`https://site.api.espn.com/apis/site/v2/sports/${path}/scoreboard?limit=300${query}`,{cache:'no-store'});if(!r.ok)throw Error(r.status);
+  let r=await fetch(`https://site.api.espn.com/apis/site/v2/sports/${path}/scoreboard?limit=300&dates=${dateParam}${query}`,{cache:'no-store'});if(!r.ok)throw Error(r.status);
   let j=await r.json();return (j.events||[]).map(e=>readGame(e,league,query)).filter(Boolean)
  }));
  let fresh=results.filter(x=>x.status==='fulfilled').flatMap(x=>x.value);
