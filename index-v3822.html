@@ -957,7 +957,7 @@ const dogs=[['DUCKY SAYS…','The couch is mine. You may visit.'],['HAZEL SAYS�
 let index=0,lastDay=dayNumber();
 function dayNumber(){const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const v=k=>Number(parts.find(p=>p.type===k).value);return Math.floor(Date.UTC(v('year'),v('month')-1,v('day'))/86400000)}
 function escapeText(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function show(){const d=dayNumber();const features=[['GUESS THE CLASSIC ROCK LYRIC','Which song includes the lyric: “All that glitters is gold”?','Answer on slide 7 of 7'],['WORD OF THE DAY',...words[d%words.length]],['DAD JOKE',...jokes[d%jokes.length]],['BAR TRIVIA',...trivia[d%trivia.length]],['ROCK HISTORY & FACTS',...rock[d%rock.length]],['HAZEL & DUCKY’S CORNER',...dogs[d%dogs.length]]];const f=features[index];document.getElementById('fun-counter').textContent=(index+1)+' / '+features.length;document.getElementById('fun-feature').innerHTML='<div class="fun-category">'+escapeText(f[0])+'</div><div class="fun-headline">'+escapeText(f[1])+'</div><div class="fun-detail">'+escapeText(f[2])+'</div>';requestAnimationFrame(fitFunText);}
+function show(){const d=dayNumber();const features=[['GUESS THE CLASSIC ROCK LYRIC','Which song includes the lyric: “All that glitters is gold”?','Answer on slide 7 of 7'],['WORD OF THE DAY',...words[d%words.length]],['DAD JOKE',...jokes[d%jokes.length]],['BAR TRIVIA',...trivia[d%trivia.length]],['ROCK HISTORY & FACTS',...rock[d%rock.length]],['HAZEL & DUCKY’S CORNER',...dogs[d%dogs.length]]];const f=features[index%features.length];document.getElementById('fun-counter').textContent=(index+1)+' / '+features.length;document.getElementById('fun-feature').innerHTML='<div class="fun-category">'+escapeText(f[0])+'</div><div class="fun-headline">'+escapeText(f[1])+'</div><div class="fun-detail">'+escapeText(f[2])+'</div>';requestAnimationFrame(fitFunText);}
 function fitFunText(){
  const panel=document.getElementById('fun-feature');
  const headline=panel.querySelector('.fun-headline'),detail=panel.querySelector('.fun-detail');
@@ -1172,4 +1172,19 @@ main>#fun-zone{grid-column:2 / 4!important;grid-row:4!important;min-height:0!imp
 main>.sponsor-column{grid-column:2!important;grid-row:1 / 4!important}
 #fun-zone .fun-bottom{display:none!important}
 #fun-feature .fun-headline{font-size:clamp(15px,1.5vw,28px)!important;line-height:1.12!important}
-</style></body></html>
+</style><style id="tv-final-header-tuning-v5">
+header{isolation:isolate!important;overflow:visible!important;z-index:100!important;grid-template-columns:minmax(0,29%) minmax(0,39%) minmax(0,32%)!important}
+header h1{display:flex!important;align-items:center!important;align-self:stretch!important;padding-left:4px!important}
+header h1 .neontitle{font-size:clamp(22px,2.65vw,49px)!important;line-height:1!important}
+header .controls{align-self:center!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:clamp(4px,.5vw,10px)!important;overflow:visible!important}
+header #clock{flex:0 0 auto!important;font-size:clamp(11px,.98vw,19px)!important;margin:0!important;padding:2px 4px!important}
+header .header-right{flex:0 1 55%!important;width:auto!important;max-width:55%!important;align-items:stretch!important;justify-content:center!important;overflow:visible!important}
+header #dashboard-refresh{align-self:center!important;max-width:100%!important}
+header #status{display:none!important}
+header .holiday-custom{position:relative!important;z-index:100000!important}
+header .holiday-menu{position:absolute!important;z-index:100001!important;right:0!important;top:calc(100% + 4px)!important;max-height:65vh!important;overflow-y:auto!important;box-shadow:0 12px 35px #000e!important}
+header .holiday-menu.open{display:block!important}
+header .holiday-option[aria-selected="true"]{background:#ffd447!important;color:#092044!important;border:2px solid #fff!important}
+header .holiday-option:focus{background:#ffb51e!important;color:#091b36!important;outline:3px solid white!important}
+main{position:relative!important;z-index:1!important}
+</style><script id="tv-header-portal-v5">(function(){function init(){const menu=document.querySelector('.holiday-menu'),trigger=document.getElementById('holiday-remote-trigger');if(!menu||!trigger)return;document.body.appendChild(menu);menu.style.position='fixed';menu.style.zIndex='2147483647';function place(){let r=trigger.getBoundingClientRect();menu.style.top=Math.round(r.bottom+5)+'px';menu.style.right=Math.max(4,Math.round(innerWidth-r.right))+'px';menu.style.left='auto';menu.style.width=Math.min(340,Math.max(220,r.width*1.7))+'px';}new MutationObserver(()=>{if(menu.classList.contains('open'))place()}).observe(menu,{attributes:true,attributeFilter:['class']});trigger.addEventListener('click',()=>{setTimeout(()=>{menu.classList.toggle('open',trigger.getAttribute('aria-expanded')==='true');if(menu.classList.contains('open'))place()},0)});document.addEventListener('click',e=>{if(!menu.contains(e.target)&&e.target!==trigger&&menu.classList.contains('open')){menu.classList.remove('open');trigger.setAttribute('aria-expanded','false')}});window.addEventListener('resize',place);menu.querySelectorAll('.holiday-option').forEach(b=>b.addEventListener('click',()=>{menu.classList.remove('open');trigger.setAttribute('aria-expanded','false')}));}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init()})();</script><style id="basement-fun-count-v5">#fun-counter{min-width:55px!important;text-align:right!important}</style></body></html>
