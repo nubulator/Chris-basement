@@ -1292,4 +1292,20 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 #basement-forecast-panel .fun-forecast{background:transparent!important}
 #basement-forecast-panel #forecast{text-shadow:0 1px 3px #000,0 0 5px #000!important}
 #garage-ap-track{font-size:clamp(19px,1.94vw,35px)!important}
+</style><style id="basement-my-teams-location-visible-v42">
+/* The location was below the matchup and clipped by compact game tiles.
+   Place it inside the open right-hand area on the My Teams rotation only. */
+#games .game.favorite:has(.basement-game-location){position:relative!important}
+#games .game.favorite .basement-game-location{
+ position:absolute!important;right:clamp(38px,4.1vw,78px)!important;top:50%!important;
+ transform:translateY(-50%)!important;max-width:35%!important;
+ padding:4px 6px!important;margin:0!important;
+ font-size:clamp(10px,.91vw,17px)!important;line-height:1.22!important;
+ white-space:normal!important;overflow:visible!important;text-overflow:clip!important;
+ text-align:center!important;z-index:3!important;
+ color:#ffe7ae!important;font-weight:800!important;
+ background:rgba(2,13,33,.74)!important;border-radius:6px!important;
+ text-shadow:0 1px 3px #000!important;pointer-events:none!important;
+}
+#games .game.favorite:has(.basement-game-location) .teams>span:first-child{max-width:61%!important}
 </style></body></html>
