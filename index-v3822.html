@@ -1147,27 +1147,29 @@ trigger.addEventListener('click',()=>{let opening=!menu.classList.contains('open
 document.addEventListener('click',e=>{if(!wrapper.contains(e.target)&&menu.classList.contains('open')){menu.classList.remove('open');trigger.setAttribute('aria-expanded','false')}});
 select.addEventListener('change',sync);sync();
 }if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
-})();</script><style id="tv-layout-repair-20261105">
-/* Reserve non-overlapping header zones on 16:9 televisions. */
-header{display:grid!important;grid-template-columns:minmax(0,28%) minmax(0,44%) minmax(0,28%)!important;align-items:center!important;overflow:visible!important;position:relative!important}
-header h1{grid-column:1!important;position:relative!important;inset:auto!important;transform:none!important;margin:0!important;min-width:0!important;z-index:2!important}
-header #decor{grid-column:2!important;position:relative!important;inset:auto!important;transform:none!important;width:100%!important;max-width:100%!important;text-align:center!important;white-space:normal!important;overflow:hidden!important;z-index:2!important;pointer-events:none!important}
-header .controls{grid-column:3!important;position:relative!important;inset:auto!important;transform:none!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;min-width:0!important;z-index:4!important}
-header #clock{position:relative!important;inset:auto!important;transform:none!important;white-space:nowrap!important}
-header .header-right{position:relative!important;inset:auto!important;transform:none!important;width:auto!important;max-width:100%!important;min-width:0!important;display:flex!important;flex-direction:column!important;align-items:flex-end!important;gap:2px!important}
-header #dashboard-refresh{font-size:clamp(9px,.72vw,13px)!important;padding:2px 5px!important}
-header #status{font-size:clamp(9px,.75vw,14px)!important;white-space:nowrap!important}
-header .holiday-custom{max-width:100%!important}
-header .holiday-trigger{max-width:100%!important;min-width:0!important;font-size:clamp(10px,.8vw,15px)!important;padding:4px 7px!important;overflow:hidden!important;text-overflow:ellipsis!important}
-header .holiday-menu{z-index:20000!important}
+})();</script><style id="tv-header-structured-v4">
+header{position:relative!important;display:grid!important;grid-template-columns:minmax(0,28%) minmax(0,40%) minmax(0,32%)!important;align-items:center!important;overflow:visible!important}
+header h1{grid-column:1!important;grid-row:1!important;position:relative!important;left:auto!important;top:auto!important;right:auto!important;transform:none!important;margin:0!important;min-width:0!important;z-index:2!important}
+header h1 .neontitle{font-size:clamp(17px,2.3vw,43px)!important;white-space:nowrap!important}
+header #decor{grid-column:2!important;grid-row:1!important;position:relative!important;inset:auto!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;transform:none!important;width:100%!important;min-width:0!important;max-width:100%!important;overflow:hidden!important;text-align:center!important;white-space:nowrap!important;font-size:clamp(12px,1.45vw,27px)!important;z-index:1!important;pointer-events:none!important}
+header .controls{grid-column:3!important;grid-row:1!important;position:relative!important;inset:auto!important;transform:none!important;min-width:0!important;width:100%!important;display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr)!important;align-items:center!important;gap:5px!important;z-index:5!important}
+header #clock{grid-column:1!important;position:relative!important;inset:auto!important;transform:none!important;max-width:100%!important;font-size:clamp(10px,1.1vw,20px)!important;white-space:nowrap!important}
+header .header-right{grid-column:2!important;position:relative!important;inset:auto!important;transform:none!important;width:100%!important;max-width:100%!important;min-width:0!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:1px!important}
+header .holiday-custom{width:100%!important;max-width:100%!important;min-width:0!important}
+header .holiday-trigger{width:100%!important;min-width:0!important;max-width:100%!important;font-size:clamp(9px,.73vw,14px)!important;padding:3px 4px!important;overflow:hidden!important;text-overflow:ellipsis!important}
+header #dashboard-refresh{font-size:clamp(9px,.7vw,13px)!important;padding:1px 4px!important;align-self:flex-end!important}
+header #status{font-size:clamp(8px,.65vw,12px)!important;text-align:right!important;white-space:nowrap!important}
 header #holiday{display:none!important}
-</style><style id="basement-weather-order-repair">
-/* Give forecast its own full-width row, between conditions and radar. */
-main>.side{display:grid!important;grid-template-rows:minmax(0,19%) minmax(0,16%) minmax(0,39%) minmax(0,26%)!important}
-#basement-forecast-panel{grid-row:2!important;min-height:0!important}
-main>.side .radar-panel{grid-row:3!important;min-height:0!important}
-#fun-zone{grid-row:4!important;min-height:0!important}
+.holiday-menu{right:0!important;top:100%!important;max-height:65vh!important;overflow:auto!important}
+</style><style id="basement-grid-restore-v4">
+/* Restore the already-working three-column layout and its display:contents side. */
+main{display:grid!important;grid-template-columns:minmax(0,53fr) minmax(0,8fr) minmax(0,39fr)!important;grid-template-rows:minmax(0,17fr) minmax(0,14fr) minmax(0,40fr) minmax(0,29fr)!important}
+main>.side{display:contents!important}
+main>.side>.panel:first-child{grid-column:3!important;grid-row:1!important}
+main>.side>#basement-forecast-panel{grid-column:3!important;grid-row:2!important;min-height:0!important}
+main>.side>#basement-radar-panel{grid-column:3!important;grid-row:3!important;min-height:0!important}
+main>#fun-zone{grid-column:2 / 4!important;grid-row:4!important;min-height:0!important}
+main>.sponsor-column{grid-column:2!important;grid-row:1 / 4!important}
 #fun-zone .fun-bottom{display:none!important}
-#fun-feature{overflow:hidden!important}
-#fun-feature .fun-headline{font-size:clamp(17px,1.7vw,30px)!important;line-height:1.13!important;overflow-wrap:break-word!important}
-</style><script id="basement-weather-order-script">(function(){function run(){let side=document.querySelector('main>.side'),fun=document.getElementById('fun-zone');if(!side||!fun)return;let forecast=document.getElementById('basement-forecast-panel');if(!forecast){forecast=document.createElement('div');forecast.id='basement-forecast-panel';forecast.className='panel';forecast.innerHTML='<h2>6-DAY FORECAST</h2>';let old=document.querySelector('#fun-zone .fun-forecast');if(old){forecast.appendChild(old);old.style.display='block';old.style.width='100%';old.style.height='auto';} }let radar=document.getElementById('radarMap')?.closest('.panel');if(radar){radar.classList.add('radar-panel');side.insertBefore(forecast,radar);side.insertBefore(radar,fun)}else side.insertBefore(forecast,fun);let h=forecast.querySelector('h2');if(h)h.textContent='6-DAY FORECAST';}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run()})();</script></body></html>
+#fun-feature .fun-headline{font-size:clamp(15px,1.5vw,28px)!important;line-height:1.12!important}
+</style></body></html>
