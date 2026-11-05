@@ -1064,4 +1064,10 @@ header .header-right #theme{grid-column:1!important;grid-row:1!important;min-wid
 header .header-right #dashboard-refresh{grid-column:2!important;grid-row:1!important;white-space:nowrap!important}
 header .header-right #status{grid-column:1 / -1!important;grid-row:2!important;text-align:right!important}
 
-</style></body></html>
+</style><style id="basement-fall-marquee-larger-v3">
+/* More prominent Fall greeting and leaves; no twinkling decorative particles. */
+header #decor{grid-template-columns:minmax(0,1.15fr) minmax(0,3.5fr) minmax(0,1.15fr)!important;gap:clamp(1px,.2vw,5px)!important;padding:0 2px!important}
+header #decor .holiday-words{font-size:clamp(21px,2.55vw,46px)!important;line-height:1.05!important;letter-spacing:-.045em!important;white-space:nowrap!important}
+header #decor .season-art{font-size:clamp(19px,2.3vw,42px)!important;line-height:1!important;white-space:nowrap!important}
+header #decor::before,header #decor::after,header #decor .sparkle,header #decor .spark,header #decor .twinkle{display:none!important}
+</style><script id="basement-hide-fall-sparkles-v3">(function(){function clean(){if(!document.body.classList.contains('fall'))return;const decor=document.getElementById('decor');if(!decor)return;for(const el of decor.querySelectorAll('.season-art')){el.textContent=el.textContent.replace(/[✨⭐🌟💫✦✧⋆★☆]/gu,'').trim()}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',clean);else clean();const decor=document.getElementById('decor');if(decor)new MutationObserver(clean).observe(decor,{childList:true,subtree:true});})();</script></body></html>
