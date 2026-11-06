@@ -963,6 +963,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
 .line-team-logo{width:clamp(24px,2.3vw,45px);height:clamp(24px,2.3vw,45px);object-fit:contain;flex:none}
 .line-vs{color:#ffb879;font-size:.72em}
 @media(max-width:850px){.line-location{max-width:48%}#line-games .line-matchup{font-size:clamp(15px,2.2vw,25px)!important}}
+.line-rank{display:inline-block;color:#ffca70;font-weight:950;white-space:nowrap;margin-right:3px}
 </style>
 <script id="v3819-interactions">
 (function(){
@@ -976,9 +977,9 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
   const start=new Date(),end=new Date(Date.now()+9*86400000);
   const range=etDate(start)+'-'+etDate(end);
   const results=await Promise.allSettled(footballLeagues.map(async ([league,path])=>{
-   const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/'+path+'/scoreboard?limit=300&dates='+range,{cache:'no-store'});
+   const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/'+path+'/scoreboard?limit=500&dates='+range+(league==='NCAA FOOTBALL'?'&groups=80':''),{cache:'no-store'});
    if(!r.ok)throw Error('football schedule '+r.status);
-   const j=await r.json();return (j.events||[]).map(e=>readGame(e,league,'')).filter(g=>g&&!g.final&&g.date>Date.now()-3600000);
+   const j=await r.json();return (j.events||[]).map(e=>readGame(e,league,'')).filter(g=>g&&!g.final&&g.date>Date.now()-3600000&&(league==='NFL'||g.ar||g.hr||g.top25));
   }));
   const fresh=results.filter(x=>x.status==='fulfilled').flatMap(x=>x.value);
   if(fresh.length){footballUpcoming=[...new Map(fresh.map(g=>[g.league+':'+g.id,g])).values()].sort((a,b)=>a.date-b.date);if(dailyLineOpen)renderDailyLine()}
@@ -995,9 +996,9 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
  };
  function lineData(){
   const now=Date.now(),today=etDay(new Date());
-  const football=[...footballUpcoming,...games.filter(g=>g.league==='NFL'||g.league==='NCAA FOOTBALL')];
+  const football=[...footballUpcoming,...games.filter(g=>g.league==='NFL'||(g.league==='NCAA FOOTBALL'&&(g.ar||g.hr||g.top25)))].filter(g=>g.league==='NFL'||(g.ar||g.hr||g.top25));
   const daily=games.filter(g=>g.league!=='NFL'&&g.league!=='NCAA FOOTBALL'&&g.date&&etDay(new Date(g.date))===today);
-  const fav=myTeams.filter(g=>g&&g.id&&g.date&&g.date>=now-3600000&&((g.league==='Ohio State Football'||g.league==='Cleveland Browns')||etDay(new Date(g.date))===today));
+  const fav=myTeams.filter(g=>g&&g.id&&g.date&&g.date>=now-3600000&&((g.league==='Cleveland Browns'||(g.league==='Ohio State Football'&&(g.ar||g.hr||g.top25)))||etDay(new Date(g.date))===today));
   const unique=new Map();
   for(const g of [...fav,...football,...daily]){
    if(!g.id||!g.date||g.final||g.date<now-3600000)continue;
@@ -1018,8 +1019,9 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
   const spread=raw.match(/LINE:\s*(.*?)\s*(?:•|$)/i)?.[1]||'—';
   const total=raw.match(/O\/U:\s*([^•]+)/i)?.[1]?.trim()||'—';
   const logo=(url,name)=>url?'<img class="line-team-logo" src="'+safe(url)+'" alt="'+safe(name)+' logo" loading="lazy" onerror="this.style.display=\'none\'">':'';
+  const ranked=(name,r)=>((g.league==='NCAA FOOTBALL'||g.league==='NCAA MEN')&&r?'<span class="line-rank">#'+safe(r)+'</span> ':'')+safe(name);
   const where=g.venue||g.venueCity?'<div class="line-location"><span>'+safe(g.venueCity||'Home: '+g.home)+'</span><span>'+safe(g.venue||'Venue to be announced')+'</span></div>':'';
-  return '<article class="line-card" data-game-id="'+safe(g.id)+'" data-league="'+safe(g.league)+'"><div class="line-card-top"><div class="line-league">'+safe(g.league)+' • '+safe(when)+'</div>'+where+'</div><div class="line-matchup"><span class="line-team">'+logo(g.awayLogo,g.away)+safe(g.away)+'</span><span class="line-vs">vs</span><span class="line-team">'+logo(g.homeLogo,g.home)+safe(g.home)+'</span></div><div class="line-metrics"><div><small>SPREAD</small><strong>'+safe(spread)+'</strong></div><div><small>OVER / UNDER</small><strong>'+safe(total)+'</strong></div><div><small>MONEYLINE</small><strong>—</strong></div></div><div class="line-source">'+(raw?'ESPN pregame line':'Odds not yet available from ESPN')+'</div></article>';
+  return '<article class="line-card" data-game-id="'+safe(g.id)+'" data-league="'+safe(g.league)+'"><div class="line-card-top"><div class="line-league">'+safe(g.league)+' • '+safe(when)+'</div>'+where+'</div><div class="line-matchup"><span class="line-team">'+logo(g.awayLogo,g.away)+ranked(g.away,g.ar)+'</span><span class="line-vs">vs</span><span class="line-team">'+logo(g.homeLogo,g.home)+ranked(g.home,g.hr)+'</span></div><div class="line-metrics"><div><small>SPREAD</small><strong>'+safe(spread)+'</strong></div><div><small>OVER / UNDER</small><strong>'+safe(total)+'</strong></div><div><small>MONEYLINE</small><strong>—</strong></div></div><div class="line-source">'+(raw?'ESPN pregame line':'Odds not yet available from ESPN')+'</div></article>';
  }
 
  const lineOddsCache=new Map();
