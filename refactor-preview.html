@@ -1510,7 +1510,9 @@ function setup(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);
 else setup();
 })();
-</script><style id="basement-version-v69">header h1{position:relative!important}#basement-build-version{position:absolute!important;left:calc(100% - 21px);bottom:3px;font:700 8px/1 Arial,sans-serif!important;letter-spacing:0!important;color:#e5e8ef!important;text-shadow:0 1px 2px #000!important;white-space:nowrap;pointer-events:none;z-index:5}@media(max-width:900px){#basement-build-version{font-size:7px!important}}</style><style id="basement-visual-overrides-consolidated">\n/* --- basement-visual-cleanup-v75 (preserved cascade order) --- */\n
+</script><style id="basement-version-v69">header h1{position:relative!important}#basement-build-version{position:absolute!important;left:calc(100% - 21px);bottom:3px;font:700 8px/1 Arial,sans-serif!important;letter-spacing:0!important;color:#e5e8ef!important;text-shadow:0 1px 2px #000!important;white-space:nowrap;pointer-events:none;z-index:5}@media(max-width:900px){#basement-build-version{font-size:7px!important}}</style><style id="basement-visual-overrides-consolidated">
+/* --- basement-visual-cleanup-v75 (preserved cascade order) --- */
+
 /* Remove the floating diamond/star strip; keep holiday emojis and greeting. */
 body::before{content:none!important;display:none!important}
 header #decor::before,header #decor::after{content:none!important;display:none!important}
@@ -1532,7 +1534,9 @@ main>#fun-zone{border-color:rgba(229,132,76,.65)!important}
 #garage-ap-ticker{border-color:rgba(65,133,215,.65)!important}
 /* Attribution stays visible but away from the radar action buttons. */
 #radarMap .leaflet-control-attribution{position:relative!important;bottom:clamp(27px,3.2vh,48px)!important;right:2px!important;max-width:70%!important;white-space:normal!important;font-size:8px!important;line-height:1.15!important}
-\n/* --- basement-controls-borders-v76 (preserved cascade order) --- */\n
+
+/* --- basement-controls-borders-v76 (preserved cascade order) --- */
+
 /* Matching control surfaces on Fire TV Silk: native select/button appearance differs. */
 header .header-right{grid-template-rows:repeat(2,clamp(24px,3vh,36px)) auto!important;row-gap:4px!important}
 header .header-right #theme,header .header-right #dashboard-refresh{
@@ -1559,7 +1563,9 @@ main>.sponsor-column>.sponsor-sign,#garage-ap-ticker,
 }
 main>.board,main>.side>.panel,main>#fun-zone{border-radius:0!important}
 body #app{outline:3px solid #2cfb46!important;outline-offset:-3px!important}
-\n/* --- basement-header-polish-v77 (preserved cascade order) --- */\n
+
+/* --- basement-header-polish-v77 (preserved cascade order) --- */
+
 /* Remove the decorative green rectangle crossing the content and version. */
 body::after{content:none!important;display:none!important}
 body #app{outline:none!important;box-shadow:none!important}
@@ -1594,7 +1600,9 @@ header .header-right #dashboard-refresh:focus-visible{
 header .header-right #dashboard-refresh{grid-column:1!important;grid-row:2!important}
 /* Keep version label inside header, away from its edge. */
 #basement-build-version{left:auto!important;right:0!important;top:auto!important;bottom:0!important;font-size:8px!important;opacity:.8!important}
-\n/* --- basement-season-perimeter-v78 (preserved cascade order) --- */\n
+
+/* --- basement-season-perimeter-v78 (preserved cascade order) --- */
+
 /* Replace the header-only green line with a single season-aware perimeter.
    Fixed overlay is independent of panel grids and cannot resize game cards. */
 body header{border-bottom:0!important;box-shadow:none!important}
@@ -1609,7 +1617,9 @@ body::after{
  box-shadow:inset 0 0 10px var(--season-glow,var(--season-edge,#2cfb46)),0 0 11px var(--season-glow,var(--season-edge,#2cfb46))!important;
  animation:none!important;
 }
-\n/* --- basement-final-visual-tuning-v80 (preserved cascade order) --- */\n
+
+/* --- basement-final-visual-tuning-v80 (preserved cascade order) --- */
+
 /* One continuous locally rendered brick surface behind the dashboard. */
 #app{
  background-color:#260e15!important;
@@ -1663,7 +1673,9 @@ main>#fun-zone{
 }
 /* Slightly larger AP headline text, without changing its animation or speed. */
 #garage-ap-track{font-size:clamp(18px,1.82vw,35px)!important}
-\n/* --- basement-visual-finish-v81 (preserved cascade order) --- */\n
+
+/* --- basement-visual-finish-v81 (preserved cascade order) --- */
+
 /* Keep the version centered under the cone at any screen width. */
 header h1 .cone-version-wrap{position:relative!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;vertical-align:middle!important;margin-left:3px!important;padding-bottom:10px!important;min-width:22px!important}
 header h1 .cone-version-wrap .mini-traffic-cone{position:relative!important;display:inline-flex!important;margin:0!important}
@@ -1692,7 +1704,9 @@ background-clip:padding-box,padding-box,border-box!important;
 background-size:cover,cover,auto!important;
 box-shadow:inset 0 0 0 3px #28170d,inset 0 0 13px #120a06,0 1px 0 #dbac6a!important;
 }
-\n/* --- basement-cone-and-tan-frame-v82 (preserved cascade order) --- */\n
+
+/* --- basement-cone-and-tan-frame-v82 (preserved cascade order) --- */
+
 /* Earlier theme CSS hid the cone with display:none!important. Restore explicitly. */
 header h1 .cone-version-wrap{display:inline-flex!important;align-items:center!important;gap:3px!important;padding:0!important;margin-left:5px!important;vertical-align:middle!important;min-width:0!important}
 header h1 .cone-version-wrap .mini-traffic-cone{
@@ -1723,5 +1737,8 @@ background-clip:padding-box,padding-box,border-box,border-box,border-box,border-
 background-size:cover,cover,auto,auto,auto,auto,auto!important;
 box-shadow:inset 0 0 0 2px #72573c,inset 0 0 7px #20160e,0 0 0 1px #8d6b45!important;
 }
-\n/* --- basement-cone-nudge-v83 (preserved cascade order) --- */\nheader h1 .cone-version-wrap{transform:translateX(5px)!important}\n</style></body></html>
+
+/* --- basement-cone-nudge-v83 (preserved cascade order) --- */
+header h1 .cone-version-wrap{transform:translateX(5px)!important}
+</style></body></html>
 <!-- Redeploy V66: restart stalled GitHub Pages build. -->
