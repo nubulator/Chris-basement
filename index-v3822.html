@@ -1431,4 +1431,26 @@ body.fall header #decor .holiday-words{color:#ffad3d!important;-webkit-text-fill
 body.thanksgiving header #decor .holiday-words{color:#ffc063!important;-webkit-text-fill-color:#ffc063!important}
 body.winter header #decor .holiday-words{color:#bceeff!important;-webkit-text-fill-color:#bceeff!important}
 body.halloween header #decor .holiday-words{color:#e5a5ff!important;-webkit-text-fill-color:#e5a5ff!important}
-</style></body></html>
+</style><style id="basement-holiday-text-v49">
+body.christmas header #decor .holiday-words{background:none!important;filter:none!important;color:#ff5959!important;-webkit-text-fill-color:#ff5959!important;text-shadow:0 0 4px white,0 0 10px #ff2424!important}
+body.christmas header #decor .holiday-words .green-word{color:#57ee95!important;-webkit-text-fill-color:#57ee95!important;text-shadow:0 0 4px white,0 0 10px #19d36a!important}
+</style>
+<script id="basement-holiday-text-script-v49">
+(function(){
+function setup(){
+ var title=document.querySelector('header #decor .holiday-words');
+ if(!title)return;
+ function recolor(){
+  if(!document.body.classList.contains('christmas'))return;
+  if(title.querySelector('.green-word'))return;
+  if(title.textContent.trim().toLowerCase()==='merry christmas'){
+   title.innerHTML='Merry <span class="green-word">Christmas</span>';
+  }
+ }
+ new MutationObserver(recolor).observe(title,{childList:true});
+ recolor();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);
+else setup();
+})();
+</script></body></html>
