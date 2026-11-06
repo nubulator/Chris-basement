@@ -1522,7 +1522,7 @@ header #decor::before,header #decor::after{content:none!important;display:none!i
 #season-mini{display:flex!important;align-items:center!important;justify-content:center!important}
 /* Equal-sized, stacked holiday selector and refresh button. */
 header .header-right{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:3px!important;justify-items:stretch!important;align-items:center!important}
-header .header-right #theme,header .header-right #dashboard-refresh{grid-column:1!important;width:100%!important;min-width:0!important;max-width:none!important;height:clamp(22px,2.8vh,32px)!important;min-height:0!important;box-sizing:border-box!important;margin:0!important;padding:1px 6px!important;font-size:clamp(10px,.9vw,16px)!important}
+header .header-right #theme,header .header-right #dashboard-refresh{grid-column:1!important;min-width:0!important;max-width:none!important;font-size:clamp(10px,.9vw,16px)!important}
 header .header-right #status{grid-column:1!important;text-align:center!important;font-size:clamp(8px,.7vw,12px)!important}
 /* One green outer frame; retain blue/red panel edges but remove green glows. */
 
@@ -1656,9 +1656,9 @@ header .header-right #dashboard-refresh:focus,header .header-right #dashboard-re
 main>.side>.panel:first-child> *{position:relative!important;z-index:1!important}
 /* Warm wood frame on the chalkboard; retain the existing chalkboard content. */
 main>#fun-zone{
- border:clamp(5px,.65vw,12px) ridge #98633c!important;
- border-radius:7px!important;
- box-shadow:inset 0 0 0 2px #432414,inset 0 0 12px #120a06!important;
+ 
+ 
+ 
  box-sizing:border-box!important;
 }
 /* Slightly larger AP headline text, without changing its animation or speed. */
