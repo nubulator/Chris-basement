@@ -627,6 +627,7 @@ main{grid-row:2!important;min-height:0!important;overflow:hidden!important}
 #garage-ap-window{contain:strict}
 #garage-ap-track{backface-visibility:hidden}
 @keyframes garage-news-scroll{from{transform:translate3d(0,0,0)}to{transform:translate3d(-100%,0,0)}}
+</style>
 <style id="basement-ap-compositor-v71">
 /* Keep the AP crawl on its own composited surface during panel changes. */
 #garage-ap-ticker{position:relative;isolation:isolate;contain:layout paint}
@@ -1025,9 +1026,8 @@ const lyricQuestions=[
 let index=0,lastDay=dayNumber();
 function dayNumber(){const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const v=k=>Number(parts.find(p=>p.type===k).value);return Math.floor(Date.UTC(v('year'),v('month')-1,v('day'))/86400000)}
 function escapeText(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function show(){const d=dayNumber();const lyric=lyricQuestions[d%lyricQuestions.length];const features=[['GUESS THE CLASSIC ROCK LYRIC',lyric[0],'Answer on slide 7 of 7'],['WORD OF THE DAY',...words[d%words.length]],['DAD JOKE',...jokes[d%jokes.length]],['BAR TRIVIA',...trivia[d%trivia.length]],['ROCK HISTORY & FACTS',...rock[d%rock.length]],['HAZEL & DUCKY’S CORNER',...dogs[d%dogs.length]],['CLASSIC ROCK LYRIC — ANSWER',lyric[1],lyric[2]]];const f=features[index%features.length];document.getElementById('fun-counter').textContent=(index+1)+' / '+features.length;const panel=document.getElementById('fun-feature');['fun-category','fun-headline','fun-detail'].forEach((cls,i)=>{let el=panel.querySelector('.'+cls);if(!el){el=document.createElement('div');el.className=cls;panel.appendChild(el)}if(el.textContent!==f[i])el.textContent=f[i]});// Defer expensive fitting until the browser has a chance to paint the ticker.
+function show(){const d=dayNumber();const lyric=lyricQuestions[d%lyricQuestions.length];const features=[['GUESS THE CLASSIC ROCK LYRIC',lyric[0],'Answer on slide 7 of 7'],['WORD OF THE DAY',...words[d%words.length]],['DAD JOKE',...jokes[d%jokes.length]],['BAR TRIVIA',...trivia[d%trivia.length]],['ROCK HISTORY & FACTS',...rock[d%rock.length]],['HAZEL & DUCKY’S CORNER',...dogs[d%dogs.length]],['CLASSIC ROCK LYRIC — ANSWER',lyric[1],lyric[2]]];const f=features[index%features.length];document.getElementById('fun-counter').textContent=(index+1)+' / '+features.length;const panel=document.getElementById('fun-feature');panel.classList.toggle('fun-long-lyric',index%features.length===0);['fun-category','fun-headline','fun-detail'].forEach((cls,i)=>{let el=panel.querySelector('.'+cls);if(!el){el=document.createElement('div');el.className=cls;panel.appendChild(el)}if(el.textContent!==f[i])el.textContent=f[i]});// Defer expensive fitting until the browser has a chance to paint the ticker.
  if(window.requestIdleCallback)requestIdleCallback(fitFunText,{timeout:500});else setTimeout(fitFunText,80);}
-let fitGeneration=0;
 const funFitCache=new Map();
 function fitFunText(){
  const panel=document.getElementById('fun-feature');
@@ -1440,7 +1440,7 @@ main>#fun-zone{
 main>#fun-zone .fun-top{background:rgba(6,18,15,.27)!important}
 main>#fun-zone .fun-headline,main>#fun-zone .fun-detail,main>#fun-zone .fun-category{text-shadow:0 1px 3px #07150e,0 0 4px #07150e!important}
 </style><script id="basement-parity-controller-v11">(function(){function init(){
-const heading=document.querySelector('.board .heading'),status=document.getElementById('status');if(heading&&!document.getElementById('basement-score-connection')){const el=document.createElement('span');el.id='basement-score-connection';heading.insertBefore(el,heading.querySelector('#updated'));function update(){let t=status?.textContent||'';let ok=/connected|live|updated/i.test(t)&&!/disconnected|not connected/i.test(t);const state=ok?'CONNECTED':'CHECKING';if(el.textContent!==state){el.textContent=state;el.style.color=ok?'#5ef38b':'#f7bd66'}}update();setInterval(update,10000);}
+const heading=document.querySelector('.board .heading'),status=document.getElementById('status');if(heading&&!document.getElementById('basement-score-connection')){const el=document.createElement('span');el.id='basement-score-connection';heading.insertBefore(el,heading.querySelector('#updated'));function update(){let t=status?.textContent||'';let ok=/connected|live|updated/i.test(t)&&!/disconnected|not connected/i.test(t);const state=ok?'CONNECTED':'CHECKING';if(el.textContent!==state){el.textContent=state;el.style.color=ok?'#5ef38b':'#f7bd66'}}update();setInterval(update,30000);}
 const select=document.getElementById('theme'),trigger=document.getElementById('holiday-remote-trigger');if(select&&trigger){const page=document.createElement('div');page.id='basement-theme-page';page.setAttribute('role','dialog');page.setAttribute('aria-modal','true');page.innerHTML='<h2>CHOOSE YOUR THEME</h2><p>Chris’s Basement</p><div id="basement-theme-options"></div><button id="basement-theme-back" type="button">BACK TO BASEMENT</button>';document.body.appendChild(page);const opts=page.querySelector('#basement-theme-options');const symbols={auto:'✦',classic:'★',halloween:'🎃',thanksgiving:'🍁',christmas:'🎄'};for(const o of select.options){const b=document.createElement('button');b.type='button';b.dataset.value=o.value;b.textContent=(symbols[o.value]||'✦')+'  '+o.textContent;b.addEventListener('click',()=>{select.value=o.value;select.dispatchEvent(new Event('change',{bubbles:true}));close()});opts.appendChild(b)}function close(){page.classList.remove('open');trigger.focus()}function open(){document.querySelector('.holiday-menu')?.classList.remove('open');trigger.setAttribute('aria-expanded','false');for(const b of opts.children)b.classList.toggle('selected',b.dataset.value===select.value);page.classList.add('open');(opts.querySelector('.selected')||opts.firstElementChild)?.focus()}trigger.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();open()},true);page.querySelector('#basement-theme-back').addEventListener('click',close);document.addEventListener('keydown',e=>{if(page.classList.contains('open')&&(e.key==='Escape'||e.key==='Backspace')){e.preventDefault();close()}},true);}
 
 }if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init()})();</script><style id="basement-seasonal-neon-v47">
@@ -1510,7 +1510,25 @@ function setup(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);
 else setup();
 })();
-</script><style id="basement-version-v69">header h1{position:relative!important}#basement-build-version{position:absolute!important;left:calc(100% - 21px);bottom:3px;font:700 8px/1 Arial,sans-serif!important;letter-spacing:0!important;color:#e5e8ef!important;text-shadow:0 1px 2px #000!important;white-space:nowrap;pointer-events:none;z-index:5}@media(max-width:900px){#basement-build-version{font-size:7px!important}}</style><style id="basement-visual-cleanup-v75">
+</script><style id="basement-version-v69">header h1{position:relative!important}#basement-build-version{position:absolute!important;left:calc(100% - 21px);bottom:3px;font:700 8px/1 Arial,sans-serif!important;letter-spacing:0!important;color:#e5e8ef!important;text-shadow:0 1px 2px #000!important;white-space:nowrap;pointer-events:none;z-index:5}@media(max-width:900px){#basement-build-version{font-size:7px!important}}</style><style id="basement-visual-overrides-consolidated">
+/*
+ * CHRIS'S BASEMENT — VISUAL OVERRIDES (refactoring preview)
+ * Phase 10 maintenance index. Sections remain in original cascade order:
+ *   v75  Base cleanup, sponsor and header grid
+ *   v76  Matching holiday/refresh controls
+ *   v77  Header polish and early border suppression
+ *   v78  Seasonal perimeter treatment
+ *   v80  Perimeter, holiday widget and skyline
+ *   v81  Fun Zone frame and version positioning
+ *   v82  Cone, chalkboard and painted-wood finishing
+ *   v83  Final traffic-cone horizontal nudge
+ * IMPORTANT: Later rules intentionally supersede earlier rules.
+ * Do not alphabetize or reorder these sections without cascade testing.
+ * Ticker and rotation JavaScript are outside this stylesheet.
+ */
+
+/* --- basement-visual-cleanup-v75 (preserved cascade order) --- */
+
 /* Remove the floating diamond/star strip; keep holiday emojis and greeting. */
 body::before{content:none!important;display:none!important}
 header #decor::before,header #decor::after{content:none!important;display:none!important}
@@ -1519,20 +1537,20 @@ header #decor::before,header #decor::after{content:none!important;display:none!i
 #season-mini .mini-art{display:block!important;font-size:clamp(18px,2vw,38px)!important;line-height:1.1!important}
 #season-mini{display:flex!important;align-items:center!important;justify-content:center!important}
 /* Equal-sized, stacked holiday selector and refresh button. */
-header .header-right{display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto auto auto!important;gap:3px!important;justify-items:stretch!important;align-items:center!important}
-header .header-right #theme,header .header-right #dashboard-refresh{grid-column:1!important;width:100%!important;min-width:0!important;max-width:none!important;height:clamp(22px,2.8vh,32px)!important;min-height:0!important;box-sizing:border-box!important;margin:0!important;padding:1px 6px!important;font-size:clamp(10px,.9vw,16px)!important}
-header .header-right #theme{grid-row:1!important}
-header .header-right #dashboard-refresh{grid-row:2!important}
-header .header-right #status{grid-column:1!important;grid-row:3!important;text-align:center!important;font-size:clamp(8px,.7vw,12px)!important}
+header .header-right{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:3px!important;justify-items:stretch!important;align-items:center!important}
+header .header-right #theme,header .header-right #dashboard-refresh{grid-column:1!important;min-width:0!important;max-width:none!important;font-size:clamp(10px,.9vw,16px)!important}
+header .header-right #status{grid-column:1!important;text-align:center!important;font-size:clamp(8px,.7vw,12px)!important}
 /* One green outer frame; retain blue/red panel edges but remove green glows. */
-body #app{outline:3px solid #2cfb46!important;outline-offset:-3px!important}
+
 main>.board,main>.side>.panel,main>#fun-zone,#garage-ap-ticker,.sponsor-column,.sponsor-sign{box-shadow:none!important}
 main>.board,main>.side>.panel,main>#fun-zone,#garage-ap-ticker{border-color:rgba(75,133,174,.65)!important}
 main>#fun-zone{border-color:rgba(229,132,76,.65)!important}
 #garage-ap-ticker{border-color:rgba(65,133,215,.65)!important}
 /* Attribution stays visible but away from the radar action buttons. */
 #radarMap .leaflet-control-attribution{position:relative!important;bottom:clamp(27px,3.2vh,48px)!important;right:2px!important;max-width:70%!important;white-space:normal!important;font-size:8px!important;line-height:1.15!important}
-</style><style id="basement-controls-borders-v76">
+
+/* --- basement-controls-borders-v76 (preserved cascade order) --- */
+
 /* Matching control surfaces on Fire TV Silk: native select/button appearance differs. */
 header .header-right{grid-template-rows:repeat(2,clamp(24px,3vh,36px)) auto!important;row-gap:4px!important}
 header .header-right #theme,header .header-right #dashboard-refresh{
@@ -1548,7 +1566,7 @@ header .header-right #theme,header .header-right #dashboard-refresh{
  letter-spacing:.02em!important;
 }
 header .header-right #theme{grid-row:1!important;cursor:pointer!important}
-header .header-right #dashboard-refresh{grid-row:2!important;cursor:pointer!important}
+header .header-right #dashboard-refresh{cursor:pointer!important}
 header .header-right #status{grid-row:3!important}
 /* Remove individual panel boxes and glows. Keep one green perimeter around the screen.
    Internal game cards and action buttons retain their useful blue accents. */
@@ -1558,12 +1576,13 @@ main>.sponsor-column>.sponsor-sign,#garage-ap-ticker,
  border:0!important;outline:0!important;box-shadow:none!important;
 }
 main>.board,main>.side>.panel,main>#fun-zone{border-radius:0!important}
-body #app{outline:3px solid #2cfb46!important;outline-offset:-3px!important}
-</style><style id="basement-header-polish-v77">
+body #app{outline-offset:-3px!important}
+
+/* --- basement-header-polish-v77 (preserved cascade order) --- */
+
 /* Remove the decorative green rectangle crossing the content and version. */
-body::after{content:none!important;display:none!important}
-body #app{outline:none!important;box-shadow:none!important}
-body header{box-shadow:none!important}
+
+
 /* The visible holiday control is a custom button, not the hidden select. */
 header .header-right .holiday-custom{grid-column:1!important;grid-row:1!important;width:100%!important;height:100%!important;min-width:0!important;display:flex!important;align-items:stretch!important}
 header .header-right .holiday-trigger,
@@ -1593,8 +1612,10 @@ header .header-right #dashboard-refresh:focus-visible{
 }
 header .header-right #dashboard-refresh{grid-column:1!important;grid-row:2!important}
 /* Keep version label inside header, away from its edge. */
-#basement-build-version{left:auto!important;right:0!important;top:auto!important;bottom:0!important;font-size:8px!important;opacity:.8!important}
-</style><style id="basement-season-perimeter-v78">
+
+
+/* --- basement-season-perimeter-v78 (preserved cascade order) --- */
+
 /* Replace the header-only green line with a single season-aware perimeter.
    Fixed overlay is independent of panel grids and cannot resize game cards. */
 body header{border-bottom:0!important;box-shadow:none!important}
@@ -1609,7 +1630,9 @@ body::after{
  box-shadow:inset 0 0 10px var(--season-glow,var(--season-edge,#2cfb46)),0 0 11px var(--season-glow,var(--season-edge,#2cfb46))!important;
  animation:none!important;
 }
-</style><style id="basement-final-visual-tuning-v80">
+
+/* --- basement-final-visual-tuning-v80 (preserved cascade order) --- */
+
 /* One continuous locally rendered brick surface behind the dashboard. */
 #app{
  background-color:#260e15!important;
@@ -1645,29 +1668,23 @@ header .header-right #dashboard-refresh:focus,header .header-right #dashboard-re
  box-shadow:inset 0 0 6px #2b8fff80,0 0 5px #ffe45c!important;
 }
 /* Columbus skyline silhouette watermark; no external photo request. */
-main>.side>.panel:first-child{position:relative!important;isolation:isolate!important;overflow:hidden!important}
-main>.side>.panel:first-child::before{
- content:""!important;display:block!important;position:absolute!important;
- inset:18% 0 0 0!important;z-index:-1!important;pointer-events:none!important;
- background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20900%20240%22%3E%3Cg%20fill%3D%22%23d4e7f3%22%3E%3Cpath%20d%3D%22M0%20230V183h50v-35h48v40h25V98h47v-24h19v114h20v-70h52v65h25V56h30V30h13V7h8v23h14v153h24V90h54v96h23V42h26v-18h9v18h24v144h30V120h40v66h30V85h57v102h30v-44h44v43h30v-57h52v57h29v-30h39v74z%22%2F%3E%3Cpath%20d%3D%22M0%20228h900v12H0z%22%2F%3E%3C%2Fg%3E%3Cg%20fill%3D%22%23d4e7f3%22%20opacity%3D%22.55%22%3E%3Cpath%20d%3D%22M292%2027h4v-25h4v25h4v6h-12zM445%2025h4V4h4v21h4v7h-12z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E")!important;
- background-repeat:no-repeat!important;background-position:center bottom!important;
- background-size:100% 85%!important;opacity:.12!important;
-}
+
 main>.side>.panel:first-child> *{position:relative!important;z-index:1!important}
 /* Warm wood frame on the chalkboard; retain the existing chalkboard content. */
 main>#fun-zone{
- border:clamp(5px,.65vw,12px) ridge #98633c!important;
- border-radius:7px!important;
- box-shadow:inset 0 0 0 2px #432414,inset 0 0 12px #120a06!important;
+ 
+ 
+ 
  box-sizing:border-box!important;
 }
 /* Slightly larger AP headline text, without changing its animation or speed. */
 #garage-ap-track{font-size:clamp(18px,1.82vw,35px)!important}
-</style><style id="basement-visual-finish-v81">
+
+/* --- basement-visual-finish-v81 (preserved cascade order) --- */
+
 /* Keep the version centered under the cone at any screen width. */
-header h1 .cone-version-wrap{position:relative!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;vertical-align:middle!important;margin-left:3px!important;padding-bottom:10px!important;min-width:22px!important}
-header h1 .cone-version-wrap .mini-traffic-cone{position:relative!important;display:inline-flex!important;margin:0!important}
-header h1 .cone-version-wrap #basement-build-version{position:absolute!important;left:50%!important;right:auto!important;top:auto!important;bottom:0!important;transform:translateX(-50%)!important;white-space:nowrap!important;font:700 8px/1 Arial,sans-serif!important}
+header h1 .cone-version-wrap{position:relative!important;justify-content:center!important;padding-bottom:10px!important;}
+header h1 .cone-version-wrap #basement-build-version{white-space:nowrap!important;}
 /* Make the custom holiday button use exactly the same capitalization as Refresh. */
 header .header-right .holiday-trigger{text-transform:uppercase!important;font-weight:800!important;letter-spacing:.02em!important}
 /* Real Columbus downtown skyline photograph, public domain, muted behind the forecast numbers. */
@@ -1681,18 +1698,10 @@ opacity:.27!important;filter:grayscale(1) contrast(1.25)!important;
 }
 main>.side>.panel:first-child>*{position:relative!important;z-index:1!important}
 /* Layered stained-wood molding, with warm highlights and a darker inner lip. */
-main>#fun-zone{
-border:clamp(7px,.78vw,15px) solid transparent!important;
-border-radius:5px!important;
-background-image:
-linear-gradient(rgba(8,22,18,.34),rgba(8,22,18,.25)),url("https://commons.wikimedia.org/wiki/Special:Redirect/file/Chalkboard_Texture.jpg?width=1280"),
-repeating-linear-gradient(92deg,#3e210f 0px,#9c5d30 3px,#d09a5e 6px,#754020 11px,#4c2816 16px,#b7783e 22px,#3c2012 27px)!important;
-background-origin:padding-box,padding-box,border-box!important;
-background-clip:padding-box,padding-box,border-box!important;
-background-size:cover,cover,auto!important;
-box-shadow:inset 0 0 0 3px #28170d,inset 0 0 13px #120a06,0 1px 0 #dbac6a!important;
-}
-</style><style id="basement-cone-and-tan-frame-v82">
+
+
+/* --- basement-cone-and-tan-frame-v82 (preserved cascade order) --- */
+
 /* Earlier theme CSS hid the cone with display:none!important. Restore explicitly. */
 header h1 .cone-version-wrap{display:inline-flex!important;align-items:center!important;gap:3px!important;padding:0!important;margin-left:5px!important;vertical-align:middle!important;min-width:0!important}
 header h1 .cone-version-wrap .mini-traffic-cone{
@@ -1723,5 +1732,14 @@ background-clip:padding-box,padding-box,border-box,border-box,border-box,border-
 background-size:cover,cover,auto,auto,auto,auto,auto!important;
 box-shadow:inset 0 0 0 2px #72573c,inset 0 0 7px #20160e,0 0 0 1px #8d6b45!important;
 }
-</style><style id="basement-cone-nudge-v83">header h1 .cone-version-wrap{transform:translateX(5px)!important}</style></body></html>
+
+/* --- basement-cone-nudge-v83 (preserved cascade order) --- */
+header h1 .cone-version-wrap{transform:translateX(5px)!important}
+</style><style id="basement-fun-lyric-fit-preview">
+/* Lyric slide: reserve room for the answer line inside the wood frame. */
+#fun-feature.fun-long-lyric{justify-content:center!important;gap:clamp(2px,.25vw,5px)!important;padding-block:clamp(2px,.28vw,5px)!important}
+#fun-feature.fun-long-lyric .fun-category{font-size:clamp(9px,.72vw,14px)!important;line-height:1.05!important;flex-shrink:0!important}
+#fun-feature.fun-long-lyric .fun-headline{font-size:clamp(14px,1.4vw,26px)!important;line-height:1.05!important;flex-shrink:1!important}
+#fun-feature.fun-long-lyric .fun-detail{font-size:clamp(11px,.88vw,17px)!important;line-height:1.08!important;flex-shrink:0!important}
+</style></body></html>
 <!-- Redeploy V66: restart stalled GitHub Pages build. -->
