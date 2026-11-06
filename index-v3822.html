@@ -1041,7 +1041,8 @@ setInterval(refreshDay,10000);
     const title=document.createElement('span');title.textContent=item.title.replace(/\s+-\s+(AP News|Associated Press|Variety)$/i,'');track.appendChild(title);
    });
   }
-  track.style.animationDuration=Math.max(85,items.length*14)+'s';
+  track.style.animation='none';void track.offsetWidth;
+  track.style.animation='garage-news-scroll '+Math.max(85,items.length*14)+'s linear infinite';
  }
  async function update(){
   const groups=await Promise.all(sources.map(retrieve));
@@ -1452,48 +1453,4 @@ function setup(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);
 else setup();
 })();
-</script><style id="basement-christmas-contrast-v50">
-body.christmas header #decor .holiday-words{background:none!important;filter:none!important;text-shadow:none!important}
-body.christmas header #decor .holiday-words .xmas-red{color:#ff3030!important;-webkit-text-fill-color:#ff3030!important;text-shadow:0 0 2px #7d0000,0 0 5px #ff2020!important}
-body.christmas header #decor .holiday-words .xmas-green{color:#00e75b!important;-webkit-text-fill-color:#00e75b!important;text-shadow:0 0 2px #004c1e,0 0 5px #00e75b!important}
-</style>
-<script id="basement-christmas-contrast-controller-v50">
-(function(){
-function start(){
- var el=document.querySelector('header #decor .holiday-words');
- if(!el)return;
- function paint(){
-  if(!document.body.classList.contains('christmas'))return;
-  if(el.querySelector('.xmas-red'))return;
-  if(el.textContent.trim().toLowerCase()!=='merry christmas')return;
-  el.innerHTML='<span class="xmas-red">Merry</span> <span class="xmas-green">Christmas</span>';
- }
- new MutationObserver(paint).observe(el,{childList:true});
- paint();
- setInterval(paint,3000);
-}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
-})();
-</script><style id="basement-clean-header-and-news-v51">
-/* Remove bright bloom from the seasonal title and adjacent ornaments. */
-header #decor .holiday-words,body.christmas header #decor .holiday-words,
-body.christmas header #decor .holiday-words .xmas-red,
-body.christmas header #decor .holiday-words .xmas-green{
- text-shadow:none!important;filter:none!important;
-}
-header #decor .season-art{filter:none!important;text-shadow:none!important}
-header #decor::before,header #decor::after{filter:none!important;text-shadow:none!important}
-body.christmas header #decor .holiday-words .xmas-red{color:#ff3535!important;-webkit-text-fill-color:#ff3535!important}
-body.christmas header #decor .holiday-words .xmas-green{color:#26e46b!important;-webkit-text-fill-color:#26e46b!important}
-/* Continuous, GPU-friendly ticker with two identical strips. */
-#garage-ap-track{animation:none!important;padding-left:0!important;display:flex!important;align-items:center!important;width:max-content!important;max-width:none!important;transform:translate3d(0,0,0);will-change:transform}
-#garage-ap-track .news-strip{display:inline-flex;align-items:center;white-space:nowrap;flex:none;padding-right:3em}
-</style>
-<style id="basement-header-ticker-v52">
-body.christmas header #decor{background:none!important;filter:none!important}
-body.christmas header #decor .holiday-words,body.christmas header #decor .holiday-words span{text-shadow:none!important;filter:none!important;background:none!important}
-body.christmas header #decor .holiday-words .xmas-red{color:#fa2424!important;-webkit-text-fill-color:#fa2424!important}
-body.christmas header #decor .holiday-words .xmas-green{color:#00ce50!important;-webkit-text-fill-color:#00ce50!important}
-body.christmas header #decor .season-art,body.christmas header #decor .season-art *{text-shadow:none!important;filter:none!important;animation:none!important}
-#garage-ap-track{display:inline-block!important;width:max-content!important;max-width:none!important;padding-left:100%!important;animation:garage-news-scroll 180s linear infinite!important;transform:translateZ(0);backface-visibility:hidden;will-change:transform}
-</style></body></html>
+</script></body></html>
