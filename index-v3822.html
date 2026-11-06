@@ -1041,8 +1041,7 @@ setInterval(refreshDay,10000);
     const title=document.createElement('span');title.textContent=item.title.replace(/\s+-\s+(AP News|Associated Press|Variety)$/i,'');track.appendChild(title);
    });
   }
-  track.style.animation='none';void track.offsetWidth;
-  track.style.animation='garage-news-scroll '+Math.max(85,items.length*14)+'s linear infinite';
+  track.style.animationDuration=Math.max(85,items.length*14)+'s';
  }
  async function update(){
   const groups=await Promise.all(sources.map(retrieve));
@@ -1490,33 +1489,11 @@ body.christmas header #decor .holiday-words .xmas-green{color:#26e46b!important;
 #garage-ap-track{animation:none!important;padding-left:0!important;display:flex!important;align-items:center!important;width:max-content!important;max-width:none!important;transform:translate3d(0,0,0);will-change:transform}
 #garage-ap-track .news-strip{display:inline-flex;align-items:center;white-space:nowrap;flex:none;padding-right:3em}
 </style>
-<script id="basement-smooth-news-v51">(function(){
-function setup(){
- var track=document.getElementById('garage-ap-track');if(!track)return;
- var x=0,last=0,original='',width=0;
- function prepare(){
-  if(track.querySelector('.news-strip'))return;
-  if(!track.children.length)return;
-  var strip=document.createElement('span');strip.className='news-strip';
-  while(track.firstChild)strip.appendChild(track.firstChild);
-  var clone=strip.cloneNode(true);clone.setAttribute('aria-hidden','true');
-  track.appendChild(strip);track.appendChild(clone);
-  width=strip.getBoundingClientRect().width;x=0;last=0;
- }
- var observer=new MutationObserver(function(){prepare()});
- observer.observe(track,{childList:true});
- prepare();
- function frame(t){
-  if(!last)last=t;
-  var dt=Math.min(50,t-last);last=t;
-  var strip=track.querySelector('.news-strip');
-  if(strip){
-   if(!width)width=strip.getBoundingClientRect().width;
-   if(width>0){x=(x+dt*.055)%width;track.style.transform='translate3d('+(-x)+'px,0,0)'}
-  }
-  requestAnimationFrame(frame);
- }
- requestAnimationFrame(frame);
-}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
-})();</script></body></html>
+<style id="basement-header-ticker-v52">
+body.christmas header #decor{background:none!important;filter:none!important}
+body.christmas header #decor .holiday-words,body.christmas header #decor .holiday-words span{text-shadow:none!important;filter:none!important;background:none!important}
+body.christmas header #decor .holiday-words .xmas-red{color:#fa2424!important;-webkit-text-fill-color:#fa2424!important}
+body.christmas header #decor .holiday-words .xmas-green{color:#00ce50!important;-webkit-text-fill-color:#00ce50!important}
+body.christmas header #decor .season-art,body.christmas header #decor .season-art *{text-shadow:none!important;filter:none!important;animation:none!important}
+#garage-ap-track{display:inline-block!important;width:max-content!important;max-width:none!important;padding-left:100%!important;animation:garage-news-scroll 180s linear infinite!important;transform:translateZ(0);backface-visibility:hidden;will-change:transform}
+</style></body></html>
