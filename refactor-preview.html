@@ -986,6 +986,29 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
 #line-games.line-six .line-league{font-size:clamp(10px,.8vw,16px)}
 #line-games.line-six .line-location{font-size:clamp(9px,.75vw,14px)}
 @media(max-width:850px){#line-games.line-six .line-matchup{font-size:clamp(14px,1.8vw,23px)!important}}
+
+/* Daily Line V24: readable matchups, compact odds, and guaranteed source footer */
+#line-games .line-card{justify-content:space-between!important;gap:clamp(3px,.32vw,7px);padding-bottom:clamp(8px,.7vw,14px)!important;min-height:0}
+#line-games .line-card-top{flex:0 0 auto}
+#line-games .line-matchup{flex:1 1 auto;min-height:0;display:flex;justify-content:center;align-items:center;gap:clamp(6px,.65vw,12px);font-size:clamp(22px,2.5vw,44px)!important;line-height:1.06;margin:0!important;overflow:hidden}
+#line-games .line-matchup .line-team{font-size:1em!important;color:#fff!important;gap:clamp(4px,.45vw,9px);white-space:nowrap}
+#line-games .line-matchup .line-vs{font-size:.65em!important;color:#ffb879!important;flex-shrink:0}
+#line-games .line-team-logo{width:clamp(29px,2.7vw,50px);height:clamp(29px,2.7vw,50px)}
+#line-games .line-metrics{flex:0 0 auto;gap:clamp(6px,.65vw,12px)}
+#line-games .line-metrics>div{padding:clamp(4px,.45vw,9px)!important;gap:1px!important}
+#line-games .line-metrics strong{font-size:clamp(18px,1.75vw,32px)!important;line-height:1.12}
+#line-games .line-source{flex:0 0 auto!important;min-height:clamp(13px,1.05vw,20px);font-size:clamp(10px,.8vw,15px)!important;line-height:1.15!important;padding:0!important;margin:0!important;white-space:nowrap;overflow:visible!important}
+#line-games.line-six .line-matchup{font-size:clamp(19px,2.15vw,37px)!important}
+#line-games.line-six .line-team-logo{width:clamp(24px,2.2vw,40px);height:clamp(24px,2.2vw,40px)}
+#line-games.line-six .line-metrics strong{font-size:clamp(17px,1.6vw,29px)!important}
+#line-games.line-six .line-source{font-size:clamp(9px,.72vw,13px)!important}
+#line-games.line-five{grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:repeat(3,minmax(0,1fr))!important;gap:clamp(6px,.65vw,12px)!important}
+#line-games.line-five .line-card{padding:clamp(6px,.65vw,12px)!important}
+#line-games.line-five .line-matchup{font-size:clamp(19px,2.1vw,37px)!important}
+#line-games.line-five .line-team-logo{width:clamp(24px,2.15vw,39px);height:clamp(24px,2.15vw,39px)}
+#line-games.line-five .line-card:nth-child(5){grid-column:1/-1}
+#line-games.line-five .line-card:nth-child(5) .line-matchup{font-size:clamp(22px,2.45vw,43px)!important}
+@media(max-width:850px){#line-games .line-matchup{font-size:clamp(16px,2.3vw,30px)!important}#line-games.line-six .line-matchup,#line-games.line-five .line-matchup{font-size:clamp(15px,2vw,27px)!important}}
 </style>
 <script id="v3819-interactions">
 (function(){
@@ -1112,8 +1135,9 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
   const tabs=[['MY','MY TEAMS'],['ALL','ALL GAMES'],...Object.entries(names).map(([id,name])=>[id,name])];
   document.getElementById('line-filters').innerHTML=tabs.map(([id,name])=>'<button type="button" data-line="'+safe(id)+'" class="'+(lineFilter===id?'active':'')+'">'+safe(name)+'</button>').join('');
   document.querySelectorAll('[data-line]').forEach(b=>b.onclick=()=>{lineFilter=b.dataset.line;linePage=0;renderDailyLine()});
-  const data=lineData(),perPage=lineFilter==='MY'?4:6,pages=Math.max(1,Math.ceil(data.length/perPage));
-  document.getElementById('line-games').classList.toggle('line-six',perPage===6);linePage=(linePage+pages)%pages;
+  const data=lineData(),perPage=lineFilter==='MY'?5:6,pages=Math.max(1,Math.ceil(data.length/perPage));
+  document.getElementById('line-games').classList.toggle('line-six',perPage===6);
+  document.getElementById('line-games').classList.toggle('line-five',perPage===5&&data.length>=5);linePage=(linePage+pages)%pages;
   const visible=data.slice(linePage*perPage,(linePage+1)*perPage);
   document.getElementById('line-games').innerHTML=visible.length?visible.map(gameCard).join(''):'<article class="line-card line-empty">No upcoming games available for this filter. Checking again automatically.</article>';
   updateVisibleOdds(visible);
