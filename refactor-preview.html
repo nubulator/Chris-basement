@@ -1025,7 +1025,7 @@ const lyricQuestions=[
 let index=0,lastDay=dayNumber();
 function dayNumber(){const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const v=k=>Number(parts.find(p=>p.type===k).value);return Math.floor(Date.UTC(v('year'),v('month')-1,v('day'))/86400000)}
 function escapeText(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function show(){const d=dayNumber();const lyric=lyricQuestions[d%lyricQuestions.length];const features=[['GUESS THE CLASSIC ROCK LYRIC',lyric[0],'Answer on slide 7 of 7'],['WORD OF THE DAY',...words[d%words.length]],['DAD JOKE',...jokes[d%jokes.length]],['BAR TRIVIA',...trivia[d%trivia.length]],['ROCK HISTORY & FACTS',...rock[d%rock.length]],['HAZEL & DUCKY’S CORNER',...dogs[d%dogs.length]],['CLASSIC ROCK LYRIC — ANSWER',lyric[1],lyric[2]]];const f=features[index%features.length];document.getElementById('fun-counter').textContent=(index+1)+' / '+features.length;const panel=document.getElementById('fun-feature');['fun-category','fun-headline','fun-detail'].forEach((cls,i)=>{let el=panel.querySelector('.'+cls);if(!el){el=document.createElement('div');el.className=cls;panel.appendChild(el)}if(el.textContent!==f[i])el.textContent=f[i]});// Defer expensive fitting until the browser has a chance to paint the ticker.
+function show(){const d=dayNumber();const lyric=lyricQuestions[d%lyricQuestions.length];const features=[['GUESS THE CLASSIC ROCK LYRIC',lyric[0],'Answer on slide 7 of 7'],['WORD OF THE DAY',...words[d%words.length]],['DAD JOKE',...jokes[d%jokes.length]],['BAR TRIVIA',...trivia[d%trivia.length]],['ROCK HISTORY & FACTS',...rock[d%rock.length]],['HAZEL & DUCKY’S CORNER',...dogs[d%dogs.length]],['CLASSIC ROCK LYRIC — ANSWER',lyric[1],lyric[2]]];const f=features[index%features.length];document.getElementById('fun-counter').textContent=(index+1)+' / '+features.length;const panel=document.getElementById('fun-feature');panel.classList.toggle('fun-long-lyric',index%features.length===0);['fun-category','fun-headline','fun-detail'].forEach((cls,i)=>{let el=panel.querySelector('.'+cls);if(!el){el=document.createElement('div');el.className=cls;panel.appendChild(el)}if(el.textContent!==f[i])el.textContent=f[i]});// Defer expensive fitting until the browser has a chance to paint the ticker.
  if(window.requestIdleCallback)requestIdleCallback(fitFunText,{timeout:500});else setTimeout(fitFunText,80);}
 let fitGeneration=0;
 const funFitCache=new Map();
@@ -1740,5 +1740,11 @@ box-shadow:inset 0 0 0 2px #72573c,inset 0 0 7px #20160e,0 0 0 1px #8d6b45!impor
 
 /* --- basement-cone-nudge-v83 (preserved cascade order) --- */
 header h1 .cone-version-wrap{transform:translateX(5px)!important}
+</style><style id="basement-fun-lyric-fit-preview">
+/* Lyric slide: reserve room for the answer line inside the wood frame. */
+#fun-feature.fun-long-lyric{justify-content:center!important;gap:clamp(2px,.25vw,5px)!important;padding-block:clamp(2px,.28vw,5px)!important}
+#fun-feature.fun-long-lyric .fun-category{font-size:clamp(9px,.72vw,14px)!important;line-height:1.05!important;flex-shrink:0!important}
+#fun-feature.fun-long-lyric .fun-headline{font-size:clamp(14px,1.4vw,26px)!important;line-height:1.05!important;flex-shrink:1!important}
+#fun-feature.fun-long-lyric .fun-detail{font-size:clamp(11px,.88vw,17px)!important;line-height:1.08!important;flex-shrink:0!important}
 </style></body></html>
 <!-- Redeploy V66: restart stalled GitHub Pages build. -->
