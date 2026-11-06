@@ -964,6 +964,13 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
 .line-vs{color:#ffb879;font-size:.72em}
 @media(max-width:850px){.line-location{max-width:48%}#line-games .line-matchup{font-size:clamp(15px,2.2vw,25px)!important}}
 .line-rank{display:inline-block;color:#ffca70;font-weight:950;white-space:nowrap;margin-right:3px}
+
+/* Daily Line V22: two large odds fields and larger matchup names on TV */
+#line-games .line-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(8px,1vw,18px)}
+#line-games .line-metrics strong{font-size:clamp(24px,2.5vw,45px)}
+#line-games .line-matchup{font-size:clamp(20px,2.05vw,38px)!important;gap:clamp(7px,.9vw,17px)}
+#line-games .line-team{font-weight:850}
+@media(max-width:850px){#line-games .line-matchup{font-size:clamp(16px,2.4vw,29px)!important}}
 </style>
 <script id="v3819-interactions">
 (function(){
@@ -1028,7 +1035,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
   const logo=(url,name)=>url?'<img class="line-team-logo" src="'+safe(url)+'" alt="'+safe(name)+' logo" loading="lazy" onerror="this.style.display=\'none\'">':'';
   const ranked=(name,r)=>((g.league==='NCAA FOOTBALL'||g.league==='NCAA MEN')&&r?'<span class="line-rank">#'+safe(r)+'</span> ':'')+safe(name);
   const where=g.venue||g.venueCity?'<div class="line-location"><span>'+safe(g.venueCity||'Home: '+g.home)+'</span><span>'+safe(g.venue||'Venue to be announced')+'</span></div>':'';
-  return '<article class="line-card" data-game-id="'+safe(g.id)+'" data-league="'+safe(g.league)+'"><div class="line-card-top"><div class="line-league">'+safe(g.league)+' • '+safe(when)+'</div>'+where+'</div><div class="line-matchup"><span class="line-team">'+logo(g.awayLogo,g.away)+ranked(g.away,g.ar)+'</span><span class="line-vs">vs</span><span class="line-team">'+logo(g.homeLogo,g.home)+ranked(g.home,g.hr)+'</span></div><div class="line-metrics"><div><small>SPREAD</small><strong>'+safe(spread)+'</strong></div><div><small>OVER / UNDER</small><strong>'+safe(total)+'</strong></div><div><small>MONEYLINE</small><strong>—</strong></div></div><div class="line-source">'+(raw?'ESPN pregame line':'Odds not yet available from ESPN')+'</div></article>';
+  return '<article class="line-card" data-game-id="'+safe(g.id)+'" data-league="'+safe(g.league)+'"><div class="line-card-top"><div class="line-league">'+safe(g.league)+' • '+safe(when)+'</div>'+where+'</div><div class="line-matchup"><span class="line-team">'+logo(g.awayLogo,g.away)+ranked(g.away,g.ar)+'</span><span class="line-vs">vs</span><span class="line-team">'+logo(g.homeLogo,g.home)+ranked(g.home,g.hr)+'</span></div><div class="line-metrics"><div><small>SPREAD</small><strong>'+safe(spread)+'</strong></div><div><small>OVER / UNDER</small><strong>'+safe(total)+'</strong></div></div><div class="line-source">'+(raw?'ESPN pregame line':'Odds not yet available from ESPN')+'</div></article>';
  }
 
  const lineOddsCache=new Map();
@@ -1079,10 +1086,10 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
    if(!card)return;
    const els=card.querySelectorAll('.line-metrics strong');
    // Keep ESPN scoreboard lines if a second source has missing fields.
-   const values=[data.spread,data.total,data.away!=null||data.home!=null?money(data.away)+' / '+money(data.home):null];
+   const values=[data.spread,data.total];
    els.forEach((el,i)=>{const v=values[i];if(v!=null&&v!==''&&v!=='—')el.textContent=String(v)});
    const label=card.querySelector('.line-source');
-   if(label)label.textContent=data.provider+(data.away!=null||data.home!=null?' • Moneyline: away / home':' • Moneyline unavailable');
+   if(label)label.textContent=data.provider+' pregame line';
   });
  }
  window.renderDailyLine=function(){
