@@ -859,7 +859,7 @@ window.addEventListener('popstate',()=>closeRadar());
   if(map&&(!layer||!expanded)){const latest=frames[frames.length-1];if(layer)map.removeLayer(layer);layer=overlay(map,latest.path)}
   if(expanded&&big){if(bigLayer)big.removeLayer(bigLayer);bigLayer=overlay(big,f.path)}
   const time=new Date(f.time*1000).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',timeZone:'America/New_York'});
-  const label=document.getElementById('radar-message');if(label)label.textContent='▶ 10s radar loop • '+time+' ET';
+  const label=document.getElementById('radar-message');if(label)label.textContent='Radar updated '+new Date(frames[frames.length-1].time*1000).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',timeZone:'America/New_York'})+' ET';
  }
  function animate(){if(timer)clearTimeout(timer);if(!frames.length||!expanded)return;
   paint();const delay=frameIndex===frames.length-1?1600:Math.max(850,Math.floor(8400/Math.max(1,frames.length-1)));
@@ -1458,4 +1458,4 @@ else setup();
 #garage-ap-window{isolation:isolate!important;contain:layout paint!important;transform:translateZ(0)!important}
 #garage-ap-track{transform:translate3d(0,0,0);backface-visibility:hidden!important;will-change:transform!important;animation-timing-function:linear!important}
 @keyframes garage-news-scroll{from{transform:translate3d(0,0,0)}to{transform:translate3d(-100%,0,0)}}
-</style></body></html>
+<style id="basement-ticker-firetv-v56">#garage-ap-track{text-rendering:optimizeSpeed!important;-webkit-font-smoothing:antialiased;contain:paint;transform-style:flat!important}#garage-ap-window{overflow:hidden!important;backface-visibility:hidden!important}</style></style></body></html>
