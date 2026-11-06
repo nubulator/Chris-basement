@@ -1453,4 +1453,26 @@ function setup(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);
 else setup();
 })();
+</script><style id="basement-christmas-contrast-v50">
+body.christmas header #decor .holiday-words{background:none!important;filter:none!important;text-shadow:none!important}
+body.christmas header #decor .holiday-words .xmas-red{color:#ff3030!important;-webkit-text-fill-color:#ff3030!important;text-shadow:0 0 2px #7d0000,0 0 5px #ff2020!important}
+body.christmas header #decor .holiday-words .xmas-green{color:#00e75b!important;-webkit-text-fill-color:#00e75b!important;text-shadow:0 0 2px #004c1e,0 0 5px #00e75b!important}
+</style>
+<script id="basement-christmas-contrast-controller-v50">
+(function(){
+function start(){
+ var el=document.querySelector('header #decor .holiday-words');
+ if(!el)return;
+ function paint(){
+  if(!document.body.classList.contains('christmas'))return;
+  if(el.querySelector('.xmas-red'))return;
+  if(el.textContent.trim().toLowerCase()!=='merry christmas')return;
+  el.innerHTML='<span class="xmas-red">Merry</span> <span class="xmas-green">Christmas</span>';
+ }
+ new MutationObserver(paint).observe(el,{childList:true});
+ paint();
+ setInterval(paint,3000);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();
 </script></body></html>
