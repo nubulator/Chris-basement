@@ -1009,6 +1009,28 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
 #line-games.line-five .line-card:nth-child(5){grid-column:1/-1}
 #line-games.line-five .line-card:nth-child(5) .line-matchup{font-size:clamp(22px,2.45vw,43px)!important}
 @media(max-width:850px){#line-games .line-matchup{font-size:clamp(16px,2.3vw,30px)!important}#line-games.line-six .line-matchup,#line-games.line-five .line-matchup{font-size:clamp(15px,2vw,27px)!important}}
+
+/* V25: restore matchup visibility by assigning explicit card rows */
+#line-games .line-card{display:grid!important;grid-template-rows:auto minmax(34px,1fr) auto auto!important;align-content:stretch!important;justify-content:stretch!important;gap:clamp(2px,.3vw,6px)!important;overflow:visible!important;min-width:0;box-sizing:border-box}
+#line-games .line-card-top{min-width:0}
+#line-games .line-matchup{display:flex!important;align-items:center!important;justify-content:center!important;min-height:34px!important;max-height:none!important;overflow:visible!important;flex:none!important;white-space:nowrap;line-height:1.2!important;font-size:clamp(18px,2vw,34px)!important}
+#line-games .line-matchup .line-team{display:inline-flex!important;align-items:center!important;min-width:0!important;flex:0 1 auto!important;font-size:1em!important;white-space:nowrap;color:#fff!important}
+#line-games .line-matchup .line-team img{display:block;flex:0 0 auto;width:clamp(24px,2vw,37px)!important;height:clamp(24px,2vw,37px)!important;object-fit:contain}
+#line-games .line-matchup .line-team .line-rank{font-size:.85em!important}
+#line-games .line-matchup .line-vs{font-size:.65em!important;flex:0 0 auto!important}
+#line-games .line-metrics{min-height:0!important;align-self:end}
+#line-games .line-metrics>div{padding:clamp(3px,.35vw,7px)!important}
+#line-games .line-metrics strong{font-size:clamp(17px,1.55vw,27px)!important}
+#line-games .line-source{display:block!important;position:static!important;min-height:12px!important;line-height:1.2!important;align-self:end!important;overflow:visible!important;white-space:nowrap!important}
+#line-games.line-six .line-matchup,#line-games.line-five .line-matchup{font-size:clamp(17px,1.75vw,30px)!important;min-height:31px!important}
+#line-games.line-five{grid-template-columns:repeat(4,minmax(0,1fr))!important;grid-template-rows:repeat(3,minmax(0,1fr))!important;gap:clamp(6px,.65vw,12px)!important}
+#line-games.line-five .line-card{grid-column:span 2!important;min-width:0}
+#line-games.line-five .line-card:nth-child(5){grid-column:2/span 2!important}
+#line-games.line-five .line-card:nth-child(5) .line-matchup{font-size:clamp(17px,1.75vw,30px)!important}
+#line-games.line-six .line-card{padding:clamp(6px,.6vw,10px)!important}
+#line-games.line-six .line-card .line-matchup{font-size:clamp(16px,1.65vw,28px)!important}
+#daily-line-view h2,#daily-line-view .line-title{font-family:Georgia,'Times New Roman',serif!important;font-weight:900!important;letter-spacing:.075em!important;color:#ffe4a0!important;text-shadow:0 2px 0 #8b250d,2px 3px 0 #a63b0a,0 0 8px #ff9800,0 0 17px #ff6a00!important}
+@media(max-width:850px){#line-games .line-matchup{font-size:clamp(15px,2vw,26px)!important}}
 </style>
 <script id="v3819-interactions">
 (function(){
