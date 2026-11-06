@@ -971,6 +971,21 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
 #line-games .line-matchup{font-size:clamp(20px,2.05vw,38px)!important;gap:clamp(7px,.9vw,17px)}
 #line-games .line-team{font-weight:850}
 @media(max-width:850px){#line-games .line-matchup{font-size:clamp(16px,2.4vw,29px)!important}}
+
+/* V23 TV layout: 4 favorites, 6 games for every other tab */
+#line-games.line-six{grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:repeat(3,minmax(0,1fr))!important;gap:clamp(6px,.65vw,12px)!important}
+#line-games.line-six .line-card{padding:clamp(6px,.6vw,12px)!important;justify-content:space-between;min-height:0}
+#line-games.line-six .line-card-top{min-height:0}
+#line-games.line-six .line-team-logo{width:clamp(19px,1.75vw,33px);height:clamp(19px,1.75vw,33px)}
+#line-games.line-six .line-matchup{font-size:clamp(15px,1.65vw,30px)!important;margin:2px 0!important}
+#line-games.line-six .line-metrics>div{padding:clamp(4px,.4vw,8px);gap:2px}
+#line-games.line-six .line-metrics small{font-size:clamp(9px,.65vw,13px)}
+#line-games .line-metrics strong{font-size:clamp(19px,1.85vw,34px)!important}
+#line-games .line-source{font-size:clamp(10px,.78vw,15px);line-height:1.2;flex-shrink:0;padding-top:3px;overflow:visible}
+#line-games.line-six .line-source{font-size:clamp(9px,.65vw,12px);padding-top:2px}
+#line-games.line-six .line-league{font-size:clamp(10px,.8vw,16px)}
+#line-games.line-six .line-location{font-size:clamp(9px,.75vw,14px)}
+@media(max-width:850px){#line-games.line-six .line-matchup{font-size:clamp(14px,1.8vw,23px)!important}}
 </style>
 <script id="v3819-interactions">
 (function(){
@@ -1097,7 +1112,8 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
   const tabs=[['MY','MY TEAMS'],['ALL','ALL GAMES'],...Object.entries(names).map(([id,name])=>[id,name])];
   document.getElementById('line-filters').innerHTML=tabs.map(([id,name])=>'<button type="button" data-line="'+safe(id)+'" class="'+(lineFilter===id?'active':'')+'">'+safe(name)+'</button>').join('');
   document.querySelectorAll('[data-line]').forEach(b=>b.onclick=()=>{lineFilter=b.dataset.line;linePage=0;renderDailyLine()});
-  const data=lineData(),perPage=4,pages=Math.max(1,Math.ceil(data.length/perPage));linePage=(linePage+pages)%pages;
+  const data=lineData(),perPage=lineFilter==='MY'?4:6,pages=Math.max(1,Math.ceil(data.length/perPage));
+  document.getElementById('line-games').classList.toggle('line-six',perPage===6);linePage=(linePage+pages)%pages;
   const visible=data.slice(linePage*perPage,(linePage+1)*perPage);
   document.getElementById('line-games').innerHTML=visible.length?visible.map(gameCard).join(''):'<article class="line-card line-empty">No upcoming games available for this filter. Checking again automatically.</article>';
   updateVisibleOdds(visible);
