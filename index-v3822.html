@@ -1410,4 +1410,25 @@ font-family:var(--season-font)!important;font-style:italic!important;font-weight
 color:var(--season-soft)!important;text-shadow:0 0 3px #fff,0 0 9px var(--season-glow),0 0 18px var(--season-glow)!important;
 }
 body header #decor .holiday-words{text-transform:none!important}
+</style><style id="basement-seasonal-neon-stability-v48">
+/* The older fixed body::after frame used --season-edge and could look red after repaint.
+   Make every decorative frame share the same resolved holiday palette. */
+body{--season-edge:var(--season-glow)!important;--season-letter:var(--season-glow)}
+body::after{border-color:var(--season-glow)!important;box-shadow:inset 0 0 13px var(--season-glow),0 0 15px var(--season-glow)!important;animation:none!important}
+body::before{color:var(--season-soft)!important;text-shadow:0 0 8px var(--season-glow)!important}
+body #app,body header,body footer,body #season-mini{transition:none!important}
+body header #decor .holiday-words,body #season-mini .mini-label{
+ color:var(--season-glow)!important;-webkit-text-fill-color:var(--season-glow)!important;
+ text-shadow:0 0 2px var(--season-soft),0 0 7px var(--season-glow),0 0 14px var(--season-glow)!important;
+}
+body.christmas header #decor .holiday-words,body.christmas #season-mini .mini-label{
+ background:linear-gradient(90deg,#ff5050 0%,#ff5050 45%,#50e69a 55%,#50e69a 100%)!important;
+ -webkit-background-clip:text!important;background-clip:text!important;
+ color:transparent!important;-webkit-text-fill-color:transparent!important;
+ filter:drop-shadow(0 0 4px #f44) drop-shadow(0 0 5px #1b9)!important;
+}
+body.fall header #decor .holiday-words{color:#ffad3d!important;-webkit-text-fill-color:#ffad3d!important}
+body.thanksgiving header #decor .holiday-words{color:#ffc063!important;-webkit-text-fill-color:#ffc063!important}
+body.winter header #decor .holiday-words{color:#bceeff!important;-webkit-text-fill-color:#bceeff!important}
+body.halloween header #decor .holiday-words{color:#e5a5ff!important;-webkit-text-fill-color:#e5a5ff!important}
 </style></body></html>
