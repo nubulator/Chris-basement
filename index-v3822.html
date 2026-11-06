@@ -490,7 +490,7 @@ body.classic #decor .holiday-icons{font-size:clamp(20px,2.4vw,43px)!important;le
 body.classic #season-mini .mini-label{display:none!important}
 body.classic #season-mini .mini-art{font-size:clamp(20px,2.3vw,43px)!important}
 body.thanksgiving #decor .holiday-words,body.patrick #decor .holiday-words,body.groundhog #decor .holiday-words,body.memorial #decor .holiday-words,body.july4 #decor .holiday-words{font-size:clamp(13px,1.85vw,34px)!important}
-.radar-preview #radarMap{image-rendering:auto;filter:contrast(1.08) saturate(1.1)}
+.radar-preview #radarMap{image-rendering:auto}
 </style>
 <style id="v3821-fun">
 .side{grid-template-rows:minmax(0,20%) minmax(0,47%) minmax(0,33%)!important}
@@ -859,7 +859,7 @@ window.addEventListener('popstate',()=>closeRadar());
   if(map&&(!layer||!expanded)){const latest=frames[frames.length-1];if(layer)map.removeLayer(layer);layer=overlay(map,latest.path)}
   if(expanded&&big){if(bigLayer)big.removeLayer(bigLayer);bigLayer=overlay(big,f.path)}
   const time=new Date(f.time*1000).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',timeZone:'America/New_York'});
-  const label=document.getElementById('radar-message');if(label)label.textContent='Radar updated '+new Date(frames[frames.length-1].time*1000).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',timeZone:'America/New_York'})+' ET';
+  const label=document.getElementById('radar-message');if(label)label.textContent='STATIC RADAR • UPDATES EVERY 60 SECONDS';
  }
  function animate(){if(timer)clearTimeout(timer);if(!frames.length||!expanded)return;
   paint();const delay=frameIndex===frames.length-1?1600:Math.max(850,Math.floor(8400/Math.max(1,frames.length-1)));
