@@ -699,7 +699,10 @@ function display(){
  let pages=leagueFilter==='ALL'?1+Math.ceil(filtered.length/n):Math.max(1,Math.ceil(filtered.length/n));
  page=((page%pages)+pages)%pages;
  let current=leagueFilter==='ALL'&&page===0?myTeams:filtered.slice((leagueFilter==='ALL'?page-1:page)*n,(leagueFilter==='ALL'?page:page+1)*n);
- $('games').innerHTML=current.map(g=>`<div class="game ${g.fav?'favorite':''}" ${leagueFilter==='ALL'&&page===0?`style="--team-watermark:url('${safe(favoriteTeams.find(t=>t.name===g.league)?.logo||g.awayLogo)}')"`:``}><div class="meta"><span>${safe(g.league)} ${g.live?'● LIVE':''}</span><span>${safe(g.status)}</span></div><div class="teams"><span style="min-width:0"><span class="teamline"><img decoding="async" src="${safe(g.awayLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.ar?`<span class="rank">#${g.ar}</span>`:''}${safe(g.away)}</span></span><span class="teamline"><img decoding="async" src="${safe(g.homeLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.hr?`<span class="rank">#${g.hr}</span>`:''}${safe(g.home)}</span></span></span><span class="score">${!g.live&&!g.final?'VS':safe(g.as)+'<br>'+safe(g.hs)}</span></div>${leagueFilter==='ALL'&&page===0&&g.id?'<div class="basement-game-location"><span class="location-city">'+safe(g.venueCity||('Home: '+g.home))+'</span><span class="location-stadium">'+safe(g.venue||'Venue to be announced')+'</span></div>':''}</div>`).join('');
+ const nextGamesHtml=current.map(g=>`<div class="game ${g.fav?'favorite':''}" ${leagueFilter==='ALL'&&page===0?`style="--team-watermark:url('${safe(favoriteTeams.find(t=>t.name===g.league)?.logo||g.awayLogo)}')"`:``}><div class="meta"><span>${safe(g.league)} ${g.live?'● LIVE':''}</span><span>${safe(g.status)}</span></div><div class="teams"><span style="min-width:0"><span class="teamline"><img decoding="async" src="${safe(g.awayLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.ar?`<span class="rank">#${g.ar}</span>`:''}${safe(g.away)}</span></span><span class="teamline"><img decoding="async" src="${safe(g.homeLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.hr?`<span class="rank">#${g.hr}</span>`:''}${safe(g.home)}</span></span></span><span class="score">${!g.live&&!g.final?'VS':safe(g.as)+'<br>'+safe(g.hs)}</span></div>${leagueFilter==='ALL'&&page===0&&g.id?'<div class="basement-game-location"><span class="location-city">'+safe(g.venueCity||('Home: '+g.home))+'</span><span class="location-stadium">'+safe(g.venue||'Venue to be announced')+'</span></div>':''}</div>`).join('');
+ // V70: Keep existing game DOM and decoded team logos when visible content is unchanged.
+ const gamesNode=$('games');
+ if(gamesNode.__lastRenderedHtml!==nextGamesHtml){gamesNode.innerHTML=nextGamesHtml;gamesNode.__lastRenderedHtml=nextGamesHtml;}
  $('updated').textContent=leagueFilter==='ALL'&&page===0?'MY TEAMS • next games':`${filtered.length} ${leagueFilter==='ALL'?'games':leagueFilter+' games'} • page ${page+1}/${pages}`;
  updateLeagueButtons();if(dailyLineOpen)renderDailyLine();
  const tickerText=games.concat(myTeams.filter(g=>g.id)).map(g=>`${g.league}: ${g.away} ${!g.live&&!g.final?'VS':g.as+' —'} ${g.home} ${g.live||g.final?g.hs:''} (${g.status})${g.odds?' • '+g.odds:''}`).join('     ✦     ');if($('ticker').textContent!==tickerText)$('ticker').textContent=tickerText;
@@ -1001,7 +1004,8 @@ const lyricQuestions=[
 let index=0,lastDay=dayNumber();
 function dayNumber(){const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const v=k=>Number(parts.find(p=>p.type===k).value);return Math.floor(Date.UTC(v('year'),v('month')-1,v('day'))/86400000)}
 function escapeText(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function show(){const d=dayNumber();const lyric=lyricQuestions[d%lyricQuestions.length];const features=[['GUESS THE CLASSIC ROCK LYRIC',lyric[0],'Answer on slide 7 of 7'],['WORD OF THE DAY',...words[d%words.length]],['DAD JOKE',...jokes[d%jokes.length]],['BAR TRIVIA',...trivia[d%trivia.length]],['ROCK HISTORY & FACTS',...rock[d%rock.length]],['HAZEL & DUCKY’S CORNER',...dogs[d%dogs.length]],['CLASSIC ROCK LYRIC — ANSWER',lyric[1],lyric[2]]];const f=features[index%features.length];document.getElementById('fun-counter').textContent=(index+1)+' / '+features.length;const panel=document.getElementById('fun-feature');['fun-category','fun-headline','fun-detail'].forEach((cls,i)=>{let el=panel.querySelector('.'+cls);if(!el){el=document.createElement('div');el.className=cls;panel.appendChild(el)}if(el.textContent!==f[i])el.textContent=f[i]});requestAnimationFrame(fitFunText);}
+function show(){const d=dayNumber();const lyric=lyricQuestions[d%lyricQuestions.length];const features=[['GUESS THE CLASSIC ROCK LYRIC',lyric[0],'Answer on slide 7 of 7'],['WORD OF THE DAY',...words[d%words.length]],['DAD JOKE',...jokes[d%jokes.length]],['BAR TRIVIA',...trivia[d%trivia.length]],['ROCK HISTORY & FACTS',...rock[d%rock.length]],['HAZEL & DUCKY’S CORNER',...dogs[d%dogs.length]],['CLASSIC ROCK LYRIC — ANSWER',lyric[1],lyric[2]]];const f=features[index%features.length];document.getElementById('fun-counter').textContent=(index+1)+' / '+features.length;const panel=document.getElementById('fun-feature');['fun-category','fun-headline','fun-detail'].forEach((cls,i)=>{let el=panel.querySelector('.'+cls);if(!el){el=document.createElement('div');el.className=cls;panel.appendChild(el)}if(el.textContent!==f[i])el.textContent=f[i]});// Defer expensive fitting until the browser has a chance to paint the ticker.
+ if(window.requestIdleCallback)requestIdleCallback(fitFunText,{timeout:500});else setTimeout(fitFunText,80);}
 let fitGeneration=0;
 const funFitCache=new Map();
 function fitFunText(){
@@ -1027,7 +1031,8 @@ function fitFunText(){
   if(ok)low=factor;else high=factor;
   factor=(low+high)/2;attempt++;
   apply(Math.max(12,initialHead*factor),Math.max(10,initialDetail*factor));
-  requestAnimationFrame(measure);
+  // Avoid a burst of consecutive layout measurements during a Fun Zone change.
+  setTimeout(()=>requestAnimationFrame(measure),50);
  }
  requestAnimationFrame(measure);
 }
