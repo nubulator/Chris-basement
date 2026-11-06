@@ -970,7 +970,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
  const filterBar=document.getElementById('league-filters');
  let lineFilter='MY',linePage=0,lineAuto=true,lineTimer=null,footballUpcoming=[];
  const footballLeagues=[['NFL','football/nfl'],['NCAA FOOTBALL','football/college-football']];
- const etDate=d=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(d).replace(/\D/g,'');
+ const etDate=d=>{const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);const p=k=>parts.find(x=>x.type===k)?.value||'';return p('year')+p('month')+p('day')};
  const etDay=d=>new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
  async function refreshFootballUpcoming(){
   const start=new Date(),end=new Date(Date.now()+9*86400000);
