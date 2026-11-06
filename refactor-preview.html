@@ -1596,7 +1596,7 @@ header .header-right #dashboard-refresh:focus-visible{
 }
 header .header-right #dashboard-refresh{grid-column:1!important;grid-row:2!important}
 /* Keep version label inside header, away from its edge. */
-#basement-build-version{left:auto!important;right:0!important;top:auto!important;bottom:0!important;font-size:8px!important;opacity:.8!important}
+
 
 /* --- basement-season-perimeter-v78 (preserved cascade order) --- */
 
@@ -1653,13 +1653,6 @@ header .header-right #dashboard-refresh:focus,header .header-right #dashboard-re
 }
 /* Columbus skyline silhouette watermark; no external photo request. */
 
-main>.side>.panel:first-child::before{
- content:""!important;display:block!important;position:absolute!important;
- inset:18% 0 0 0!important;z-index:-1!important;pointer-events:none!important;
- background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20900%20240%22%3E%3Cg%20fill%3D%22%23d4e7f3%22%3E%3Cpath%20d%3D%22M0%20230V183h50v-35h48v40h25V98h47v-24h19v114h20v-70h52v65h25V56h30V30h13V7h8v23h14v153h24V90h54v96h23V42h26v-18h9v18h24v144h30V120h40v66h30V85h57v102h30v-44h44v43h30v-57h52v57h29v-30h39v74z%22%2F%3E%3Cpath%20d%3D%22M0%20228h900v12H0z%22%2F%3E%3C%2Fg%3E%3Cg%20fill%3D%22%23d4e7f3%22%20opacity%3D%22.55%22%3E%3Cpath%20d%3D%22M292%2027h4v-25h4v25h4v6h-12zM445%2025h4V4h4v21h4v7h-12z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E")!important;
- background-repeat:no-repeat!important;background-position:center bottom!important;
- background-size:100% 85%!important;opacity:.12!important;
-}
 main>.side>.panel:first-child> *{position:relative!important;z-index:1!important}
 /* Warm wood frame on the chalkboard; retain the existing chalkboard content. */
 main>#fun-zone{
@@ -1689,17 +1682,7 @@ opacity:.27!important;filter:grayscale(1) contrast(1.25)!important;
 }
 main>.side>.panel:first-child>*{position:relative!important;z-index:1!important}
 /* Layered stained-wood molding, with warm highlights and a darker inner lip. */
-main>#fun-zone{
-border:clamp(7px,.78vw,15px) solid transparent!important;
-border-radius:5px!important;
-background-image:
-linear-gradient(rgba(8,22,18,.34),rgba(8,22,18,.25)),url("https://commons.wikimedia.org/wiki/Special:Redirect/file/Chalkboard_Texture.jpg?width=1280"),
-repeating-linear-gradient(92deg,#3e210f 0px,#9c5d30 3px,#d09a5e 6px,#754020 11px,#4c2816 16px,#b7783e 22px,#3c2012 27px)!important;
-background-origin:padding-box,padding-box,border-box!important;
-background-clip:padding-box,padding-box,border-box!important;
-background-size:cover,cover,auto!important;
-box-shadow:inset 0 0 0 3px #28170d,inset 0 0 13px #120a06,0 1px 0 #dbac6a!important;
-}
+
 
 /* --- basement-cone-and-tan-frame-v82 (preserved cascade order) --- */
 
