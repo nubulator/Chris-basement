@@ -1300,7 +1300,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 #basement-forecast-panel>*{position:relative!important;z-index:1!important}
 #basement-forecast-panel .fun-forecast{background:transparent!important}
 #basement-forecast-panel #forecast{text-shadow:0 1px 3px #000,0 0 5px #000!important}
-#garage-ap-track{font-size:clamp(19px,1.94vw,35px)!important}
+#garage-ap-track{font-size:clamp(17px,1.7vw,33px)!important;line-height:1.13!important}
 </style><style id="basement-my-teams-location-visible-v42">
 /* The location was below the matchup and clipped by compact game tiles.
    Place it inside the open right-hand area on the My Teams rotation only. */
@@ -1453,9 +1453,4 @@ function setup(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);
 else setup();
 })();
-</script><style id="basement-ticker-compositor-only-v53">
-/* Keep the existing news animation, but promote it to a composited layer. */
-#garage-ap-window{isolation:isolate!important;contain:layout paint!important;transform:translateZ(0)!important}
-#garage-ap-track{transform:translate3d(0,0,0);backface-visibility:hidden!important;will-change:transform!important;animation-timing-function:linear!important}
-@keyframes garage-news-scroll{from{transform:translate3d(0,0,0)}to{transform:translate3d(-100%,0,0)}}
-<style id="basement-ticker-firetv-v56">#garage-ap-track{text-rendering:optimizeSpeed!important;-webkit-font-smoothing:antialiased;contain:paint;transform-style:flat!important}#garage-ap-window{overflow:hidden!important;backface-visibility:hidden!important}</style></style></body></html>
+</script></body></html>
