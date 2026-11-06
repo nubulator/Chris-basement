@@ -1475,4 +1475,48 @@ function start(){
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
 })();
-</script></body></html>
+</script><style id="basement-clean-header-and-news-v51">
+/* Remove bright bloom from the seasonal title and adjacent ornaments. */
+header #decor .holiday-words,body.christmas header #decor .holiday-words,
+body.christmas header #decor .holiday-words .xmas-red,
+body.christmas header #decor .holiday-words .xmas-green{
+ text-shadow:none!important;filter:none!important;
+}
+header #decor .season-art{filter:none!important;text-shadow:none!important}
+header #decor::before,header #decor::after{filter:none!important;text-shadow:none!important}
+body.christmas header #decor .holiday-words .xmas-red{color:#ff3535!important;-webkit-text-fill-color:#ff3535!important}
+body.christmas header #decor .holiday-words .xmas-green{color:#26e46b!important;-webkit-text-fill-color:#26e46b!important}
+/* Continuous, GPU-friendly ticker with two identical strips. */
+#garage-ap-track{animation:none!important;padding-left:0!important;display:flex!important;align-items:center!important;width:max-content!important;max-width:none!important;transform:translate3d(0,0,0);will-change:transform}
+#garage-ap-track .news-strip{display:inline-flex;align-items:center;white-space:nowrap;flex:none;padding-right:3em}
+</style>
+<script id="basement-smooth-news-v51">(function(){
+function setup(){
+ var track=document.getElementById('garage-ap-track');if(!track)return;
+ var x=0,last=0,original='',width=0;
+ function prepare(){
+  if(track.querySelector('.news-strip'))return;
+  if(!track.children.length)return;
+  var strip=document.createElement('span');strip.className='news-strip';
+  while(track.firstChild)strip.appendChild(track.firstChild);
+  var clone=strip.cloneNode(true);clone.setAttribute('aria-hidden','true');
+  track.appendChild(strip);track.appendChild(clone);
+  width=strip.getBoundingClientRect().width;x=0;last=0;
+ }
+ var observer=new MutationObserver(function(){prepare()});
+ observer.observe(track,{childList:true});
+ prepare();
+ function frame(t){
+  if(!last)last=t;
+  var dt=Math.min(50,t-last);last=t;
+  var strip=track.querySelector('.news-strip');
+  if(strip){
+   if(!width)width=strip.getBoundingClientRect().width;
+   if(width>0){x=(x+dt*.055)%width;track.style.transform='translate3d('+(-x)+'px,0,0)'}
+  }
+  requestAnimationFrame(frame);
+ }
+ requestAnimationFrame(frame);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
+})();</script></body></html>
