@@ -1523,11 +1523,9 @@ header #decor::before,header #decor::after{content:none!important;display:none!i
 /* Equal-sized, stacked holiday selector and refresh button. */
 header .header-right{display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto auto auto!important;gap:3px!important;justify-items:stretch!important;align-items:center!important}
 header .header-right #theme,header .header-right #dashboard-refresh{grid-column:1!important;width:100%!important;min-width:0!important;max-width:none!important;height:clamp(22px,2.8vh,32px)!important;min-height:0!important;box-sizing:border-box!important;margin:0!important;padding:1px 6px!important;font-size:clamp(10px,.9vw,16px)!important}
-header .header-right #theme{grid-row:1!important}
-header .header-right #dashboard-refresh{grid-row:2!important}
 header .header-right #status{grid-column:1!important;grid-row:3!important;text-align:center!important;font-size:clamp(8px,.7vw,12px)!important}
 /* One green outer frame; retain blue/red panel edges but remove green glows. */
-body #app{outline:3px solid #2cfb46!important;outline-offset:-3px!important}
+
 main>.board,main>.side>.panel,main>#fun-zone,#garage-ap-ticker,.sponsor-column,.sponsor-sign{box-shadow:none!important}
 main>.board,main>.side>.panel,main>#fun-zone,#garage-ap-ticker{border-color:rgba(75,133,174,.65)!important}
 main>#fun-zone{border-color:rgba(229,132,76,.65)!important}
@@ -1567,8 +1565,7 @@ body #app{outline:3px solid #2cfb46!important;outline-offset:-3px!important}
 /* --- basement-header-polish-v77 (preserved cascade order) --- */
 
 /* Remove the decorative green rectangle crossing the content and version. */
-body::after{content:none!important;display:none!important}
-body #app{outline:none!important;box-shadow:none!important}
+
 
 /* The visible holiday control is a custom button, not the hidden select. */
 header .header-right .holiday-custom{grid-column:1!important;grid-row:1!important;width:100%!important;height:100%!important;min-width:0!important;display:flex!important;align-items:stretch!important}
@@ -1678,7 +1675,6 @@ main>#fun-zone{
 
 /* Keep the version centered under the cone at any screen width. */
 header h1 .cone-version-wrap{position:relative!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;vertical-align:middle!important;margin-left:3px!important;padding-bottom:10px!important;min-width:22px!important}
-header h1 .cone-version-wrap .mini-traffic-cone{position:relative!important;display:inline-flex!important;margin:0!important}
 header h1 .cone-version-wrap #basement-build-version{position:absolute!important;left:50%!important;right:auto!important;top:auto!important;bottom:0!important;transform:translateX(-50%)!important;white-space:nowrap!important;font:700 8px/1 Arial,sans-serif!important}
 /* Make the custom holiday button use exactly the same capitalization as Refresh. */
 header .header-right .holiday-trigger{text-transform:uppercase!important;font-weight:800!important;letter-spacing:.02em!important}
