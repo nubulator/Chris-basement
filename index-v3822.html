@@ -845,7 +845,7 @@ window.addEventListener('popstate',()=>closeRadar());
 <script>
 /* RainViewer 10-second animated historical radar loop with one overlay per map. */
 (function(){
- let map=null,big=null,layer=null,bigLayer=null,frames=[],frameIndex=0,timer=null;
+ let map=null,big=null,layer=null,bigLayer=null,frames=[],frameIndex=0,timer=null,expanded=false;
  const loc=[40.01,-82.81];
  function setup(id,zoom){
   const m=L.map(id,{center:loc,zoom,zoomControl:id!=='radarMap',attributionControl:true,keyboard:false});
@@ -856,12 +856,12 @@ window.addEventListener('popstate',()=>closeRadar());
  function paint(){
   if(!frames.length)return;
   const f=frames[frameIndex];
-  if(map){if(layer)map.removeLayer(layer);layer=overlay(map,f.path)}
-  if(big){if(bigLayer)big.removeLayer(bigLayer);bigLayer=overlay(big,f.path)}
+  if(map&&(!layer||!expanded)){const latest=frames[frames.length-1];if(layer)map.removeLayer(layer);layer=overlay(map,latest.path)}
+  if(expanded&&big){if(bigLayer)big.removeLayer(bigLayer);bigLayer=overlay(big,f.path)}
   const time=new Date(f.time*1000).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',timeZone:'America/New_York'});
   const label=document.getElementById('radar-message');if(label)label.textContent='▶ 10s radar loop • '+time+' ET';
  }
- function animate(){if(timer)clearTimeout(timer);if(!frames.length)return;
+ function animate(){if(timer)clearTimeout(timer);if(!frames.length||!expanded)return;
   paint();const delay=frameIndex===frames.length-1?1600:Math.max(850,Math.floor(8400/Math.max(1,frames.length-1)));
   timer=setTimeout(()=>{frameIndex=(frameIndex+1)%frames.length;animate()},delay);
  }
@@ -870,15 +870,15 @@ window.addEventListener('popstate',()=>closeRadar());
   const r=await fetch('https://api.rainviewer.com/public/weather-maps.json',{cache:'no-store'});if(!r.ok)throw Error('Radar API '+r.status);
   const data=await r.json(),past=data.radar&&data.radar.past;
   if(!past||!past.length)throw Error('No radar frames');
-  frames=past.slice(-12).filter(f=>f.path&&f.time).filter((f,i)=>i%2===0);frameIndex=0;animate();
+  frames=past.slice(-12).filter(f=>f.path&&f.time).filter((f,i)=>i%2===0);frameIndex=0;paint();if(expanded)animate();
  }catch(e){console.warn('RainViewer',e);const msg=document.getElementById('radar-message');if(msg)msg.textContent='Radar unavailable • retrying';
   if(!map){const iframe=document.querySelector('.radar-preview iframe');if(iframe)iframe.style.display='block';document.getElementById('radarMap').style.display='none'}
  }}
  const originalOpen=window.openRadar;
  window.openRadar=function(){originalOpen();if(!window.L||!map){const f=document.querySelector('.radar-modal iframe');if(f)f.style.display='block';return}
-  if(!big)big=setup('radarMapBig',8);paint();setTimeout(()=>big.invalidateSize(),120);
+  if(!big)big=setup('radarMapBig',8);expanded=true;frameIndex=0;animate();setTimeout(()=>big.invalidateSize(),120);
  };
- refresh();setInterval(refresh,300000);
+ const oldClose=window.closeRadar;window.closeRadar=function(){expanded=false;if(timer)clearTimeout(timer);if(typeof oldClose==='function')oldClose()};document.addEventListener('keydown',e=>{if(e.key==='Escape'){expanded=false;if(timer)clearTimeout(timer)}});refresh();setInterval(refresh,60000);
 })();
 </script>
 <script id="beachControls">
