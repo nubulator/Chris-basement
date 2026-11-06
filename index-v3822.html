@@ -1386,4 +1386,28 @@ const clock=document.getElementById('clock');if(clock){function format(){if(cloc
 const heading=document.querySelector('.board .heading'),status=document.getElementById('status');if(heading&&!document.getElementById('basement-score-connection')){const el=document.createElement('span');el.id='basement-score-connection';heading.insertBefore(el,heading.querySelector('#updated'));function update(){let t=status?.textContent||'';let ok=/connected|live|updated/i.test(t)&&!/disconnected|not connected/i.test(t);el.textContent=ok?'CONNECTED':'CHECKING';el.style.color=ok?'#5ef38b':'#f7bd66'}update();setInterval(update,10000);}
 const select=document.getElementById('theme'),trigger=document.getElementById('holiday-remote-trigger');if(select&&trigger){const page=document.createElement('div');page.id='basement-theme-page';page.setAttribute('role','dialog');page.setAttribute('aria-modal','true');page.innerHTML='<h2>CHOOSE YOUR THEME</h2><p>Chris’s Basement</p><div id="basement-theme-options"></div><button id="basement-theme-back" type="button">BACK TO BASEMENT</button>';document.body.appendChild(page);const opts=page.querySelector('#basement-theme-options');const symbols={auto:'✦',classic:'★',halloween:'🎃',thanksgiving:'🍁',christmas:'🎄'};for(const o of select.options){const b=document.createElement('button');b.type='button';b.dataset.value=o.value;b.textContent=(symbols[o.value]||'✦')+'  '+o.textContent;b.addEventListener('click',()=>{select.value=o.value;select.dispatchEvent(new Event('change',{bubbles:true}));close()});opts.appendChild(b)}function close(){page.classList.remove('open');trigger.focus()}function open(){document.querySelector('.holiday-menu')?.classList.remove('open');trigger.setAttribute('aria-expanded','false');for(const b of opts.children)b.classList.toggle('selected',b.dataset.value===select.value);page.classList.add('open');(opts.querySelector('.selected')||opts.firstElementChild)?.focus()}trigger.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();open()},true);page.querySelector('#basement-theme-back').addEventListener('click',close);document.addEventListener('keydown',e=>{if(page.classList.contains('open')&&(e.key==='Escape'||e.key==='Backspace')){e.preventDefault();close()}},true);}
 
-}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init()})();</script></body></html>
+}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init()})();</script><style id="basement-seasonal-neon-v47">
+/* Seasonal palette: affects decorative neon, not game/team colors or weather. */
+body{--season-glow:#ff493c;--season-soft:#ffc5b4;--season-font:Georgia,'Times New Roman',serif}
+body.fall{--season-glow:#ff922d;--season-soft:#ffcf72;--season-font:Georgia,'Times New Roman',serif}
+body.thanksgiving{--season-glow:#d97827;--season-soft:#ffdb83;--season-font:Georgia,'Times New Roman',serif}
+body.halloween{--season-glow:#b35aff;--season-soft:#ffac47;--season-font:Georgia,'Times New Roman',serif}
+body.christmas{--season-glow:#25c982;--season-soft:#ffe5b0;--season-font:Georgia,'Times New Roman',serif}
+body.winter{--season-glow:#65caff;--season-soft:#ecfaff;--season-font:Georgia,'Times New Roman',serif}
+body.spring,body.easter{--season-glow:#64d89b;--season-soft:#ffcae4;--season-font:Georgia,'Times New Roman',serif}
+body.summer{--season-glow:#20d4d8;--season-soft:#ffe48d;--season-font:Trebuchet MS,Arial,sans-serif}
+body.july4,body.memorial{--season-glow:#4b9fff;--season-soft:#fff4f4;--season-font:Georgia,'Times New Roman',serif}
+body.patrick{--season-glow:#41e780;--season-soft:#dcffab;--season-font:Georgia,'Times New Roman',serif}
+body.groundhog{--season-glow:#d9aa71;--season-soft:#fff0bd;--season-font:Georgia,'Times New Roman',serif}
+body.newyear{--season-glow:#f6cb56;--season-soft:#fff2c0;--season-font:Georgia,'Times New Roman',serif}
+body.classic{--season-glow:#ff4b4b;--season-soft:#ffd6d6}
+body #app{outline:3px solid var(--season-glow)!important;outline-offset:-3px!important;box-shadow:inset 0 0 12px var(--season-glow),0 0 13px var(--season-glow)!important}
+body header{border-bottom-color:var(--season-glow)!important;box-shadow:0 3px 14px var(--season-glow)!important}
+body footer{border-top-color:var(--season-glow)!important;box-shadow:0 -2px 12px var(--season-glow)!important}
+body #season-mini{border-color:var(--season-glow)!important;box-shadow:0 0 11px var(--season-glow)!important}
+body #season-mini .mini-label,body header #decor .holiday-words{
+font-family:var(--season-font)!important;font-style:italic!important;font-weight:800!important;
+color:var(--season-soft)!important;text-shadow:0 0 3px #fff,0 0 9px var(--season-glow),0 0 18px var(--season-glow)!important;
+}
+body header #decor .holiday-words{text-transform:none!important}
+</style></body></html>
