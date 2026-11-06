@@ -1453,4 +1453,9 @@ function setup(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);
 else setup();
 })();
-</script></body></html>
+</script><style id="basement-ticker-compositor-only-v53">
+/* Keep the existing news animation, but promote it to a composited layer. */
+#garage-ap-window{isolation:isolate!important;contain:layout paint!important;transform:translateZ(0)!important}
+#garage-ap-track{transform:translate3d(0,0,0);backface-visibility:hidden!important;will-change:transform!important;animation-timing-function:linear!important}
+@keyframes garage-news-scroll{from{transform:translate3d(0,0,0)}to{transform:translate3d(-100%,0,0)}}
+</style></body></html>
