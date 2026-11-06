@@ -862,7 +862,7 @@ window.addEventListener('popstate',()=>closeRadar());
   const label=document.getElementById('radar-message');if(label)label.textContent='▶ 10s radar loop • '+time+' ET';
  }
  function animate(){if(timer)clearTimeout(timer);if(!frames.length)return;
-  paint();const delay=frameIndex===frames.length-1?1300:Math.max(230,Math.floor(8700/Math.max(1,frames.length-1)));
+  paint();const delay=frameIndex===frames.length-1?1600:Math.max(850,Math.floor(8400/Math.max(1,frames.length-1)));
   timer=setTimeout(()=>{frameIndex=(frameIndex+1)%frames.length;animate()},delay);
  }
  async function refresh(){try{
@@ -870,7 +870,7 @@ window.addEventListener('popstate',()=>closeRadar());
   const r=await fetch('https://api.rainviewer.com/public/weather-maps.json',{cache:'no-store'});if(!r.ok)throw Error('Radar API '+r.status);
   const data=await r.json(),past=data.radar&&data.radar.past;
   if(!past||!past.length)throw Error('No radar frames');
-  frames=past.slice(-16).filter(f=>f.path&&f.time);frameIndex=0;animate();
+  frames=past.slice(-12).filter(f=>f.path&&f.time).filter((f,i)=>i%2===0);frameIndex=0;animate();
  }catch(e){console.warn('RainViewer',e);const msg=document.getElementById('radar-message');if(msg)msg.textContent='Radar unavailable • retrying';
   if(!map){const iframe=document.querySelector('.radar-preview iframe');if(iframe)iframe.style.display='block';document.getElementById('radarMap').style.display='none'}
  }}
