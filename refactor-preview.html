@@ -1019,7 +1019,36 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
   const total=raw.match(/O\/U:\s*([^•]+)/i)?.[1]?.trim()||'—';
   const logo=(url,name)=>url?'<img class="line-team-logo" src="'+safe(url)+'" alt="'+safe(name)+' logo" loading="lazy" onerror="this.style.display=\'none\'">':'';
   const where=g.venue||g.venueCity?'<div class="line-location"><span>'+safe(g.venueCity||'Home: '+g.home)+'</span><span>'+safe(g.venue||'Venue to be announced')+'</span></div>':'';
-  return '<article class="line-card"><div class="line-card-top"><div class="line-league">'+safe(g.league)+' • '+safe(when)+'</div>'+where+'</div><div class="line-matchup"><span class="line-team">'+logo(g.awayLogo,g.away)+safe(g.away)+'</span><span class="line-vs">vs</span><span class="line-team">'+logo(g.homeLogo,g.home)+safe(g.home)+'</span></div><div class="line-metrics"><div><small>SPREAD</small><strong>'+safe(spread)+'</strong></div><div><small>OVER / UNDER</small><strong>'+safe(total)+'</strong></div><div><small>MONEYLINE</small><strong>—</strong></div></div><div class="line-source">'+(raw?'ESPN pregame line':'Odds not yet available from ESPN')+'</div></article>';
+  return '<article class="line-card" data-game-id="'+safe(g.id)+'" data-league="'+safe(g.league)+'"><div class="line-card-top"><div class="line-league">'+safe(g.league)+' • '+safe(when)+'</div>'+where+'</div><div class="line-matchup"><span class="line-team">'+logo(g.awayLogo,g.away)+safe(g.away)+'</span><span class="line-vs">vs</span><span class="line-team">'+logo(g.homeLogo,g.home)+safe(g.home)+'</span></div><div class="line-metrics"><div><small>SPREAD</small><strong>'+safe(spread)+'</strong></div><div><small>OVER / UNDER</small><strong>'+safe(total)+'</strong></div><div><small>MONEYLINE</small><strong>—</strong></div></div><div class="line-source">'+(raw?'ESPN pregame line':'Odds not yet available from ESPN')+'</div></article>';
+ }
+
+ const lineOddsCache=new Map();
+ async function fetchLineOdds(g){
+  const paths={'NFL':'football/nfl','NCAA FOOTBALL':'football/college-football','NCAA MEN':'basketball/mens-college-basketball','NBA':'basketball/nba','NHL':'hockey/nhl','MLB':'baseball/mlb'};
+  const path=paths[g.league];if(!path||!/^\d+$/.test(String(g.id)))return null;
+  const key=path+':'+g.id,old=lineOddsCache.get(key);
+  if(old&&Date.now()-old.at<300000)return old.data;
+  const url='https://sports.core.api.espn.com/v2/sports/'+path.replace('/','/leagues/')+'/events/'+g.id+'/competitions/'+g.id+'/odds?limit=20';
+  try{
+   const response=await fetch(url,{cache:'no-store'});
+   if(!response.ok)throw Error('Odds HTTP '+response.status);
+   const payload=await response.json();
+   const choices=(payload.items||[]).filter(x=>x&&!x.$ref);
+   const picked=choices.find(x=>x.provider?.name==='DraftKings')||choices.find(x=>x.provider?.name==='FanDuel')||choices[0];
+   const data=picked?{spread:picked.details??picked.spread??'—',total:picked.overUnder??'—',away:picked.awayTeamOdds?.moneyLine,home:picked.homeTeamOdds?.moneyLine,provider:picked.provider?.name||'ESPN odds'}:null;
+   lineOddsCache.set(key,{at:Date.now(),data});return data;
+  }catch(err){lineOddsCache.set(key,{at:Date.now(),data:null});return null}
+ }
+ function money(v){if(v==null||v==='')return '—';const n=Number(v);return Number.isFinite(n)?(n>0?'+':'')+n:'—'}
+ function updateVisibleOdds(visible){
+  visible.forEach(async g=>{
+   const data=await fetchLineOdds(g);if(!data||!dailyLineOpen)return;
+   const card=[...document.querySelectorAll('#line-games .line-card')].find(el=>el.dataset.gameId===String(g.id)&&el.dataset.league===g.league);
+   if(!card)return;
+   const vals=[String(data.spread),String(data.total),money(data.away)+' / '+money(data.home)];
+   card.querySelectorAll('.line-metrics strong').forEach((el,i)=>{if(el.textContent!==vals[i])el.textContent=vals[i]});
+   const label=card.querySelector('.line-source');if(label)label.textContent=data.provider+' • Moneyline: away / home';
+  });
  }
  window.renderDailyLine=function(){
   if(!dailyLineOpen)return;
@@ -1029,6 +1058,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
   const data=lineData(),perPage=4,pages=Math.max(1,Math.ceil(data.length/perPage));linePage=(linePage+pages)%pages;
   const visible=data.slice(linePage*perPage,(linePage+1)*perPage);
   document.getElementById('line-games').innerHTML=visible.length?visible.map(gameCard).join(''):'<article class="line-card line-empty">No upcoming games available for this filter. Checking again automatically.</article>';
+  updateVisibleOdds(visible);
   document.getElementById('line-page-label').textContent=(lineFilter==='MY'?'MY TEAMS':lineFilter==='ALL'?'ALL GAMES':names[lineFilter])+' • '+data.length+' games • page '+(linePage+1)+'/'+pages;
   document.getElementById('line-page-dots').textContent=Array.from({length:Math.min(pages,12)},(_,i)=>i===linePage?'●':'○').join(' ');
   document.getElementById('line-auto').textContent='AUTO: '+(lineAuto?'ON':'OFF');
