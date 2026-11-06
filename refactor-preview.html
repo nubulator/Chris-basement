@@ -1027,7 +1027,6 @@ function dayNumber(){const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Amer
 function escapeText(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function show(){const d=dayNumber();const lyric=lyricQuestions[d%lyricQuestions.length];const features=[['GUESS THE CLASSIC ROCK LYRIC',lyric[0],'Answer on slide 7 of 7'],['WORD OF THE DAY',...words[d%words.length]],['DAD JOKE',...jokes[d%jokes.length]],['BAR TRIVIA',...trivia[d%trivia.length]],['ROCK HISTORY & FACTS',...rock[d%rock.length]],['HAZEL & DUCKY’S CORNER',...dogs[d%dogs.length]],['CLASSIC ROCK LYRIC — ANSWER',lyric[1],lyric[2]]];const f=features[index%features.length];document.getElementById('fun-counter').textContent=(index+1)+' / '+features.length;const panel=document.getElementById('fun-feature');panel.classList.toggle('fun-long-lyric',index%features.length===0);['fun-category','fun-headline','fun-detail'].forEach((cls,i)=>{let el=panel.querySelector('.'+cls);if(!el){el=document.createElement('div');el.className=cls;panel.appendChild(el)}if(el.textContent!==f[i])el.textContent=f[i]});// Defer expensive fitting until the browser has a chance to paint the ticker.
  if(window.requestIdleCallback)requestIdleCallback(fitFunText,{timeout:500});else setTimeout(fitFunText,80);}
-let fitGeneration=0;
 const funFitCache=new Map();
 function fitFunText(){
  const panel=document.getElementById('fun-feature');
