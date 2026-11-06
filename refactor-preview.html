@@ -1032,21 +1032,44 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
  }
 
  const lineOddsCache=new Map();
+ function usableOdds(x){
+  if(!x||typeof x!=='object')return null;
+  const away=x.awayTeamOdds||{},home=x.homeTeamOdds||{};
+  return {spread:x.details??x.spread??null,total:x.overUnder??null,away:away.moneyLine??away.moneyline??null,home:home.moneyLine??home.moneyline??null,provider:x.provider?.name||'ESPN',updated:x.lastModified||x.lastUpdated||''};
+ }
+ function oddsScore(x){
+  return (x.spread!=null?1:0)+(x.total!=null?1:0)+(x.away!=null?2:0)+(x.home!=null?2:0);
+ }
  async function fetchLineOdds(g){
   const paths={'NFL':'football/nfl','NCAA FOOTBALL':'football/college-football','NCAA MEN':'basketball/mens-college-basketball','NBA':'basketball/nba','NHL':'hockey/nhl','MLB':'baseball/mlb'};
-  const path=paths[g.league];if(!path||!/^\d+$/.test(String(g.id)))return null;
+  const path=paths[g.league];if(!path||!/^\\d+$/.test(String(g.id)))return null;
   const key=path+':'+g.id,old=lineOddsCache.get(key);
-  if(old&&Date.now()-old.at<300000)return old.data;
-  const url='https://sports.core.api.espn.com/v2/sports/'+path.replace('/','/leagues/')+'/events/'+g.id+'/competitions/'+g.id+'/odds?limit=20';
+  if(old&&Date.now()-old.at<(old.data?300000:120000))return old.data;
+  const base='https://sports.core.api.espn.com/v2/sports/'+path.replace('/','/leagues/')+'/events/'+g.id+'/competitions/'+g.id+'/odds';
+  let choices=[];
   try{
-   const response=await fetch(url,{cache:'no-store'});
-   if(!response.ok)throw Error('Odds HTTP '+response.status);
-   const payload=await response.json();
-   const choices=(payload.items||[]).filter(x=>x&&!x.$ref);
-   const picked=choices.find(x=>x.provider?.name==='DraftKings')||choices.find(x=>x.provider?.name==='FanDuel')||choices[0];
-   const data=picked?{spread:picked.details??picked.spread??'—',total:picked.overUnder??'—',away:picked.awayTeamOdds?.moneyLine,home:picked.homeTeamOdds?.moneyLine,provider:picked.provider?.name||'ESPN odds'}:null;
-   lineOddsCache.set(key,{at:Date.now(),data});return data;
-  }catch(err){lineOddsCache.set(key,{at:Date.now(),data:null});return null}
+   const response=await fetch(base+'?limit=30',{cache:'no-store'});
+   if(response.ok){
+    const payload=await response.json();
+    // ESPN returns $ref on valid odds objects; do not discard them.
+    choices=(payload.items||[]).map(usableOdds).filter(Boolean);
+   }
+  }catch(err){console.info('Daily Line core odds unavailable',g.league,g.id)}
+  // ESPN's game summary sometimes has odds that the core feed omits.
+  if(!choices.some(x=>oddsScore(x)>=5)){
+   try{
+    const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/'+path+'/summary?event='+encodeURIComponent(g.id),{cache:'no-store'});
+    if(r.ok){
+     const j=await r.json();
+     const summary=[...(j.pickcenter||[]),...(j.header?.competitions?.[0]?.odds||[])];
+     choices.push(...summary.map(usableOdds).filter(Boolean));
+    }
+   }catch(err){console.info('Daily Line summary odds unavailable',g.league,g.id)}
+  }
+  choices.sort((x,y)=>oddsScore(y)-oddsScore(x));
+  const data=choices.find(x=>oddsScore(x)>0)||null;
+  lineOddsCache.set(key,{at:Date.now(),data});
+  return data;
  }
  function money(v){if(v==null||v==='')return '—';const n=Number(v);return Number.isFinite(n)?(n>0?'+':'')+n:'—'}
  function updateVisibleOdds(visible){
@@ -1054,9 +1077,12 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
    const data=await fetchLineOdds(g);if(!data||!dailyLineOpen)return;
    const card=[...document.querySelectorAll('#line-games .line-card')].find(el=>el.dataset.gameId===String(g.id)&&el.dataset.league===g.league);
    if(!card)return;
-   const vals=[String(data.spread),String(data.total),money(data.away)+' / '+money(data.home)];
-   card.querySelectorAll('.line-metrics strong').forEach((el,i)=>{if(el.textContent!==vals[i])el.textContent=vals[i]});
-   const label=card.querySelector('.line-source');if(label)label.textContent=data.provider+' • Moneyline: away / home';
+   const els=card.querySelectorAll('.line-metrics strong');
+   // Keep ESPN scoreboard lines if a second source has missing fields.
+   const values=[data.spread,data.total,data.away!=null||data.home!=null?money(data.away)+' / '+money(data.home):null];
+   els.forEach((el,i)=>{const v=values[i];if(v!=null&&v!==''&&v!=='—')el.textContent=String(v)});
+   const label=card.querySelector('.line-source');
+   if(label)label.textContent=data.provider+(data.away!=null||data.home!=null?' • Moneyline: away / home':' • Moneyline unavailable');
   });
  }
  window.renderDailyLine=function(){
