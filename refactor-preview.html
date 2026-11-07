@@ -1080,6 +1080,20 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
 #line-games.line-six .line-matchup .line-team,#line-games.line-five .line-matchup .line-team{font-size:clamp(18px,2.05vw,36px)!important}
 #line-games.line-six .line-matchup .line-team img,#line-games.line-five .line-matchup .line-team img{width:clamp(27px,2.5vw,46px)!important;height:clamp(27px,2.5vw,46px)!important}
 #daily-line-view .line-top>strong{border:3px double #ffe6a1!important;border-radius:17px!important;padding:4px 20px!important;background:linear-gradient(180deg,#7b220f 0%,#321016 48%,#160c16 100%)!important;color:#fff0b6!important;box-shadow:inset 0 0 0 2px #bd4c14,inset 0 0 13px #ffb629,0 0 8px #ff9800,0 0 18px #fa5b0a!important;text-shadow:1px 2px 0 #9e3809,0 0 7px #ffb02a,0 0 17px #f70!important}
+
+/* V30: fill available TV area with equal-size cards and casino marquee accents */
+#daily-line-view #line-games{flex:1 1 auto!important;min-height:0!important;align-content:stretch!important;align-items:stretch!important;grid-auto-rows:minmax(0,1fr)!important;gap:clamp(7px,.75vw,14px)!important;overflow:hidden!important}
+#daily-line-view #line-games.line-five,#daily-line-view #line-games.line-six{grid-template-rows:repeat(3,minmax(0,1fr))!important}
+#daily-line-view #line-games:not(.line-five):not(.line-six){grid-template-rows:repeat(2,minmax(0,1fr))!important}
+#daily-line-view #line-games .line-card{height:100%!important;min-height:0!important;box-sizing:border-box!important;grid-template-rows:auto minmax(0,1fr) auto auto!important;align-content:stretch!important;padding:clamp(8px,.7vw,14px)!important}
+#daily-line-view #line-games .line-matchup{align-self:center!important;min-height:0!important;max-height:100%!important}
+#daily-line-view #line-games .line-matchup .line-team{font-size:clamp(20px,2.1vw,39px)!important}
+#daily-line-view #line-games .line-matchup .line-team img{width:clamp(28px,2.6vw,48px)!important;height:clamp(28px,2.6vw,48px)!important}
+#daily-line-view #line-games.line-six .line-matchup .line-team,#daily-line-view #line-games.line-five .line-matchup .line-team{font-size:clamp(19px,1.95vw,36px)!important}
+#daily-line-view #line-games.line-six .line-matchup .line-team img,#daily-line-view #line-games.line-five .line-matchup .line-team img{width:clamp(26px,2.4vw,45px)!important;height:clamp(26px,2.4vw,45px)!important}
+#daily-line-view .line-top>strong{display:inline-flex!important;align-items:center!important;gap:clamp(7px,1vw,18px)!important;white-space:nowrap!important}
+#daily-line-view .line-top>strong:before{content:'🂡 🂱';font-family:Georgia,serif;font-style:normal;font-size:.52em;color:#fff4d3;letter-spacing:-.1em;text-shadow:0 0 7px #ffae00}
+#daily-line-view .line-top>strong:after{content:'🎲';font-size:.66em;font-style:normal;filter:drop-shadow(0 0 6px #ffb11c)}
 </style>
 <script id="v3819-interactions">
 (function(){
