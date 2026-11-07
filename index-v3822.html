@@ -726,7 +726,14 @@ function display(){
  const label=d.downDistance||'';
  return '<div class="live-drive" aria-label="Live football field position"><div class="drive-caption">'+safe(team?team+' BALL':'BALL POSITION')+(label?' · '+safe(label):'')+'</div><div class="drive-field"><span class="drive-yard y20">20</span><span class="drive-yard y50">50</span><span class="drive-yard y80">20</span><span class="drive-marker" style="left:'+pos+'%">🏈</span></div><div class="drive-caption drive-spot">'+safe(d.spot||'')+'</div></div>';
 }
-const nextGamesHtml=current.map(g=>`<div class="game ${g.fav?'favorite':''}" ${showingMyTeams?`style="--team-watermark:url('${safe(favoriteTeams.find(t=>t.name===g.league)?.logo||g.awayLogo)}')"`:``}><div class="meta"><span>${safe(g.league)} ${g.live?'● LIVE':''}</span><span>${safe(g.status)}</span></div><div class="teams"><span style="min-width:0"><span class="teamline"><img decoding="async" src="${safe(g.awayLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.ar?`<span class="rank">#${g.ar}</span>`:''}${safe(g.away)}</span></span><span class="teamline"><img decoding="async" src="${safe(g.homeLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.hr?`<span class="rank">#${g.hr}</span>`:''}${safe(g.home)}</span></span></span>${footballLiveDrive(g)}<span class="score">${!g.live&&!g.final?'VS':safe(g.as)+'<br>'+safe(g.hs)}</span></div>${showingMyTeams&&g.id?'<div class="basement-game-location"><span class="location-city">'+safe(g.venueCity||('Home: '+g.home))+'</span><span class="location-stadium">'+safe(g.venue||'Venue to be announced')+'</span></div>':''}</div>`).join('');
+function baseballLiveDiamond(g){
+ if(!g.live||g.league!=='MLB')return '';
+ const d=g.baseball||{};
+ const num=v=>v===null||v===undefined||v===''?'—':safe(String(v));
+ const b=(v,cls)=>'<span class="baseball-base '+cls+(v===true?' occupied':'')+'"></span>';
+ return '<div class="live-baseball" aria-label="Live baseball situation"><div class="baseball-count"><span>B '+num(d.balls)+'</span><span>S '+num(d.strikes)+'</span><span>O '+num(d.outs)+'</span></div><div class="baseball-diamond">'+b(d.second,'second')+b(d.third,'third')+b(d.first,'first')+'<span class="baseball-home"></span></div><div class="baseball-pitches">PITCHES '+num(d.pitchCount)+'</div></div>';
+}
+const nextGamesHtml=current.map(g=>`<div class="game ${g.fav?'favorite':''}" ${showingMyTeams?`style="--team-watermark:url('${safe(favoriteTeams.find(t=>t.name===g.league)?.logo||g.awayLogo)}')"`:``}><div class="meta"><span>${safe(g.league)} ${g.live?'● LIVE':''}</span><span>${safe(g.status)}</span></div><div class="teams"><span style="min-width:0"><span class="teamline"><img decoding="async" src="${safe(g.awayLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.ar?`<span class="rank">#${g.ar}</span>`:''}${safe(g.away)}</span></span><span class="teamline"><img decoding="async" src="${safe(g.homeLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.hr?`<span class="rank">#${g.hr}</span>`:''}${safe(g.home)}</span></span></span>${footballLiveDrive(g)}${baseballLiveDiamond(g)}<span class="score">${!g.live&&!g.final?'VS':safe(g.as)+'<br>'+safe(g.hs)}</span></div>${showingMyTeams&&g.id?'<div class="basement-game-location"><span class="location-city">'+safe(g.venueCity||('Home: '+g.home))+'</span><span class="location-stadium">'+safe(g.venue||'Venue to be announced')+'</span></div>':''}</div>`).join('');
  // V70: Keep existing game DOM and decoded team logos when visible content is unchanged.
  const gamesNode=$('games');
  // V74 rollback: restore the original Sports Center grid and card sizing.
@@ -774,8 +781,10 @@ function readGame(e,league,query){
  let situation=c?.situation||e?.situation||{},possId=String(situation.possession||''),posTeam=c?.competitors?.find(x=>String(x.team?.id)===possId),spot=situation.possessionText||situation.downDistanceText||'',yard=Number(situation.possessionYardLine);
  let drive=(st.state==='in'&&['NFL','NCAA FOOTBALL'].includes(league)&&Number.isFinite(yard)&&yard>=0&&yard<=100)?{yard:yard,possession:posTeam?.team?.abbreviation||posTeam?.team?.shortDisplayName||'',downDistance:situation.downDistanceText||'',spot:situation.possessionText||''}:null;
 
+ let bs=c?.situation||e?.situation||{};
+ let baseball=st.state==='in'&&league==='MLB'?{first:bs.onFirst,second:bs.onSecond,third:bs.onThird,balls:bs.balls??bs.count?.balls,strikes:bs.strikes??bs.count?.strikes,outs:bs.outs??bs.count?.outs,pitchCount:bs.pitchCount??bs.pitcher?.pitchCount}:null;
  let odds=spread!=null||ou!=null?`LINE: ${spread??'—'}  •  O/U: ${ou??'—'}` :'';
- return {id:String(e.id),league,away,home,awayLogo:a.team?.logo||a.team?.logos?.[0]?.href||teamLogo(league,a.team),homeLogo:h.team?.logo||h.team?.logos?.[0]?.href||teamLogo(league,h.team),as:a.score??'',hs:h.score??'',ar,hr,odds,venue:c?.venue?.fullName||'',venueCity:[c?.venue?.address?.city,c?.venue?.address?.state].filter(Boolean).join(', '),status:st.shortDetail||'Scheduled',drive,live:st.state==='in',final:st.state==='post',date:Date.parse(e.date),fav:/Ohio State|Buckeyes|Cleveland Browns|Cleveland Cavaliers|Cleveland Guardians|Columbus Blue Jackets/i.test(away+' '+home),bigTen:bigTen(a)||bigTen(h),top25:!!(ar||hr),fromTop25:false,fromBigTen:false};
+ return {id:String(e.id),league,away,home,awayLogo:a.team?.logo||a.team?.logos?.[0]?.href||teamLogo(league,a.team),homeLogo:h.team?.logo||h.team?.logos?.[0]?.href||teamLogo(league,h.team),as:a.score??'',hs:h.score??'',ar,hr,odds,venue:c?.venue?.fullName||'',venueCity:[c?.venue?.address?.city,c?.venue?.address?.state].filter(Boolean).join(', '),status:st.shortDetail||'Scheduled',drive,baseball,live:st.state==='in',final:st.state==='post',date:Date.parse(e.date),fav:/Ohio State|Buckeyes|Cleveland Browns|Cleveland Cavaliers|Cleveland Guardians|Columbus Blue Jackets/i.test(away+' '+home),bigTen:bigTen(a)||bigTen(h),top25:!!(ar||hr),fromTop25:false,fromBigTen:false};
 }
 
 const favoriteTeams=[
@@ -1946,5 +1955,14 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 #games .drive-yard{position:absolute;top:50%;transform:translate(-50%,-50%);color:#ffffff9c;font-size:clamp(7px,.6vw,11px);font-weight:700}
 #games .y20{left:20%}#games .y50{left:50%}#games .y80{left:80%}
 #games .drive-marker{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:clamp(13px,1.2vw,23px);line-height:1;filter:drop-shadow(0 1px 3px #000)}
+</style><style id="basement-live-mlb-v1">
+#games .game:has(.live-baseball) .teams{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(105px,35%) auto!important;align-items:center!important;column-gap:clamp(4px,.5vw,10px)!important}
+#games .live-baseball{min-width:0;display:flex;align-items:center;justify-content:center;gap:clamp(4px,.5vw,9px);font-weight:800;color:#fff}
+#games .baseball-count{display:flex;flex-direction:column;gap:2px;font-size:clamp(9px,.7vw,14px);color:#f4f7ff;white-space:nowrap}
+#games .baseball-diamond{position:relative;flex:none;width:clamp(42px,4.8vw,83px);height:clamp(42px,4.8vw,83px);background:linear-gradient(135deg,#0d5838,#187b49);border:1px solid #a9eac4;border-radius:50%;box-shadow:inset 0 0 7px #0008}
+#games .baseball-base,#games .baseball-home{position:absolute;width:16%;height:16%;transform:rotate(45deg);background:#dce8ef;border:1px solid #fff;box-shadow:0 1px 3px #0009}
+#games .baseball-base.occupied{background:#ffda35;border-color:#fff1a4;box-shadow:0 0 7px #ffb800}
+#games .baseball-base.second{top:17%;left:42%}#games .baseball-base.first{top:42%;right:17%}#games .baseball-base.third{top:42%;left:17%}#games .baseball-home{bottom:17%;left:42%;background:#fff}
+#games .baseball-pitches{font-size:clamp(8px,.64vw,12px);max-width:55px;line-height:1.2;text-align:center;color:#f7e2a8}
 </style></body></html>
 <!-- Redeploy V66: restart stalled GitHub Pages build. -->
