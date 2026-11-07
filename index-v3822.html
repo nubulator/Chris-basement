@@ -964,7 +964,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
   filterBar.querySelectorAll('[data-league]').forEach(b=>b.onclick=()=>filterTo(b.dataset.league));
   document.getElementById('daily-line-button').onclick=openDailyLine;
  };
- let lineUpcoming=[],lineLastRefresh=0;
+ let lineUpcoming=[],lineLastRefresh=0,lineRankingMaps=new Map();
  async function refreshLineUpcoming(){
   const now=Date.now();
   if(now-lineLastRefresh<10*60000&&lineUpcoming.length)return;
@@ -976,7 +976,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
    const j=await r.json(),poll=j.rankings?.find(p=>/AP Top 25|AP Poll/i.test(p.name||p.shortName||''))||j.rankings?.[0];
    return [league,new Map((poll?.ranks||[]).map(x=>[String(x.team?.id),Number(x.current)]))];
   }));
-  const rankingMaps=new Map(polls.filter(x=>x.status==='fulfilled').map(x=>x.value));
+  const rankingMaps=new Map(polls.filter(x=>x.status==='fulfilled').map(x=>x.value));lineRankingMaps=rankingMaps;
   const jobs=sources.flatMap(([league,path,extra])=>days.map(date=>({league,path,extra,date})));
   const results=[];
   // ESPN Site API rejects date ranges for some sports. Use individual YYYYMMDD days.
@@ -1033,6 +1033,15 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
    else all.set(key,{...old,...normalized,ar:normalized.ar||old.ar,hr:normalized.hr||old.hr,odds:normalized.odds||old.odds});
   });
   const list=[...all.values()].sort((a,b)=>a.date-b.date);
+  for(const g of list){
+   if(g.league==='NCAA FOOTBALL'||g.league==='NCAA MEN'){
+    const ranks=lineRankingMaps.get(g.league);
+    if(ranks){const teamIds=g.league==='NCAA FOOTBALL'?['194']:['194']; 
+      if(/Ohio State|Buckeyes/i.test(g.away))g.ar=g.ar||ranks.get('194')||0;
+      if(/Ohio State|Buckeyes/i.test(g.home))g.hr=g.hr||ranks.get('194')||0;
+    }
+   }
+  }
   if(lineFilter==='MY'){
    const ids=new Set(fav.map(g=>g.id));
    return list.filter(g=>ids.has(g.id));
@@ -1046,7 +1055,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
   const spread=raw.match(/LINE:\s*(.*?)\s*(?:•|$)/i)?.[1]?.trim()||'—';
   const total=raw.match(/O\/U:\s*([^•]+)/i)?.[1]?.trim()||'—';
   const logo=(src,name)=>src?'<img class="line-team-logo" loading="lazy" src="'+safe(src)+'" alt="'+safe(name)+' logo">':'';
-  return '<article class="line-card"><div class="line-league">'+safe(g.league)+' <span class="line-date">• '+safe(when)+'</span></div><div class="line-teams"><div class="line-team">'+logo(g.awayLogo,g.away)+'<span>'+(g.ar?'#'+g.ar+' ':'')+safe(g.away)+'</span></div><span class="line-versus">VS</span><div class="line-team">'+logo(g.homeLogo,g.home)+'<span>'+safe(g.home)+'</span></div></div><div class="line-metrics"><div><small>SPREAD</small><strong>'+safe(spread)+'</strong></div><div><small>OVER / UNDER</small><strong>'+safe(total)+'</strong></div></div><div class="line-source">'+(raw?'ESPN pregame odds':'Awaiting published ESPN odds')+'</div></article>';
+  return '<article class="line-card"><div class="line-league">'+safe(g.league)+' <span class="line-date">• '+safe(when)+'</span></div><div class="line-teams"><div class="line-team">'+logo(g.awayLogo,g.away)+'<span>'+(g.ar?'#'+g.ar+' ':'')+safe(g.away)+'</span></div><span class="line-versus">VS</span><div class="line-team">'+logo(g.homeLogo,g.home)+'<span>'+(g.hr?'#'+g.hr+' ':'')+safe(g.home)+'</span></div></div><div class="line-metrics"><div><small>SPREAD</small><strong>'+safe(spread)+'</strong></div><div><small>OVER / UNDER</small><strong>'+safe(total)+'</strong></div></div><div class="line-source">'+(raw?'ESPN pregame odds':'Awaiting published ESPN odds')+'</div></article>';
  }
  window.renderDailyLine=function(){
   if(!dailyLineOpen)return;
@@ -1054,7 +1063,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
   document.getElementById('line-filters').innerHTML=tabs.map(([id,name])=>'<button type="button" data-line="'+safe(id)+'" class="'+(lineFilter===id?'active':'')+'">'+safe(name)+'</button>').join('');
   document.querySelectorAll('[data-line]').forEach(b=>b.onclick=()=>{lineFilter=b.dataset.line;linePage=0;renderDailyLine()});
   const data=lineData(),perPage=5,pages=Math.max(1,Math.ceil(data.length/perPage));linePage=(linePage+pages)%pages;
-  const visible=data.slice(linePage*perPage,(linePage+1)*perPage);if(visible.some(g=>g.id&&!g.odds))enrichLineOdds(visible);
+  const visible=data.slice(linePage*perPage,(linePage+1)*perPage);
   document.getElementById('line-games').innerHTML=visible.length?visible.map(gameCard).join(''):'<article class="line-card line-empty">No upcoming games available for this filter. Checking again automatically.</article>';
   document.getElementById('line-page-label').textContent=(lineFilter==='MY'?'MY TEAMS':lineFilter==='ALL'?'ALL GAMES':names[lineFilter])+' • '+data.length+' games • page '+(linePage+1)+'/'+pages;
   document.getElementById('line-page-dots').textContent=Array.from({length:Math.min(pages,12)},(_,i)=>i===linePage?'●':'○').join(' ');
