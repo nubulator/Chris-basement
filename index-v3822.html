@@ -733,10 +733,10 @@ const leagues=[
  ['NFL','football/nfl',''],
  ['NCAA FOOTBALL','football/college-football',''],
  ['NCAA FOOTBALL','football/college-football','&groups=80'],
- ['NCAA FOOTBALL','football/college-football','&groups=5'],
+ ['NCAA FOOTBALL','football/college-football','&groups=21'],
  ['NBA','basketball/nba',''],
  ['NCAA MEN','basketball/mens-college-basketball',''],
- ['NCAA MEN','basketball/mens-college-basketball','&groups=50'],
+ ['NCAA MEN','basketball/mens-college-basketball','&groups=50'],['NCAA MEN','basketball/mens-college-basketball',''],
  ['MLB','baseball/mlb',''],
  ['NHL','hockey/nhl','']
 ];
@@ -971,6 +971,12 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
   const fmt=d=>{const p=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);const v=k=>p.find(x=>x.type===k)?.value;return v('year')+v('month')+v('day')};
   const days=Array.from({length:9},(_,i)=>fmt(new Date(now+i*86400000)));
   const sources=[['NFL','football/nfl',''],['NCAA FOOTBALL','football/college-football','&groups=80'],['NCAA FOOTBALL','football/college-football','&groups=5'],['NCAA MEN','basketball/mens-college-basketball','&groups=50'],['NBA','basketball/nba',''],['NHL','hockey/nhl',''],['MLB','baseball/mlb','']];
+  const polls=await Promise.allSettled([['NCAA FOOTBALL','football/college-football'],['NCAA MEN','basketball/mens-college-basketball']].map(async ([league,path])=>{
+   const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/'+path+'/rankings',{cache:'no-store'});if(!r.ok)throw Error(r.status);
+   const j=await r.json(),poll=j.rankings?.find(p=>/AP Top 25|AP Poll/i.test(p.name||p.shortName||''))||j.rankings?.[0];
+   return [league,new Map((poll?.ranks||[]).map(x=>[String(x.team?.id),Number(x.current)]))];
+  }));
+  const rankingMaps=new Map(polls.filter(x=>x.status==='fulfilled').map(x=>x.value));
   const jobs=sources.flatMap(([league,path,extra])=>days.map(date=>({league,path,extra,date})));
   const results=[];
   // ESPN Site API rejects date ranges for some sports. Use individual YYYYMMDD days.
@@ -978,7 +984,12 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
    const batch=await Promise.allSettled(jobs.slice(i,i+12).map(async ({league,path,extra,date})=>{
     const url='https://site.api.espn.com/apis/site/v2/sports/'+path+'/scoreboard?limit=500&dates='+date+extra;
     const response=await fetch(url,{cache:'no-store'});if(!response.ok)throw Error(response.status);
-    const json=await response.json();return (json.events||[]).map(e=>readGame(e,league,extra)).filter(Boolean);
+    const json=await response.json();return (json.events||[]).map(e=>{
+     const g=readGame(e,league,extra);if(!g)return null;
+     const c=e.competitions?.[0],ranks=rankingMaps.get(league);
+     if(ranks&&c){for(const x of c.competitors||[]){const n=ranks.get(String(x.team?.id))||0;if(x.homeAway==='home')g.hr=n||g.hr;else g.ar=n||g.ar;}g.top25=!!(g.ar||g.hr)}
+     return g;
+    }).filter(Boolean);
    }));
    results.push(...batch);
   }
@@ -993,8 +1004,23 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
    g.league==='NCAA MEN'&&(g.top25||g.fav)||g.league==='NBA'&&/Cavaliers|Cleveland/i.test(g.away+' '+g.home)||
    g.league==='NHL'&&/Blue Jackets|Columbus/i.test(g.away+' '+g.home)||g.league==='MLB'&&/Reds|Cincinnati/i.test(g.away+' '+g.home)
   )).sort((a,b)=>a.date-b.date);
-  if(results.some(r=>r.status==='fulfilled')){lineUpcoming=upcoming;lineLastRefresh=now}
+  if(results.some(r=>r.status==='fulfilled')){lineUpcoming=upcoming;lineLastRefresh=now;enrichLineOdds(upcoming.slice(0,70))}
   if(dailyLineOpen)renderDailyLine();
+ }
+ let lineOddsBusy=false;
+ async function enrichLineOdds(list){
+  if(lineOddsBusy)return;lineOddsBusy=true;
+  const paths={'NFL':'football/nfl','NCAA FOOTBALL':'football/college-football','NCAA MEN':'basketball/mens-college-basketball','NBA':'basketball/nba','NHL':'hockey/nhl','MLB':'baseball/mlb'};
+  const targets=list.filter(g=>g.id&&!g.odds).slice(0,35);
+  for(let i=0;i<targets.length;i+=6){
+   await Promise.allSettled(targets.slice(i,i+6).map(async g=>{
+    const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/'+paths[g.league]+'/summary?event='+encodeURIComponent(g.id),{cache:'no-store'});
+    if(!r.ok)return;const j=await r.json(),o=j.pickcenter?.[0]||j.header?.competitions?.[0]?.odds?.[0];
+    if(o&&(o.details!=null||o.spread!=null||o.overUnder!=null)){g.odds='LINE: '+(o.details??o.spread??'—')+' • O/U: '+(o.overUnder??'—');}
+   }));
+   if(dailyLineOpen)renderDailyLine();
+  }
+  lineOddsBusy=false;
  }
  function lineData(){
   const fav=myTeams.filter(g=>g&&g.id&&!g.final);
