@@ -717,7 +717,16 @@ function display(){
  let current=showingMyTeams?myTeams.slice(page*n,(page+1)*n):filtered.slice((leagueFilter==='ALL'?page-myTeamPages:page)*n,(leagueFilter==='ALL'?page-myTeamPages+1:page+1)*n);
  // The main Sports Center always has four slots; the Daily Line separately shows six.
  $('games').style.gridTemplateRows='repeat(4,minmax(0,1fr))';
- const nextGamesHtml=current.map(g=>`<div class="game ${g.fav?'favorite':''}" ${showingMyTeams?`style="--team-watermark:url('${safe(favoriteTeams.find(t=>t.name===g.league)?.logo||g.awayLogo)}')"`:``}><div class="meta"><span>${safe(g.league)} ${g.live?'● LIVE':''}</span><span>${safe(g.status)}</span></div><div class="teams"><span style="min-width:0"><span class="teamline"><img decoding="async" src="${safe(g.awayLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.ar?`<span class="rank">#${g.ar}</span>`:''}${safe(g.away)}</span></span><span class="teamline"><img decoding="async" src="${safe(g.homeLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.hr?`<span class="rank">#${g.hr}</span>`:''}${safe(g.home)}</span></span></span><span class="score">${!g.live&&!g.final?'VS':safe(g.as)+'<br>'+safe(g.hs)}</span></div>${showingMyTeams&&g.id?'<div class="basement-game-location"><span class="location-city">'+safe(g.venueCity||('Home: '+g.home))+'</span><span class="location-stadium">'+safe(g.venue||'Venue to be announced')+'</span></div>':''}</div>`).join('');
+ function footballLiveDrive(g){
+ if(!g.live||!['NFL','NCAA FOOTBALL'].includes(g.league))return '';
+ const d=g.drive||{},yard=Number(d.yard);
+ if(!Number.isFinite(yard)||yard<0||yard>100)return '';
+ const pos=Math.max(2,Math.min(98,yard));
+ const team=d.possession||'';
+ const label=d.downDistance||'';
+ return '<div class="live-drive" aria-label="Live football field position"><div class="drive-caption">'+safe(team?team+' BALL':'BALL POSITION')+(label?' · '+safe(label):'')+'</div><div class="drive-field"><span class="drive-yard y20">20</span><span class="drive-yard y50">50</span><span class="drive-yard y80">20</span><span class="drive-marker" style="left:'+pos+'%">🏈</span></div><div class="drive-caption drive-spot">'+safe(d.spot||'')+'</div></div>';
+}
+const nextGamesHtml=current.map(g=>`<div class="game ${g.fav?'favorite':''}" ${showingMyTeams?`style="--team-watermark:url('${safe(favoriteTeams.find(t=>t.name===g.league)?.logo||g.awayLogo)}')"`:``}><div class="meta"><span>${safe(g.league)} ${g.live?'● LIVE':''}</span><span>${safe(g.status)}</span></div><div class="teams"><span style="min-width:0"><span class="teamline"><img decoding="async" src="${safe(g.awayLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.ar?`<span class="rank">#${g.ar}</span>`:''}${safe(g.away)}</span></span><span class="teamline"><img decoding="async" src="${safe(g.homeLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.hr?`<span class="rank">#${g.hr}</span>`:''}${safe(g.home)}</span></span></span>${footballLiveDrive(g)}<span class="score">${!g.live&&!g.final?'VS':safe(g.as)+'<br>'+safe(g.hs)}</span></div>${showingMyTeams&&g.id?'<div class="basement-game-location"><span class="location-city">'+safe(g.venueCity||('Home: '+g.home))+'</span><span class="location-stadium">'+safe(g.venue||'Venue to be announced')+'</span></div>':''}</div>`).join('');
  // V70: Keep existing game DOM and decoded team logos when visible content is unchanged.
  const gamesNode=$('games');
  // V74 rollback: restore the original Sports Center grid and card sizing.
@@ -762,8 +771,11 @@ function readGame(e,league,query){
  let c=e.competitions?.[0],a=c?.competitors?.find(x=>x.homeAway==='away'),h=c?.competitors?.find(x=>x.homeAway==='home');if(!a||!h)return null;
  let away=a.team?.shortDisplayName||a.team?.displayName||'TBD',home=h.team?.shortDisplayName||h.team?.displayName||'TBD',st=e.status?.type||{},ar=rank(a),hr=rank(h);
  let od=c.odds?.[0],spread=od?.details||od?.spread,ou=od?.overUnder;
+ let situation=c?.situation||e?.situation||{},possId=String(situation.possession||''),posTeam=c?.competitors?.find(x=>String(x.team?.id)===possId),spot=situation.possessionText||situation.downDistanceText||'',yard=Number(situation.possessionYardLine);
+ let drive=(st.state==='in'&&['NFL','NCAA FOOTBALL'].includes(league)&&Number.isFinite(yard)&&yard>=0&&yard<=100)?{yard:yard,possession:posTeam?.team?.abbreviation||posTeam?.team?.shortDisplayName||'',downDistance:situation.downDistanceText||'',spot:situation.possessionText||''}:null;
+
  let odds=spread!=null||ou!=null?`LINE: ${spread??'—'}  •  O/U: ${ou??'—'}` :'';
- return {id:String(e.id),league,away,home,awayLogo:a.team?.logo||a.team?.logos?.[0]?.href||teamLogo(league,a.team),homeLogo:h.team?.logo||h.team?.logos?.[0]?.href||teamLogo(league,h.team),as:a.score??'',hs:h.score??'',ar,hr,odds,venue:c?.venue?.fullName||'',venueCity:[c?.venue?.address?.city,c?.venue?.address?.state].filter(Boolean).join(', '),status:st.shortDetail||'Scheduled',live:st.state==='in',final:st.state==='post',date:Date.parse(e.date),fav:/Ohio State|Buckeyes|Cleveland Browns|Cleveland Cavaliers|Cleveland Guardians|Columbus Blue Jackets/i.test(away+' '+home),bigTen:bigTen(a)||bigTen(h),top25:!!(ar||hr),fromTop25:false,fromBigTen:false};
+ return {id:String(e.id),league,away,home,awayLogo:a.team?.logo||a.team?.logos?.[0]?.href||teamLogo(league,a.team),homeLogo:h.team?.logo||h.team?.logos?.[0]?.href||teamLogo(league,h.team),as:a.score??'',hs:h.score??'',ar,hr,odds,venue:c?.venue?.fullName||'',venueCity:[c?.venue?.address?.city,c?.venue?.address?.state].filter(Boolean).join(', '),status:st.shortDetail||'Scheduled',drive,live:st.state==='in',final:st.state==='post',date:Date.parse(e.date),fav:/Ohio State|Buckeyes|Cleveland Browns|Cleveland Cavaliers|Cleveland Guardians|Columbus Blue Jackets/i.test(away+' '+home),bigTen:bigTen(a)||bigTen(h),top25:!!(ar||hr),fromTop25:false,fromBigTen:false};
 }
 
 const favoriteTeams=[
@@ -1925,5 +1937,14 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 #basement-theme-options button[data-value="thanksgiving"]{background:#a34b19!important;background-image:linear-gradient(115deg,#a34b19,#e6a63c)!important;color:#fff!important;text-shadow:0 2px 4px #0009!important}
 #basement-theme-options button[data-value="christmas"]{background:#12693d!important;background-image:linear-gradient(115deg,#12693d,#bd293f)!important;color:#fff!important;text-shadow:0 2px 4px #0009!important}
 #basement-theme-options button[data-value="newyear"]{background:#342080!important;background-image:linear-gradient(115deg,#342080,#a450cc)!important;color:#fff!important;text-shadow:0 2px 4px #0009!important}
+</style><style id="basement-football-drive-v1">
+#games .game:has(.live-drive) .teams{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(105px,36%) auto!important;align-items:center!important;column-gap:clamp(4px,.55vw,10px)!important}
+#games .live-drive{min-width:0;display:flex;flex-direction:column;gap:2px;align-self:center;text-align:center;overflow:hidden}
+#games .drive-caption{font-size:clamp(8px,.69vw,13px);font-weight:800;color:#f8e7b1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#games .drive-spot{font-size:clamp(7px,.6vw,11px);color:#d5eaff}
+#games .drive-field{height:clamp(19px,2.25vh,34px);position:relative;border:1px solid #e5f8ff;border-radius:4px;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(10% - 1px),#ffffff45 calc(10% - 1px),#ffffff45 10%),linear-gradient(90deg,#155b35,#22864c,#155b35);box-shadow:inset 0 0 8px #0008;overflow:visible}
+#games .drive-yard{position:absolute;top:50%;transform:translate(-50%,-50%);color:#ffffff9c;font-size:clamp(7px,.6vw,11px);font-weight:700}
+#games .y20{left:20%}#games .y50{left:50%}#games .y80{left:80%}
+#games .drive-marker{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:clamp(13px,1.2vw,23px);line-height:1;filter:drop-shadow(0 1px 3px #000)}
 </style></body></html>
 <!-- Redeploy V66: restart stalled GitHub Pages build. -->
