@@ -1058,6 +1058,21 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
 #line-games.line-six .line-metrics>div,#line-games.line-five .line-metrics>div{padding:2px 6px!important}
 #line-games.line-six .line-metrics strong,#line-games.line-five .line-metrics strong{font-size:clamp(15px,1.35vw,23px)!important}
 #line-games.line-six .line-source,#line-games.line-five .line-source{font-size:clamp(9px,.65vw,12px)!important}
+
+/* V28: unboxed, centered side-by-side betting line; emphasize team names and logos */
+#line-games .line-card{grid-template-rows:auto minmax(28px,1fr) auto auto!important;gap:2px!important}
+#line-games .line-metrics{display:flex!important;align-items:center!important;justify-content:center!important;gap:clamp(14px,2.1vw,42px)!important;width:100%!important;background:transparent!important;border:0!important;box-shadow:none!important;min-height:0!important}
+#line-games .line-metrics>div{display:flex!important;flex-direction:row!important;align-items:baseline!important;justify-content:center!important;gap:clamp(4px,.55vw,10px)!important;flex:0 1 auto!important;width:auto!important;min-width:0!important;padding:0!important;margin:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+#line-games .line-metrics>div+div:before{content:'|';color:#8fb4e0;font-weight:700;margin-right:clamp(7px,1vw,18px)}
+#line-games .line-metrics small{font-size:clamp(10px,.8vw,15px)!important;line-height:1.1!important;color:#cfe8ff!important;white-space:nowrap!important}
+#line-games .line-metrics strong{font-size:clamp(17px,1.55vw,29px)!important;color:#ffe27a!important;white-space:nowrap!important}
+#line-games .line-matchup .line-team{font-size:clamp(19px,2.15vw,39px)!important}
+#line-games .line-matchup .line-team img{width:clamp(28px,2.65vw,49px)!important;height:clamp(28px,2.65vw,49px)!important}
+#line-games.line-six .line-matchup .line-team,#line-games.line-five .line-matchup .line-team{font-size:clamp(17px,1.9vw,34px)!important}
+#line-games.line-six .line-matchup .line-team img,#line-games.line-five .line-matchup .line-team img{width:clamp(25px,2.3vw,43px)!important;height:clamp(25px,2.3vw,43px)!important}
+#line-games.line-six .line-metrics,#line-games.line-five .line-metrics{gap:clamp(8px,1.2vw,22px)!important}
+#line-games.line-six .line-metrics small,#line-games.line-five .line-metrics small{font-size:clamp(9px,.7vw,13px)!important}
+#line-games.line-six .line-metrics strong,#line-games.line-five .line-metrics strong{font-size:clamp(15px,1.35vw,25px)!important}
 </style>
 <script id="v3819-interactions">
 (function(){
