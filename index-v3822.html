@@ -742,7 +742,7 @@ function display(){
 function basketballLivePanel(g){
  if(!g.live||!['NBA','NCAA MEN'].includes(g.league))return '';
  const d=g.basketball||{};
- const num=v=>Number.isFinite(Number(v))&&Number(v)>=0?String(v):'—';
+ const num=v=>v!==null&&v!==undefined&&v!==''&&Number.isFinite(Number(v))&&Number(v)>=0?String(v):'—';
  const period=String(d.period||'').trim();
  const shot=num(d.shotClock);
  const foulsA=num(d.awayFouls),foulsH=num(d.homeFouls);
@@ -751,7 +751,7 @@ function basketballLivePanel(g){
 function hockeyLivePanel(g){
  if(!g.live||g.league!=='NHL')return '';
  const d=g.hockey||{};
- const num=v=>Number.isFinite(Number(v))&&Number(v)>=0?String(v):'—';
+ const num=v=>v!==null&&v!==undefined&&v!==''&&Number.isFinite(Number(v))&&Number(v)>=0?String(v):'—';
  const a=num(d.awayShots),h=num(d.homeShots);
  const pp=String(d.powerPlay||'').trim();
  return '<div class="live-rink" aria-label="Live hockey game details"><div class="rink-art"><span class="rink-goal left">▣</span><span class="rink-faceoff">●</span><span class="rink-goal right">▣</span></div><div class="rink-info"><strong>SHOTS ON GOAL</strong><span>'+safe(d.awayAbbr||'AWAY')+' '+a+' · '+safe(d.homeAbbr||'HOME')+' '+h+'</span>'+(pp?'<span class="rink-pp">POWER PLAY '+safe(pp)+'</span>':'')+'</div></div>';
