@@ -1238,29 +1238,517 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
 })();
 </script>
 <script id="v3821-funjs">(function(){
-const jokes=[["Why did the scarecrow win an award?", "Because he was outstanding in his field."], ["I only know 25 letters of the alphabet.", "I don’t know y."], ["Why did the bicycle fall over?", "It was two-tired."], ["What do you call fake spaghetti?", "An impasta."], ["Why did the coffee file a police report?", "It got mugged."], ["How do you organize a space party?", "You planet."], ["Why don’t eggs tell jokes?", "They’d crack each other up."], ["What did one wall say to the other?", "I’ll meet you at the corner."], ["Why was the math book sad?", "It had too many problems."], ["What do you call cheese that isn’t yours?", "Nacho cheese."], ["What do you call a sleeping bull?", "A bulldozer."], ["Why couldn’t the leopard play hide-and-seek?", "Because he was always spotted."], ["How do trees get online?", "They log in."], ["Why do seagulls fly over the sea?", "Because if they flew over the bay, they’d be bagels."], ["Why was the broom late?", "It overswept."], ["What do you call a fish wearing a bow tie?", "Sofishticated."], ["What do you call a factory that makes okay products?", "A satisfactory."], ["What do you call a bear with no teeth?", "A gummy bear."], ["Why did the tomato blush?", "It saw the salad dressing."], ["What do you call an alligator in a vest?", "An investigator."], ["Why can’t your nose be 12 inches long?", "Because then it would be a foot."], ["What did the ocean say to the beach?", "Nothing, it just waved."], ["Why did the golfer bring two pairs of pants?", "In case he got a hole in one."], ["Why did the computer go to the doctor?", "It caught a virus."], ["Why don’t skeletons fight each other?", "They don’t have the guts."], ["What do you call a dog magician?", "A labracadabrador."], ["Why did the picture go to jail?", "It was framed."], ["What do you call a boomerang that won’t come back?", "A stick."], ["Why did the cookie go to the hospital?", "Because it felt crummy."], ["How does the moon cut its hair?", "Eclipse it."], ["Why did the stadium get hot?", "All the fans left."], ["What’s orange and sounds like a parrot?", "A carrot."], ["Why did the man put his money in the freezer?", "He wanted cold hard cash."], ["Why do bees have sticky hair?", "Because they use honeycombs."], ["Why can’t you trust stairs?", "They’re always up to something."], ["What do you call a belt made of watches?", "A waist of time."], ["Why did the invisible man turn down the job?", "He couldn’t see himself doing it."], ["What did the janitor say when he jumped out of the closet?", "Supplies!"], ["What do you call a cow with no legs?", "Ground beef."], ["What do you call a cow with two legs?", "Lean beef."]];
-const words=[['KERFUFFLE','A fuss or commotion over something trivial.'],['BUMBERSHOOT','An old-fashioned word for an umbrella.'],['FLUMMOX','To confuse or completely bewilder.'],['GOBBLEDYGOOK','Language that is unnecessarily complicated.'],['SKEDADDLE','To leave quickly, especially to avoid trouble.'],['LALLYGAG','To waste time or move slowly.'],['DOOHICKEY','A thing whose proper name you can’t remember.'],['NINCOMPOOP','A foolish or silly person.'],['WHIPPERSNAPPER','A young person considered overly confident.'],['HULLABALOO','A noisy commotion or fuss.']];
-const trivia=[['What band released the album 1984?','Van Halen.'],['What city is home to the Rock & Roll Hall of Fame?','Cleveland, Ohio.'],['What team did the Cincinnati Reds beat in the 1990 World Series?','The Oakland Athletics.'],['What instrument did John Bonham play?','Drums for Led Zeppelin.'],['What is the only NFL team named after a person?','The Cleveland Browns, named for Paul Brown.'],['What band recorded The Dark Side of the Moon?','Pink Floyd.'],['What is Ohio State’s football stadium nicknamed?','The Horseshoe.']];
-const rock=[['LED ZEPPELIN','John Bonham’s powerful drumming helped define the band’s sound.'],['VAN HALEN','Eddie Van Halen’s guitar solo “Eruption” appeared on the band’s 1978 debut album.'],['PINK FLOYD','The Dark Side of the Moon was released in 1973.'],['U2','The Joshua Tree was released in 1987.'],['THE ROLLING STONES','Their famous tongue-and-lips logo debuted in 1971.'],['VAN MORRISON','The album Moondance was released in 1970.']];
-const dogs=[['DUCKY SAYS…','The couch is mine. You may visit.'],['HAZEL SAYS…','I’ve never met a lap I didn’t fit in.'],['DUCKY SAYS…','Walk? I thought you said snack.'],['HAZEL SAYS…','Personal space is a myth.'],['DUCKY & HAZEL','Two dogs. One couch. Zero available seats.']];
+const jokes=[["Why did the bicycle fall over?","Because it was two-tired."],["What do you call a bear with no teeth?","A gummy bear."],["Why did the scarecrow win an award?","He was outstanding in his field."],["Why did the coffee file a police report?","It got mugged."],["What do you call fake spaghetti?","An impasta."],["Why don’t eggs tell jokes?","They would crack each other up."],["Why was the math book sad?","It had too many problems."],["How do trees get online?","They log in."],["Why did the tomato blush?","It saw the salad dressing."],["What did the ocean say to the beach?","Nothing. It just waved."],["Why did the broom arrive late?","It overswept."],["Why did the computer visit a doctor?","It caught a virus."],["Why don't skeletons fight?","They don't have the guts."],["Why did the golfer bring two pairs of pants?","In case he got a hole in one."],["What do you call cheese that isn't yours?","Nacho cheese."],["Why did the cookie visit the doctor?","It felt crummy."],["What do you call a sleeping bull?","A bulldozer."],["Why can't a nose be twelve inches long?","Then it would be a foot."],["What do you call a fish wearing a bow tie?","Sofishticated."],["Why did the orange stop rolling?","It ran out of juice."],["Why don't scientists trust atoms?","They make up everything."],["Why was the calendar nervous?","Its days were numbered."],["How does a penguin build its house?","Igloos it together."],["What do you call a dinosaur with an extensive vocabulary?","A thesaurus."],["Why did the belt get arrested?","It held up a pair of pants."],["What do you call a factory that makes okay products?","A satisfactory."],["What do you call a boomerang that won't come back?","A stick."],["Why did the picture go to jail?","It was framed."],["What do you call a cow with no legs?","Ground beef."],["Why was the stadium so cool?","It was full of fans."],["Why did the banana go to the doctor?","It wasn't peeling well."],["What do you call a dog magician?","A labracadabrador."],["Why couldn't the pony sing?","It was a little hoarse."],["What do you call a pile of cats?","A meowtain."],["Why did the mushroom get invited to parties?","He was a fungi."],["Why was the computer cold?","It left its Windows open."],["How do you organize a space party?","You planet."],["Why did the music teacher need a ladder?","To reach the high notes."],["What kind of shoes do spies wear?","Sneakers."],["Why don't oysters share?","They're shellfish."],["What did the janitor say when he jumped out of the closet?","Supplies!"],["Why did the grape stop in the road?","It ran out of wine."],["Why did the chicken join a band?","It had the drumsticks."],["What do you call a sad strawberry?","A blueberry."],["Why did the lamp get a promotion?","It was outstanding in its field of light."],["Why was the belt so confident?","It had everything under control."],["What do you call an alligator in a vest?","An investigator."],["Why do bees have sticky hair?","They use honeycombs."],["What do you call a singing laptop?","A Dell."],["Why was the broom so popular?","It swept everyone off their feet."],["Why did the frog take the bus?","Its car got toad."],["What do you call a snowman in summer?","A puddle."],["Why did the scarecrow become a comedian?","He was outstanding in his field."],["How do you make a tissue dance?","Put a little boogie in it."],["Why did the baker stop making donuts?","He was fed up with the hole business."],["Why did the clock get in trouble?","It tocked too much."],["What do you call a bear caught in the rain?","A drizzly bear."],["Why did the bicycle refuse to stand?","It was two-tired."],["Why was the computer good at singing?","It had great processing power."],["What do you call a duck that gets good grades?","A wise quacker."],["Why did the tomato turn red?","It saw the salad dressing."],["Why don't eggs tell secrets?","They might crack."],["Why did the robot go on vacation?","To recharge its batteries."],["What did one wall say to the other?","I'll meet you at the corner."],["Why did the ocean break up with the beach?","It needed some space."],["What do you call a sleeping pizza?","A piZZZa."],["Why did the book join the police?","It wanted to go undercover."],["What did the zero say to the eight?","Nice belt!"],["Why did the barber win the race?","He knew a shortcut."],["What do you call a sheep without legs?","A cloud."],["Why did the baseball player get arrested?","He stole second base."],["Why did the pencil get an award?","It was on point."],["What did the left eye say to the right eye?","Between us, something smells."],["Why did the astronaut break up with the moon?","He needed space."],["What do you call a can opener that doesn't work?","A can't opener."],["Why was the math teacher so calm?","She knew how to work out problems."],["Why did the refrigerator hum?","It forgot the words."],["What do you call a cow playing guitar?","A moo-sician."],["Why did the keyboard go to therapy?","It had too many issues to press."],["What kind of tree fits in your hand?","A palm tree."],["Why was the football team so warm?","They had lots of fans."],["Why did the pirate learn the alphabet?","He kept getting lost at C."],["What do you call a rabbit with fleas?","Bugs Bunny."],["Why did the donut visit the dentist?","It needed a filling."],["Why did the clock go on vacation?","It needed time off."],["What do you call a horse that lives next door?","A neigh-bor."],["Why did the fish blush?","It saw the ocean's bottom."],["Why did the coffee taste like dirt?","It was freshly ground."],["What do you call a cow in an earthquake?","A milkshake."],["Why did the phone need glasses?","It lost its contacts."],["Why was the guitar upset?","Someone picked on it."],["Why did the computer go to the beach?","To surf the web."],["Why did the dog sit in the shade?","It didn't want to be a hot dog."],["What do you call a detective duck?","Sherquack Holmes."],["Why did the ladder get promoted?","It was always moving up."],["Why did the calendar go to school?","To improve its dates."],["Why did the sandwich go to the gym?","To get shredded."],["Why did the cat sit on the computer?","To keep an eye on the mouse."],["Why did the astronaut bring a broom?","To sweep through space."],["Why did the musician buy a new watch?","For better timing."]];
+const words=[["FLUMMOX","To confuse or completely bewilder"],["KERFUFFLE","A commotion or fuss"],["BAMBOOZLE","To trick or confuse someone"],["SERENDIPITY","Finding something good by chance"],["GOBSMACKED","Completely astonished"],["SHENANIGANS","Playful mischief or tricks"],["WHIMSICAL","Playfully unusual or fanciful"],["SKEDADDLE","To leave in a hurry"],["HULLABALOO","A noisy fuss or commotion"],["CATYWAMPUS","Crooked or out of alignment"],["DILLYDALLY","To waste time by delaying"],["LOLLYGAG","To spend time aimlessly"],["ABSQUATULATE","To leave suddenly or secretly"],["BIBLIOPHILE","A person who loves books"],["CACOPHONY","A harsh mixture of sounds"],["DOPPELGANGER","A person's uncanny lookalike"],["EFFERVESCENT","Bubbly, lively, or enthusiastic"],["FIDDLESTICKS","A playful expression of nonsense"],["GALLIVANT","To wander around seeking fun"],["HAPHAZARD","Lacking an obvious plan or order"],["INCANDESCENT","Glowing with heat or intense feeling"],["JUBILANT","Feeling great joy or triumph"],["KISMET","Fate or destiny"],["LACKADAISICAL","Showing little enthusiasm or effort"],["MELLIFLUOUS","Sweet and smooth sounding"],["NINCOMPOOP","A foolish or silly person"],["OBFUSCATE","To make something unclear"],["PANACHE","Flamboyant confidence or flair"],["QUANDARY","A difficult choice or dilemma"],["RIGMAROLE","A long, complicated procedure"],["SUSURRUS","A soft whispering or rustling sound"],["TINTINNABULATION","The ringing of bells"],["UBIQUITOUS","Found almost everywhere"],["VERISIMILITUDE","The appearance of being true"],["WANDERLUST","A strong desire to travel"],["XENIAL","Friendly to guests or strangers"],["YONDER","At some distance over there"],["ZEITGEIST","The spirit or mood of an era"],["ALACRITY","Cheerful readiness"],["BROUHAHA","A noisy fuss or uproar"],["CATAWAMPUS","Crooked or askew"],["DISCOMBOBULATE","To confuse or unsettle"],["EPHEMERAL","Lasting only a short time"],["FLIBBERTIGIBBET","A frivolous or overly talkative person"],["GUMPTION","Initiative and courage"],["IMBROGLIO","A confusing or embarrassing situation"],["JUXTAPOSE","To place side by side for comparison"],["KALEIDOSCOPIC","Changing in a colorful pattern"],["LOQUACIOUS","Very talkative"],["MALARKY","Nonsense or foolish talk"],["NEFARIOUS","Wicked or criminal"],["ONOMATOPOEIA","A word that imitates a sound"],["PERSNICKETY","Very particular about details"],["QUINTESSENTIAL","The most typical example"],["RACONTEUR","A skilled storyteller"],["SANGUINE","Optimistic or hopeful"],["TUMULTUOUS","Noisy and disorderly"],["UNFLAPPABLE","Calm under pressure"],["VICARIOUS","Experienced through another person"],["WINSOME","Charming in a sweet way"],["ZANY","Amusingly unconventional"],["AMELIORATE","To make something better"],["BOMBASTIC","Overly grand or pompous"],["CHICANERY","Trickery or deception"],["EBULLIENT","Cheerful and full of energy"],["FURTIVE","Secretive or sneaky"],["GARRULOUS","Excessively talkative"],["HARBINGER","A sign of something coming"],["INEFFABLE","Too great to put into words"],["JOCULAR","Fond of joking"],["KOWTOW","To act excessively submissive"],["LUGUBRIOUS","Exaggeratedly sad or gloomy"],["MAVERICK","An independent-minded person"],["NEBULOUS","Vague or unclear"],["OSTENTATIOUS","Designed to impress others"],["PERNICIOUS","Causing subtle but serious harm"],["QUOTIDIAN","Ordinary or everyday"],["RESPLENDENT","Brightly impressive or dazzling"],["SOLILOQUY","A speech spoken to oneself"],["TACITURN","Quiet and reserved"],["UNCTUOUS","Excessively flattering"],["VEX","To annoy or puzzle"],["ZESTFUL","Full of enthusiasm"],["ANACHRONISM","Something out of its proper time"],["BESPOKE","Made for a particular customer"],["CAPRICIOUS","Changing suddenly and unpredictably"],["DEBONAIR","Confident, stylish, and charming"],["ELUCIDATE","To explain clearly"],["FLOUNDER","To struggle or stumble"],["GRANDILOQUENT","Using pompous language"],["HISTRIONIC","Overly dramatic"],["INQUISITIVE","Curious and eager to learn"],["JARGON","Specialized language of a group"],["KUDOS","Praise for an achievement"],["LUMINOUS","Giving off or reflecting light"],["MIRTH","Laughter and amusement"],["NOSTALGIA","Longing for the past"],["QUAGMIRE","A difficult or messy situation"],["FANDANGO","An elaborate fuss or lively dance"],["PULCHRITUDE","Physical beauty"]];
+const trivia=[["Which band released the album 1984?","Van Halen"],["Who sang the album Moondance?","Van Morrison"],["Which band recorded Rumours?","Fleetwood Mac"],["Who was the drummer for Led Zeppelin?","John Bonham"],["Which band released The Joshua Tree?","U2"],["Which band recorded Back in Black?","AC/DC"],["Which artist recorded Born to Run?","Bruce Springsteen"],["Which band recorded Dark Side of the Moon?","Pink Floyd"],["Who sang the hit Maggie May?","Rod Stewart"],["Which band released Exile on Main St.?","The Rolling Stones"],["Which group recorded Hotel California?","Eagles"],["Who was the lead singer of The Doors?","Jim Morrison"],["What is the largest planet in our solar system?","Jupiter"],["Which ocean is the largest?","Pacific Ocean"],["How many bones does an adult human typically have?","206"],["Which planet is known as the Red Planet?","Mars"],["What is the capital of Australia?","Canberra"],["Which element has the symbol Au?","Gold"],["What is the smallest prime number?","2"],["Which country invented paper?","China"],["What is the tallest mountain above sea level?","Mount Everest"],["What is the chemical formula for water?","H2O"],["Which artist painted the Mona Lisa?","Leonardo da Vinci"],["What is the largest mammal?","Blue whale"],["How many sides does a hexagon have?","Six"],["What is the capital of Canada?","Ottawa"],["Which planet has prominent rings?","Saturn"],["What instrument has 88 keys?","A standard piano"],["What is the fastest land animal?","Cheetah"],["What is the world's largest desert?","Antarctic Desert"],["Which bird is a symbol of peace?","Dove"],["What is the freezing point of water in Celsius?","0°C"],["Who wrote Romeo and Juliet?","William Shakespeare"],["What is the longest river in South America?","Amazon River"],["What is the hardest natural mineral?","Diamond"],["Which gas do plants absorb for photosynthesis?","Carbon dioxide"],["What is the currency of Japan?","Yen"],["Which continent has the most countries?","Africa"],["What is the square root of 144?","12"],["What is the largest organ of the human body?","Skin"],["What is the name of our galaxy?","Milky Way"],["Which animal is known for black and white stripes?","Zebra"],["What does DNA stand for?","Deoxyribonucleic acid"],["Which US state is nicknamed the Sunshine State?","Florida"],["What is the capital of Italy?","Rome"],["How many strings does a standard violin have?","Four"],["Which planet is closest to the Sun?","Mercury"],["What is the main ingredient in guacamole?","Avocado"],["Which country is famous for the Eiffel Tower?","France"],["What do bees collect from flowers?","Nectar and pollen"],["What is the largest bone in the human body?","Femur"],["Which sport uses a shuttlecock?","Badminton"],["What is the capital of Spain?","Madrid"],["What is the boiling point of water at sea level in Celsius?","100°C"],["Which scientist developed the theory of relativity?","Albert Einstein"],["Which US state is the Grand Canyon in?","Arizona"],["How many players are on the field for one soccer team?","11"],["What is the main language of Brazil?","Portuguese"],["Which instrument measures earthquakes?","Seismometer"],["What is the capital of Germany?","Berlin"],["What is the world's largest island?","Greenland"],["Which animal is the tallest living land animal?","Giraffe"],["How many minutes are in a day?","1,440"],["Which planet is famous for the Great Red Spot?","Jupiter"],["What is the national sport of Japan traditionally associated with wrestlers?","Sumo"],["Which metal is liquid near room temperature?","Mercury"],["Which country is shaped like a boot?","Italy"],["What is the first element on the periodic table?","Hydrogen"],["What does HTTP stand for?","Hypertext Transfer Protocol"],["Which sea creature has eight arms?","Octopus"],["What is the capital of Greece?","Athens"],["What is the smallest US state by area?","Rhode Island"],["Which bird cannot fly and lives in Antarctica?","Penguin"],["What is the study of weather called?","Meteorology"],["Which country gifted the Statue of Liberty to the US?","France"],["How many colors are traditionally in a rainbow?","Seven"],["What is the name of the largest ocean trench?","Mariana Trench"],["Which chess piece moves in an L shape?","Knight"],["What is the capital of Ireland?","Dublin"],["What do you call a group of lions?","A pride"],["What is the longest bone in a human leg?","Femur"],["Which composer wrote the Fifth Symphony with its famous opening?","Beethoven"],["What is the capital of Egypt?","Cairo"],["What is the smallest continent by land area?","Australia"],["What type of animal is a Komodo dragon?","Lizard"],["Which famous ship sank in 1912?","Titanic"],["What is the capital of Mexico?","Mexico City"],["What does a thermometer measure?","Temperature"],["Which US city is nicknamed the Big Easy?","New Orleans"],["Which gas makes up most of Earth's atmosphere?","Nitrogen"],["What is the largest species of shark?","Whale shark"],["What is the capital of New Zealand?","Wellington"],["Which ocean lies between Africa and Australia?","Indian Ocean"],["What is the official name for a baby goat?","Kid"],["How many legs does a spider have?","Eight"],["Which planet is farthest from the Sun?","Neptune"],["Which US state is nicknamed the Aloha State?","Hawaii"],["What does a barometer measure?","Air pressure"],["Which country is home to Machu Picchu?","Peru"],["Which month has an extra day in leap years?","February"]];
+const rock=[["On November 5, 1605…","The Gunpowder Plot was discovered in London"],["In 1969…","Apollo 11 landed humans on the Moon"],["In 1977…","Star Wars opened in movie theaters"],["In 1981…","MTV began broadcasting music videos"],["In 1970…","The first Earth Day was observed"],["In 1975…","Jaws became a major summer movie hit"],["In 1982…","E.T. the Extra-Terrestrial reached theaters"],["In 1976…","The United States celebrated its bicentennial"],["In 1964…","The Beatles appeared on The Ed Sullivan Show"],["In 1985…","Live Aid concerts were held in London and Philadelphia"],["In 1990…","The Hubble Space Telescope launched into orbit"],["In 1776…","The US Declaration of Independence was adopted"],["In 1789…","George Washington became the first US president"],["In 1803…","The Louisiana Purchase doubled the size of the young US"],["In 1804…","Lewis and Clark began their western expedition"],["In 1815…","Napoleon was defeated at Waterloo"],["In 1825…","The Erie Canal opened"],["In 1837…","Victoria became queen of the United Kingdom"],["In 1848…","The California Gold Rush began"],["In 1859…","Charles Darwin published On the Origin of Species"],["In 1861…","The American Civil War began"],["In 1863…","The Emancipation Proclamation took effect"],["In 1865…","The American Civil War ended"],["In 1869…","The first US transcontinental railroad was completed"],["In 1876…","Alexander Graham Bell received a telephone patent"],["In 1883…","The Brooklyn Bridge opened"],["In 1886…","The Statue of Liberty was dedicated"],["In 1893…","Chicago hosted the World's Columbian Exposition"],["In 1896…","The first modern Olympic Games opened in Athens"],["In 1903…","The Wright brothers achieved powered flight"],["In 1908…","Ford introduced the Model T"],["In 1912…","The Titanic sank on its maiden voyage"],["In 1914…","World War I began"],["In 1917…","The US entered World War I"],["In 1918…","World War I ended"],["In 1920…","Women gained voting rights nationwide in the US"],["In 1922…","Tutankhamun's tomb was discovered"],["In 1927…","Charles Lindbergh flew solo across the Atlantic"],["In 1928…","Penicillin was discovered by Alexander Fleming"],["In 1929…","The US stock market crash helped usher in the Great Depression"],["In 1932…","Amelia Earhart flew solo across the Atlantic"],["In 1933…","The US began the New Deal"],["In 1936…","Jesse Owens won four Olympic gold medals in Berlin"],["In 1937…","The Golden Gate Bridge opened"],["In 1939…","World War II began in Europe"],["In 1941…","The attack on Pearl Harbor brought the US into World War II"],["In 1944…","Allied forces landed in Normandy on D-Day"],["In 1945…","World War II ended"],["In 1947…","Jackie Robinson broke Major League Baseball's color barrier"],["In 1948…","The Universal Declaration of Human Rights was adopted"],["In 1950…","The Korean War began"],["In 1953…","Edmund Hillary and Tenzing Norgay reached Everest's summit"],["In 1954…","The US Supreme Court ruled in Brown v. Board of Education"],["In 1955…","Rosa Parks refused to give up her bus seat in Montgomery"],["In 1957…","The Soviet Union launched Sputnik 1"],["In 1958…","NASA was established"],["In 1960…","The first televised US presidential debates were held"],["In 1961…","Yuri Gagarin became the first human in space"],["In 1962…","The Cuban Missile Crisis brought the Cold War to a dangerous point"],["In 1963…","Martin Luther King Jr. delivered his I Have a Dream speech"],["In 1965…","The Voting Rights Act became US law"],["In 1966…","Star Trek premiered on television"],["In 1967…","The first Super Bowl was played"],["In 1968…","Apollo 8 orbited the Moon"],["In 1971…","The first email was sent on ARPANET"],["In 1972…","Apollo 17 became the last crewed Moon landing to date"],["In 1973…","The first handheld mobile phone call was demonstrated"],["In 1974…","Richard Nixon resigned the US presidency"],["In 1978…","The first successful IVF birth took place"],["In 1979…","Sony introduced the Walkman"],["In 1980…","The US men's hockey team won the Miracle on Ice game"],["In 1983…","The original Nintendo Famicom launched in Japan"],["In 1984…","Apple introduced the Macintosh"],["In 1986…","The Space Shuttle Challenger disaster occurred"],["In 1987…","The first Final Fantasy video game was released"],["In 1988…","The first Internet worm spread across early networks"],["In 1989…","The Berlin Wall began to fall"],["In 1991…","The Soviet Union dissolved"],["In 1992…","The first SMS text message was sent"],["In 1993…","The World Wide Web entered the public domain"],["In 1994…","The first PlayStation launched in Japan"],["In 1995…","The DVD format was announced"],["In 1996…","Dolly the sheep was born"],["In 1997…","The first Harry Potter novel was published"],["In 1998…","Google was founded"],["In 1999…","The euro was introduced for electronic transactions"],["In 2000…","Humans had lived continuously aboard the ISS since November"],["In 2001…","Wikipedia launched"],["In 2002…","The euro began circulating as banknotes and coins"],["In 2003…","The Human Genome Project was declared complete"],["In 2004…","Facebook launched"],["In 2005…","YouTube was founded"],["In 2006…","Pluto was reclassified as a dwarf planet"],["In 2007…","Apple introduced the first iPhone"],["In 2008…","The Large Hadron Collider began operations"],["In 2009…","Bitcoin's first block was mined"],["In 2010…","Instagram launched"],["In 2011…","The last Space Shuttle mission flew"],["In 2012…","NASA's Curiosity rover landed on Mars"],["In 2013…","The first 3D-printed gun design sparked a global debate"]];
+const dogs=[["DUCKY’S GREYHOUND FACT","Greyhounds are sighthounds that use vision to follow movement."],["DUCKY ASKS…","Did you know that greyhounds are sighthounds that use vision to follow movement?"],["HAZEL’S GREAT DANE FACT","Great Danes were developed in Germany despite their name."],["HAZEL ASKS…","Did you know that great danes were developed in Germany despite their name?"],["DUCKY’S GREYHOUND FACT","Greyhounds can sprint at roughly 40 to 45 miles per hour."],["DUCKY ASKS…","Did you know that greyhounds can sprint at roughly 40 to 45 miles per hour?"],["HAZEL’S GREAT DANE FACT","Great Danes were historically used for boar hunting."],["HAZEL ASKS…","Did you know that great danes were historically used for boar hunting?"],["DUCKY’S GREYHOUND FACT","Greyhounds use a double-suspension gallop."],["DUCKY ASKS…","Did you know that greyhounds use a double-suspension gallop?"],["HAZEL’S GREAT DANE FACT","Great Danes are often called gentle giants."],["HAZEL ASKS…","Did you know that great danes are often called gentle giants?"],["DUCKY’S GREYHOUND FACT","Greyhounds are sprinters rather than distance runners."],["DUCKY ASKS…","Did you know that greyhounds are sprinters rather than distance runners?"],["HAZEL’S GREAT DANE FACT","Great Danes often lean on people for affection."],["HAZEL ASKS…","Did you know that great danes often lean on people for affection?"],["DUCKY’S GREYHOUND FACT","Greyhounds have thin skin and short coats."],["DUCKY ASKS…","Did you know that greyhounds have thin skin and short coats?"],["HAZEL’S GREAT DANE FACT","Great Danes come in fawn, brindle, black, blue, harlequin and mantle."],["HAZEL ASKS…","Did you know that great danes come in fawn, brindle, black, blue, harlequin and mantle?"],["DUCKY’S GREYHOUND FACT","Greyhounds often love a long nap after brief exercise."],["DUCKY ASKS…","Did you know that greyhounds often love a long nap after brief exercise?"],["HAZEL’S GREAT DANE FACT","Great Danes need plenty of space to stretch out."],["HAZEL ASKS…","Did you know that great danes need plenty of space to stretch out?"],["DUCKY’S GREYHOUND FACT","Greyhounds have a streamlined narrow head."],["DUCKY ASKS…","Did you know that greyhounds have a streamlined narrow head?"],["HAZEL’S GREAT DANE FACT","Great Danes belong to the AKC working group."],["HAZEL ASKS…","Did you know that great danes belong to the AKC working group?"],["DUCKY’S GREYHOUND FACT","Greyhounds sometimes chatter their teeth when excited."],["DUCKY ASKS…","Did you know that greyhounds sometimes chatter their teeth when excited?"],["HAZEL’S GREAT DANE FACT","Great Danes are known for expressive body language."],["HAZEL ASKS…","Did you know that great danes are known for expressive body language?"],["DUCKY’S GREYHOUND FACT","Greyhounds have a long history as hunting companions."],["DUCKY ASKS…","Did you know that greyhounds have a long history as hunting companions?"],["HAZEL’S GREAT DANE FACT","Great Danes are also called Deutsche Dogge."],["HAZEL ASKS…","Did you know that great danes are also called Deutsche Dogge?"],["DUCKY’S GREYHOUND FACT","Greyhounds have deep chests built for athletic performance."],["DUCKY ASKS…","Did you know that greyhounds have deep chests built for athletic performance?"],["HAZEL’S GREAT DANE FACT","Great Danes grow quickly as puppies."],["HAZEL ASKS…","Did you know that great danes grow quickly as puppies?"],["DUCKY’S GREYHOUND FACT","Greyhounds have comparatively low body fat."],["DUCKY ASKS…","Did you know that greyhounds have comparatively low body fat?"],["HAZEL’S GREAT DANE FACT","Great Danes can stand more than 30 inches at the shoulder."],["HAZEL ASKS…","Did you know that great danes can stand more than 30 inches at the shoulder?"],["DUCKY’S GREYHOUND FACT","Greyhounds often prefer cushioned places to sleep."],["DUCKY ASKS…","Did you know that greyhounds often prefer cushioned places to sleep?"],["HAZEL’S GREAT DANE FACT","Great Danes can be surprisingly sensitive."],["HAZEL ASKS…","Did you know that great danes can be surprisingly sensitive?"],["DUCKY’S GREYHOUND FACT","Greyhounds have flexible spines that help them sprint."],["DUCKY ASKS…","Did you know that greyhounds have flexible spines that help them sprint?"],["HAZEL’S GREAT DANE FACT","Great Danes once served as estate guardians."],["HAZEL ASKS…","Did you know that great danes once served as estate guardians?"],["DUCKY’S GREYHOUND FACT","Greyhounds often carry their ears folded back in a rose shape."],["DUCKY ASKS…","Did you know that greyhounds often carry their ears folded back in a rose shape?"],["HAZEL’S GREAT DANE FACT","Great Danes have tails that can sweep objects off tables."],["HAZEL ASKS…","Did you know that great danes have tails that can sweep objects off tables?"],["DUCKY’S GREYHOUND FACT","Greyhounds can have strong chase instincts."],["DUCKY ASKS…","Did you know that greyhounds can have strong chase instincts?"],["HAZEL’S GREAT DANE FACT","Great Danes are among the tallest dog breeds."],["HAZEL ASKS…","Did you know that great danes are among the tallest dog breeds?"],["DUCKY’S GREYHOUND FACT","Greyhounds may appreciate a coat in cold weather."],["DUCKY ASKS…","Did you know that greyhounds may appreciate a coat in cold weather?"],["HAZEL’S GREAT DANE FACT","Great Danes can be couch potatoes."],["HAZEL ASKS…","Did you know that great danes can be couch potatoes?"],["DUCKY’S GREYHOUND FACT","Greyhounds often wear martingale collars for their narrow heads."],["DUCKY ASKS…","Did you know that greyhounds often wear martingale collars for their narrow heads?"],["HAZEL’S GREAT DANE FACT","Great Danes benefit from early positive socialization."],["HAZEL ASKS…","Did you know that great danes benefit from early positive socialization?"],["DUCKY’S GREYHOUND FACT","Greyhounds sometimes sleep upside down in a pose called roaching."],["DUCKY ASKS…","Did you know that greyhounds sometimes sleep upside down in a pose called roaching?"],["HAZEL’S GREAT DANE FACT","Great Danes can easily reach counter height."],["HAZEL ASKS…","Did you know that great danes can easily reach counter height?"],["DUCKY’S GREYHOUND FACT","Greyhounds have a wide field of vision."],["DUCKY ASKS…","Did you know that greyhounds have a wide field of vision?"],["HAZEL’S GREAT DANE FACT","Great Danes have smooth short coats."],["HAZEL ASKS…","Did you know that great danes have smooth short coats?"],["DUCKY’S GREYHOUND FACT","Greyhounds are often quiet indoors."],["DUCKY ASKS…","Did you know that greyhounds are often quiet indoors?"],["HAZEL’S GREAT DANE FACT","Great Danes need regular but sensible exercise."],["HAZEL ASKS…","Did you know that great danes need regular but sensible exercise?"],["DUCKY’S GREYHOUND FACT","Greyhounds have a distinctive tucked-up waist."],["DUCKY ASKS…","Did you know that greyhounds have a distinctive tucked-up waist?"],["HAZEL’S GREAT DANE FACT","Great Danes can be affectionate family companions."],["HAZEL ASKS…","Did you know that great danes can be affectionate family companions?"],["DUCKY’S GREYHOUND FACT","Greyhounds can enjoy puzzle toys and scent games."],["DUCKY ASKS…","Did you know that greyhounds can enjoy puzzle toys and scent games?"],["HAZEL’S GREAT DANE FACT","Great Danes need good leash manners because of their size."],["HAZEL ASKS…","Did you know that great danes need good leash manners because of their size?"],["DUCKY’S GREYHOUND FACT","Greyhounds appear in artwork dating back centuries."],["DUCKY ASKS…","Did you know that greyhounds appear in artwork dating back centuries?"],["HAZEL’S GREAT DANE FACT","Great Danes sometimes drool after drinking."],["HAZEL ASKS…","Did you know that great danes sometimes drool after drinking?"],["DUCKY’S GREYHOUND FACT","Greyhounds may need to learn stairs after kennel life."],["DUCKY ASKS…","Did you know that greyhounds may need to learn stairs after kennel life?"],["HAZEL’S GREAT DANE FACT","Great Danes can have impressively deep barks."],["HAZEL ASKS…","Did you know that great danes can have impressively deep barks?"],["DUCKY’S GREYHOUND FACT","Greyhounds are often calm housemates."],["DUCKY ASKS…","Did you know that greyhounds are often calm housemates?"],["HAZEL’S GREAT DANE FACT","Great Danes are sometimes nicknamed the Apollo of dogs."],["HAZEL ASKS…","Did you know that great danes are sometimes nicknamed the Apollo of dogs?"]];
 const lyricQuestions=[
- ['Which song includes the lyric: “All that glitters is gold”?','Stairway to Heaven','Led Zeppelin'],
- ['Which song includes the lyric: “You can check out any time you like”?','Hotel California','Eagles'],
- ['Which song includes the lyric: “Meet the new boss, same as the old boss”?','Won’t Get Fooled Again','The Who'],
- ['Which song includes the lyric: “We don’t need no education”?','Another Brick in the Wall, Part 2','Pink Floyd'],
- ['Which song includes the lyric: “I see a red door”?','Paint It Black','The Rolling Stones'],
- ['Which song includes the lyric: “Is this the real life”?','Bohemian Rhapsody','Queen'],
- ['Which song includes the lyric: “She’s a good girl, loves her mama”?','Free Fallin’','Tom Petty'],
- ['Which song includes the lyric: “Take it easy”?','Take It Easy','Eagles'],
- ['Which song includes the lyric: “Sweet home Alabama”?','Sweet Home Alabama','Lynyrd Skynyrd'],
- ['Which song includes the lyric: “Born to be wild”?','Born to Be Wild','Steppenwolf'],
- ['Which song includes the lyric: “I wanna rock and roll all night”?','Rock and Roll All Nite','KISS'],
- ['Which song includes the lyric: “Riders on the storm”?','Riders on the Storm','The Doors']
+ [
+  "Which song includes the lyric: “All that glitters is gold”?",
+  "Stairway to Heaven",
+  "Led Zeppelin"
+ ],
+ [
+  "Which song includes the lyric: “You can check out any time you like”?",
+  "Hotel California",
+  "Eagles"
+ ],
+ [
+  "Which song includes the lyric: “Meet the new boss, same as the old boss”?",
+  "Won’t Get Fooled Again",
+  "The Who"
+ ],
+ [
+  "Which song includes the lyric: “We don’t need no education”?",
+  "Another Brick in the Wall, Part 2",
+  "Pink Floyd"
+ ],
+ [
+  "Which song includes the lyric: “I see a red door”?",
+  "Paint It Black",
+  "The Rolling Stones"
+ ],
+ [
+  "Which song includes the lyric: “I wanna rock and roll all night”?",
+  "Rock and Roll All Nite",
+  "KISS"
+ ],
+ [
+  "Which song includes the lyric: “Is this the real life”?",
+  "Bohemian Rhapsody",
+  "Queen"
+ ],
+ [
+  "Which song includes the lyric: “Born to be wild”?",
+  "Born to Be Wild",
+  "Steppenwolf"
+ ],
+ [
+  "Which song includes the lyric: “Take it easy”?",
+  "Take It Easy",
+  "Eagles"
+ ],
+ [
+  "Which song includes the lyric: “She’s a good girl, loves her mama”?",
+  "Free Fallin’",
+  "Tom Petty"
+ ],
+ [
+  "Which song includes the lyric: “Sweet home Alabama”?",
+  "Sweet Home Alabama",
+  "Lynyrd Skynyrd"
+ ],
+ [
+  "Which song includes the lyric: “Been a long time since I rock and rolled”?",
+  "Rock and Roll",
+  "Led Zeppelin"
+ ],
+ [
+  "Which song includes the lyric: “Smoke on the water”?",
+  "Smoke on the Water",
+  "Deep Purple"
+ ],
+ [
+  "Which song includes the lyric: “Highway to hell”?",
+  "Highway to Hell",
+  "AC/DC"
+ ],
+ [
+  "Which song includes the lyric: “You shook me all night long”?",
+  "You Shook Me All Night Long",
+  "AC/DC"
+ ],
+ [
+  "Which song includes the lyric: “Dream on, dream on”?",
+  "Dream On",
+  "Aerosmith"
+ ],
+ [
+  "Which song includes the lyric: “Walk this way”?",
+  "Walk This Way",
+  "Aerosmith"
+ ],
+ [
+  "Which song includes the lyric: “Sweet emotion”?",
+  "Sweet Emotion",
+  "Aerosmith"
+ ],
+ [
+  "Which song includes the lyric: “More than a feeling”?",
+  "More Than a Feeling",
+  "Boston"
+ ],
+ [
+  "Which song includes the lyric: “Peace of mind”?",
+  "Peace of Mind",
+  "Boston"
+ ],
+ [
+  "Which song includes the lyric: “Don’t look back”?",
+  "Don’t Look Back",
+  "Boston"
+ ],
+ [
+  "Which song includes the lyric: “Carry on my wayward son”?",
+  "Carry On Wayward Son",
+  "Kansas"
+ ],
+ [
+  "Which song includes the lyric: “Dust in the wind”?",
+  "Dust in the Wind",
+  "Kansas"
+ ],
+ [
+  "Which song includes the lyric: “Come sail away”?",
+  "Come Sail Away",
+  "Styx"
+ ],
+ [
+  "Which song includes the lyric: “Renegade, you had it made”?",
+  "Renegade",
+  "Styx"
+ ],
+ [
+  "Which song includes the lyric: “Mr. Roboto”?",
+  "Mr. Roboto",
+  "Styx"
+ ],
+ [
+  "Which song includes the lyric: “Don’t stop believin’”?",
+  "Don’t Stop Believin’",
+  "Journey"
+ ],
+ [
+  "Which song includes the lyric: “Any way you want it”?",
+  "Any Way You Want It",
+  "Journey"
+ ],
+ [
+  "Which song includes the lyric: “Wheel in the sky”?",
+  "Wheel in the Sky",
+  "Journey"
+ ],
+ [
+  "Which song includes the lyric: “Separate ways”?",
+  "Separate Ways (Worlds Apart)",
+  "Journey"
+ ],
+ [
+  "Which song includes the lyric: “Go your own way”?",
+  "Go Your Own Way",
+  "Fleetwood Mac"
+ ],
+ [
+  "Which song includes the lyric: “Sara, you’re the poet in my heart”?",
+  "Sara",
+  "Fleetwood Mac"
+ ],
+ [
+  "Which song includes the lyric: “Dreams unwind”?",
+  "Rhiannon",
+  "Fleetwood Mac"
+ ],
+ [
+  "Which song includes the lyric: “Tell me lies, tell me sweet little lies”?",
+  "Little Lies",
+  "Fleetwood Mac"
+ ],
+ [
+  "Which song includes the lyric: “Don’t stop thinking about tomorrow”?",
+  "Don’t Stop",
+  "Fleetwood Mac"
+ ],
+ [
+  "Which song includes the lyric: “You make loving fun”?",
+  "You Make Loving Fun",
+  "Fleetwood Mac"
+ ],
+ [
+  "Which song includes the lyric: “The chain keeps us together”?",
+  "The Chain",
+  "Fleetwood Mac"
+ ],
+ [
+  "Which song includes the lyric: “I want to break free”?",
+  "I Want to Break Free",
+  "Queen"
+ ],
+ [
+  "Which song includes the lyric: “We will rock you”?",
+  "We Will Rock You",
+  "Queen"
+ ],
+ [
+  "Which song includes the lyric: “We are the champions”?",
+  "We Are the Champions",
+  "Queen"
+ ],
+ [
+  "Which song includes the lyric: “Another one bites the dust”?",
+  "Another One Bites the Dust",
+  "Queen"
+ ],
+ [
+  "Which song includes the lyric: “Somebody to love”?",
+  "Somebody to Love",
+  "Queen"
+ ],
+ [
+  "Which song includes the lyric: “Under pressure”?",
+  "Under Pressure",
+  "Queen & David Bowie"
+ ],
+ [
+  "Which song includes the lyric: “Let’s dance”?",
+  "Let’s Dance",
+  "David Bowie"
+ ],
+ [
+  "Which song includes the lyric: “Ground control to Major Tom”?",
+  "Space Oddity",
+  "David Bowie"
+ ],
+ [
+  "Which song includes the lyric: “Rebel rebel”?",
+  "Rebel Rebel",
+  "David Bowie"
+ ],
+ [
+  "Which song includes the lyric: “Changes, turn and face the strange”?",
+  "Changes",
+  "David Bowie"
+ ],
+ [
+  "Which song includes the lyric: “Ziggy played guitar”?",
+  "Ziggy Stardust",
+  "David Bowie"
+ ],
+ [
+  "Which song includes the lyric: “Born in the U.S.A.”?",
+  "Born in the U.S.A.",
+  "Bruce Springsteen"
+ ],
+ [
+  "Which song includes the lyric: “Baby we were born to run”?",
+  "Born to Run",
+  "Bruce Springsteen"
+ ],
+ [
+  "Which song includes the lyric: “Dancing in the dark”?",
+  "Dancing in the Dark",
+  "Bruce Springsteen"
+ ],
+ [
+  "Which song includes the lyric: “Glory days”?",
+  "Glory Days",
+  "Bruce Springsteen"
+ ],
+ [
+  "Which song includes the lyric: “Hungry heart”?",
+  "Hungry Heart",
+  "Bruce Springsteen"
+ ],
+ [
+  "Which song includes the lyric: “Thunder road”?",
+  "Thunder Road",
+  "Bruce Springsteen"
+ ],
+ [
+  "Which song includes the lyric: “Badlands, you gotta live it every day”?",
+  "Badlands",
+  "Bruce Springsteen"
+ ],
+ [
+  "Which song includes the lyric: “Start me up”?",
+  "Start Me Up",
+  "The Rolling Stones"
+ ],
+ [
+  "Which song includes the lyric: “You can’t always get what you want”?",
+  "You Can’t Always Get What You Want",
+  "The Rolling Stones"
+ ],
+ [
+  "Which song includes the lyric: “I can’t get no satisfaction”?",
+  "(I Can’t Get No) Satisfaction",
+  "The Rolling Stones"
+ ],
+ [
+  "Which song includes the lyric: “Jumpin’ Jack Flash”?",
+  "Jumpin’ Jack Flash",
+  "The Rolling Stones"
+ ],
+ [
+  "Which song includes the lyric: “Angie, Angie”?",
+  "Angie",
+  "The Rolling Stones"
+ ],
+ [
+  "Which song includes the lyric: “Gimme shelter”?",
+  "Gimme Shelter",
+  "The Rolling Stones"
+ ],
+ [
+  "Which song includes the lyric: “Brown sugar”?",
+  "Brown Sugar",
+  "The Rolling Stones"
+ ],
+ [
+  "Which song includes the lyric: “Beast of burden”?",
+  "Beast of Burden",
+  "The Rolling Stones"
+ ],
+ [
+  "Which song includes the lyric: “Roxanne, you don’t have to”?",
+  "Roxanne",
+  "The Police"
+ ],
+ [
+  "Which song includes the lyric: “Every breath you take”?",
+  "Every Breath You Take",
+  "The Police"
+ ],
+ [
+  "Which song includes the lyric: “Message in a bottle”?",
+  "Message in a Bottle",
+  "The Police"
+ ],
+ [
+  "Which song includes the lyric: “Don’t stand so close to me”?",
+  "Don’t Stand So Close to Me",
+  "The Police"
+ ],
+ [
+  "Which song includes the lyric: “Every little thing she does is magic”?",
+  "Every Little Thing She Does Is Magic",
+  "The Police"
+ ],
+ [
+  "Which song includes the lyric: “With or without you”?",
+  "With or Without You",
+  "U2"
+ ],
+ [
+  "Which song includes the lyric: “I still haven’t found what I’m looking for”?",
+  "I Still Haven’t Found What I’m Looking For",
+  "U2"
+ ],
+ [
+  "Which song includes the lyric: “Where the streets have no name”?",
+  "Where the Streets Have No Name",
+  "U2"
+ ],
+ [
+  "Which song includes the lyric: “Sunday bloody Sunday”?",
+  "Sunday Bloody Sunday",
+  "U2"
+ ],
+ [
+  "Which song includes the lyric: “Pride in the name of love”?",
+  "Pride (In the Name of Love)",
+  "U2"
+ ],
+ [
+  "Which song includes the lyric: “It’s a beautiful day”?",
+  "Beautiful Day",
+  "U2"
+ ],
+ [
+  "Which song includes the lyric: “One love, one life”?",
+  "One",
+  "U2"
+ ],
+ [
+  "Which song includes the lyric: “Jump! Go ahead and jump”?",
+  "Jump",
+  "Van Halen"
+ ],
+ [
+  "Which song includes the lyric: “Panama, Panama”?",
+  "Panama",
+  "Van Halen"
+ ],
+ [
+  "Which song includes the lyric: “Running with the devil”?",
+  "Runnin’ with the Devil",
+  "Van Halen"
+ ],
+ [
+  "Which song includes the lyric: “Ain’t talkin’ ’bout love”?",
+  "Ain’t Talkin’ ’Bout Love",
+  "Van Halen"
+ ],
+ [
+  "Which song includes the lyric: “Hot for teacher”?",
+  "Hot for Teacher",
+  "Van Halen"
+ ],
+ [
+  "Which song includes the lyric: “Why can’t this be love”?",
+  "Why Can’t This Be Love",
+  "Van Halen"
+ ],
+ [
+  "Which song includes the lyric: “Right now”?",
+  "Right Now",
+  "Van Halen"
+ ],
+ [
+  "Which song includes the lyric: “Black dog”?",
+  "Black Dog",
+  "Led Zeppelin"
+ ],
+ [
+  "Which song includes the lyric: “Whole lotta love”?",
+  "Whole Lotta Love",
+  "Led Zeppelin"
+ ],
+ [
+  "Which song includes the lyric: “Ramble on”?",
+  "Ramble On",
+  "Led Zeppelin"
+ ],
+ [
+  "Which song includes the lyric: “Hey, hey, what can I do”?",
+  "Hey, Hey, What Can I Do",
+  "Led Zeppelin"
+ ],
+ [
+  "Which song includes the lyric: “If the sun refused to shine”?",
+  "Thank You",
+  "Led Zeppelin"
+ ],
+ [
+  "Which song includes the lyric: “Kashmir”?",
+  "Kashmir",
+  "Led Zeppelin"
+ ],
+ [
+  "Which song includes the lyric: “Dazed and confused”?",
+  "Dazed and Confused",
+  "Led Zeppelin"
+ ],
+ [
+  "Which song includes the lyric: “Immigrant song”?",
+  "Immigrant Song",
+  "Led Zeppelin"
+ ],
+ [
+  "Which song includes the lyric: “Baba O’Riley”?",
+  "Baba O’Riley",
+  "The Who"
+ ],
+ [
+  "Which song includes the lyric: “Who are you”?",
+  "Who Are You",
+  "The Who"
+ ],
+ [
+  "Which song includes the lyric: “Behind blue eyes”?",
+  "Behind Blue Eyes",
+  "The Who"
+ ],
+ [
+  "Which song includes the lyric: “Pinball wizard”?",
+  "Pinball Wizard",
+  "The Who"
+ ],
+ [
+  "Which song includes the lyric: “My generation”?",
+  "My Generation",
+  "The Who"
+ ],
+ [
+  "Which song includes the lyric: “See me, feel me”?",
+  "See Me, Feel Me",
+  "The Who"
+ ],
+ [
+  "Which song includes the lyric: “The boys are back in town”?",
+  "The Boys Are Back in Town",
+  "Thin Lizzy"
+ ],
+ [
+  "Which song includes the lyric: “Juke box hero”?",
+  "Juke Box Hero",
+  "Foreigner"
+ ],
+ [
+  "Which song includes the lyric: “Cold as ice”?",
+  "Cold as Ice",
+  "Foreigner"
+ ],
+ [
+  "Which song includes the lyric: “I want to know what love is”?",
+  "I Want to Know What Love Is",
+  "Foreigner"
+ ]
 ];
 let index=0,lastDay=dayNumber();
 function dayNumber(){const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const v=k=>Number(parts.find(p=>p.type===k).value);return Math.floor(Date.UTC(v('year'),v('month')-1,v('day'))/86400000)}
 function escapeText(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function show(){const d=dayNumber();const lyric=lyricQuestions[d%lyricQuestions.length];const features=[['GUESS THE CLASSIC ROCK LYRIC',lyric[0],'Answer on slide 7 of 7'],['WORD OF THE DAY',...words[d%words.length]],['DAD JOKE',...jokes[d%jokes.length]],['BAR TRIVIA',...trivia[d%trivia.length]],['ROCK HISTORY & FACTS',...rock[d%rock.length]],['HAZEL & DUCKY’S CORNER',...dogs[d%dogs.length]],['CLASSIC ROCK LYRIC — ANSWER',lyric[1],lyric[2]]];const f=features[index%features.length];document.getElementById('fun-counter').textContent=(index+1)+' / '+features.length;const panel=document.getElementById('fun-feature');panel.classList.toggle('fun-long-lyric',index%features.length===0);['fun-category','fun-headline','fun-detail'].forEach((cls,i)=>{let el=panel.querySelector('.'+cls);if(!el){el=document.createElement('div');el.className=cls;panel.appendChild(el)}if(el.textContent!==f[i])el.textContent=f[i]});// Defer expensive fitting until the browser has a chance to paint the ticker.
+function show(){const d=dayNumber();const lyric=lyricQuestions[(d*37)%lyricQuestions.length];const features=[['GUESS THE CLASSIC ROCK LYRIC',lyric[0],'Answer on slide 7 of 7'],['WORD OF THE DAY',...words[(d*37)%words.length]],['DAD JOKE',...jokes[(d*37)%jokes.length]],['BAR TRIVIA',...trivia[(d*37)%trivia.length]],['ROCK HISTORY & FACTS',...rock[(d*37)%rock.length]],['HAZEL & DUCKY’S CORNER',...dogs[(d*37)%dogs.length]],['CLASSIC ROCK LYRIC — ANSWER',lyric[1],lyric[2]]];const f=features[index%features.length];document.getElementById('fun-counter').textContent=(index+1)+' / '+features.length;const panel=document.getElementById('fun-feature');panel.classList.toggle('fun-long-lyric',index%features.length===0);['fun-category','fun-headline','fun-detail'].forEach((cls,i)=>{let el=panel.querySelector('.'+cls);if(!el){el=document.createElement('div');el.className=cls;panel.appendChild(el)}if(el.textContent!==f[i])el.textContent=f[i]});// Defer expensive fitting until the browser has a chance to paint the ticker.
  if(window.requestIdleCallback)requestIdleCallback(fitFunText,{timeout:500});else setTimeout(fitFunText,80);}
 const funFitCache=new Map();
 function fitFunText(){
