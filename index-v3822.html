@@ -710,12 +710,14 @@ function safe(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&l
 function display(){
  if(!games.length&&!myTeams.length){$('games').innerHTML='<div class="game">No qualifying games available right now. Retrying automatically.</div>';$('ticker').textContent='Chris’ Basement • NCAA Football: Top 25 + Big Ten • Men’s Hoops: Top 25 + Ohio State • NFL • NBA • MLB • NHL';return}
  let n=4,filtered=leagueFilter==='ALL'?games:games.filter(g=>g.league===leagueFilter);
- let pages=leagueFilter==='ALL'?1+Math.ceil(filtered.length/n):Math.max(1,Math.ceil(filtered.length/n));
+ const myTeamPages=Math.max(1,Math.ceil(myTeams.length/n));
+ let pages=leagueFilter==='ALL'?myTeamPages+Math.ceil(filtered.length/n):Math.max(1,Math.ceil(filtered.length/n));
  page=((page%pages)+pages)%pages;
- let current=leagueFilter==='ALL'&&page===0?myTeams:filtered.slice((leagueFilter==='ALL'?page-1:page)*n,(leagueFilter==='ALL'?page:page+1)*n);
- // Match the Sports Center row count to the number of My Teams (now six).
- $('games').style.gridTemplateRows='repeat('+Math.max(1,current.length)+',minmax(0,1fr))';
- const nextGamesHtml=current.map(g=>`<div class="game ${g.fav?'favorite':''}" ${leagueFilter==='ALL'&&page===0?`style="--team-watermark:url('${safe(favoriteTeams.find(t=>t.name===g.league)?.logo||g.awayLogo)}')"`:``}><div class="meta"><span>${safe(g.league)} ${g.live?'● LIVE':''}</span><span>${safe(g.status)}</span></div><div class="teams"><span style="min-width:0"><span class="teamline"><img decoding="async" src="${safe(g.awayLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.ar?`<span class="rank">#${g.ar}</span>`:''}${safe(g.away)}</span></span><span class="teamline"><img decoding="async" src="${safe(g.homeLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.hr?`<span class="rank">#${g.hr}</span>`:''}${safe(g.home)}</span></span></span><span class="score">${!g.live&&!g.final?'VS':safe(g.as)+'<br>'+safe(g.hs)}</span></div>${leagueFilter==='ALL'&&page===0&&g.id?'<div class="basement-game-location"><span class="location-city">'+safe(g.venueCity||('Home: '+g.home))+'</span><span class="location-stadium">'+safe(g.venue||'Venue to be announced')+'</span></div>':''}</div>`).join('');
+ const showingMyTeams=leagueFilter==='ALL'&&page<myTeamPages;
+ let current=showingMyTeams?myTeams.slice(page*n,(page+1)*n):filtered.slice((leagueFilter==='ALL'?page-myTeamPages:page)*n,(leagueFilter==='ALL'?page-myTeamPages+1:page+1)*n);
+ // The main Sports Center always has four slots; the Daily Line separately shows six.
+ $('games').style.gridTemplateRows='repeat(4,minmax(0,1fr))';
+ const nextGamesHtml=current.map(g=>`<div class="game ${g.fav?'favorite':''}" ${showingMyTeams?`style="--team-watermark:url('${safe(favoriteTeams.find(t=>t.name===g.league)?.logo||g.awayLogo)}')"`:``}><div class="meta"><span>${safe(g.league)} ${g.live?'● LIVE':''}</span><span>${safe(g.status)}</span></div><div class="teams"><span style="min-width:0"><span class="teamline"><img decoding="async" src="${safe(g.awayLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.ar?`<span class="rank">#${g.ar}</span>`:''}${safe(g.away)}</span></span><span class="teamline"><img decoding="async" src="${safe(g.homeLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.hr?`<span class="rank">#${g.hr}</span>`:''}${safe(g.home)}</span></span></span><span class="score">${!g.live&&!g.final?'VS':safe(g.as)+'<br>'+safe(g.hs)}</span></div>${showingMyTeams&&g.id?'<div class="basement-game-location"><span class="location-city">'+safe(g.venueCity||('Home: '+g.home))+'</span><span class="location-stadium">'+safe(g.venue||'Venue to be announced')+'</span></div>':''}</div>`).join('');
  // V70: Keep existing game DOM and decoded team logos when visible content is unchanged.
  const gamesNode=$('games');
  // V74 rollback: restore the original Sports Center grid and card sizing.
@@ -734,7 +736,7 @@ function display(){
   gamesNode.__visiblePageKey=pageKey;
   gamesNode.__visibleHtml=nextGamesHtml;
  }
- $('updated').textContent=leagueFilter==='ALL'&&page===0?'MY TEAMS • next games':`${filtered.length} ${leagueFilter==='ALL'?'games':leagueFilter+' games'} • page ${page+1}/${pages}`;
+ $('updated').textContent=showingMyTeams?'MY TEAMS • next games':`${filtered.length} ${leagueFilter==='ALL'?'games':leagueFilter+' games'} • page ${page+1}/${pages}`;
  updateLeagueButtons();if(dailyLineOpen)renderDailyLine();
  const tickerText=games.concat(myTeams.filter(g=>g.id)).map(g=>`${g.league}: ${g.away} ${!g.live&&!g.final?'VS':g.as+' —'} ${g.home} ${g.live||g.final?g.hs:''} (${g.status})${g.odds?' • '+g.odds:''}`).join('     ✦     ');if($('ticker').textContent!==tickerText)$('ticker').textContent=tickerText;
 }
