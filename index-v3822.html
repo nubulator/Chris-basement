@@ -1004,23 +1004,41 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
    g.league==='NCAA MEN'&&(g.top25||g.fav)||g.league==='NBA'&&/Cavaliers|Cleveland/i.test(g.away+' '+g.home)||
    g.league==='NHL'&&/Blue Jackets|Columbus/i.test(g.away+' '+g.home)||g.league==='MLB'&&/Reds|Cincinnati/i.test(g.away+' '+g.home)
   )).sort((a,b)=>a.date-b.date);
-  if(results.some(r=>r.status==='fulfilled')){lineUpcoming=upcoming;lineLastRefresh=now;enrichLineOdds(upcoming.slice(0,70))}
+  if(results.some(r=>r.status==='fulfilled')){lineUpcoming=upcoming;lineLastRefresh=now;enrichLineOdds(upcoming)}
   if(dailyLineOpen)renderDailyLine();
  }
  let lineOddsBusy=false;
+ const lineOddsChecked=new Map();
  async function enrichLineOdds(list){
-  if(lineOddsBusy)return;lineOddsBusy=true;
+  if(lineOddsBusy)return;
+  const now=Date.now();
+  const prioritized=[...list].filter(g=>g&&g.id&&!g.odds).sort((a,b)=>{
+   const af=/Ohio State|Buckeyes|Blue Jackets|Columbus|Cavaliers|Cleveland|Browns|Reds|Cincinnati/i.test(a.away+' '+a.home)?0:1;
+   const bf=/Ohio State|Buckeyes|Blue Jackets|Columbus|Cavaliers|Cleveland|Browns|Reds|Cincinnati/i.test(b.away+' '+b.home)?0:1;
+   return af-bf||a.date-b.date;
+  });
+  const targets=prioritized.filter(g=>now-(lineOddsChecked.get(g.league+':'+g.id)||0)>15*60000).slice(0,80);
+  if(!targets.length)return;
+  lineOddsBusy=true;
   const paths={'NFL':'football/nfl','NCAA FOOTBALL':'football/college-football','NCAA MEN':'basketball/mens-college-basketball','NBA':'basketball/nba','NHL':'hockey/nhl','MLB':'baseball/mlb'};
-  const targets=list.filter(g=>g.id&&!g.odds).slice(0,70);
-  for(let i=0;i<targets.length;i+=6){
-   await Promise.allSettled(targets.slice(i,i+6).map(async g=>{
-    const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/'+paths[g.league]+'/summary?event='+encodeURIComponent(g.id),{cache:'no-store'});
-    if(!r.ok)return;const j=await r.json(),o=j.pickcenter?.[0]||j.header?.competitions?.[0]?.odds?.[0];
-    if(o&&(o.details!=null||o.spread!=null||o.overUnder!=null)){g.odds='LINE: '+(o.details??o.spread??'—')+' • O/U: '+(o.overUnder??'—');}
-   }));
-   if(dailyLineOpen)renderDailyLine();
-  }
-  lineOddsBusy=false;
+  try{
+   for(let i=0;i<targets.length;i+=4){
+    await Promise.allSettled(targets.slice(i,i+4).map(async g=>{
+     lineOddsChecked.set(g.league+':'+g.id,Date.now());
+     const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/'+paths[g.league]+'/summary?event='+encodeURIComponent(g.id),{cache:'no-store'});
+     if(!r.ok)return;
+     const j=await r.json();
+     const options=[...(Array.isArray(j.pickcenter)?j.pickcenter:[]),...(Array.isArray(j.odds)?j.odds:[]),...(j.header?.competitions?.[0]?.odds||[])];
+     const o=options.find(x=>x&&(x.details!=null||x.spread!=null||x.overUnder!=null||x.over_under!=null));
+     if(!o)return;
+     const spread=o.details??o.spread??'—',total=o.overUnder??o.over_under??'—';
+     g.odds='LINE: '+spread+' • O/U: '+total;
+     for(const match of lineUpcoming){if(match.id===g.id&&match.league===g.league)match.odds=g.odds;}
+     for(const match of myTeams){if(String(match.id)===String(g.id))match.odds=g.odds;}
+    }));
+    if(dailyLineOpen)renderDailyLine();
+   }
+  }finally{lineOddsBusy=false;}
  }
  function lineData(){
   const fav=myTeams.filter(g=>g&&g.id&&!g.final);
