@@ -1893,21 +1893,37 @@ header h1 .cone-version-wrap{transform:translateX(5px)!important}
 @media(max-width:650px){#basement-theme-options{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 </style>
 <script id="shared-theme-selector-icons-v2">(function(){
-const icons={auto:'✨',classic:'⭐',winter:'❄️',spring:'🌷',summer:'☀️',fall:'🍁',autumn:'🍁',groundhog:'🦫',patrick:'☘️',easter:'🐰',memorial:'🇺🇸',independence:'🎆',july:'🎆',labor:'🛠️',halloween:'🎃',thanksgiving:'🦃',christmas:'🎄',newyear:'🎉',valentine:'❤️',president:'🇺🇸',veteran:'🇺🇸'};
-function decorate(){
- const root=document.getElementById('basement-theme-options');if(!root||!root.children.length)return false;
- for(const b of root.querySelectorAll('button')){
-  if(b.querySelector('.theme-choice-icon'))continue;
-  const raw=b.textContent.trim(),v=(b.dataset.value||'').toLowerCase(),label=raw.replace(/^[✦★♦✧◆✨⭐🎃🍁🎄]\s*/u,'').trim();
-  const match=Object.keys(icons).find(k=>v.includes(k))||Object.keys(icons).find(k=>label.toLowerCase().includes(k));
-  const icon=icons[match]||'🎈';b.textContent='';
-  const i=document.createElement('span');i.className='theme-choice-icon';i.setAttribute('aria-hidden','true');i.textContent=icon;
-  const n=document.createElement('span');n.className='theme-choice-label';n.textContent=label;b.append(i,n);
- }
- return true;
-}
-function init(){if(decorate())return;let attempts=0;const timer=setInterval(()=>{if(decorate()||++attempts>24)clearInterval(timer)},200)}
+const choices={auto:['✨','AUTO HOLIDAY'],classic:['⭐','CLASSIC SPORTS BAR'],winter:['❄️','WINTER'],spring:['🌷','SPRING'],summer:['☀️','SUMMER'],fall:['🍁','HAPPY FALL'],groundhog:['🌤️','GROUNDHOG DAY'],patrick:['☘️',"ST. PATRICK'S DAY"],easter:['🐰','EASTER'],memorial:['🇺🇸','MEMORIAL DAY'],july:['🎆','FOURTH OF JULY'],independence:['🎆','FOURTH OF JULY'],halloween:['🎃','HALLOWEEN'],thanksgiving:['🦃','HAPPY THANKSGIVING'],christmas:['🎄','CHRISTMAS'],newyear:['🎉','NEW YEAR']};
+function decorate(){const root=document.getElementById('basement-theme-options');if(!root||!root.children.length)return false;
+for(const b of root.querySelectorAll('button')){const v=(b.dataset.value||'').toLowerCase(),raw=b.textContent||'';const k=Object.keys(choices).find(key=>v.includes(key))||Object.keys(choices).find(key=>raw.toLowerCase().includes(key));const [icon,label]=choices[k]||['🎈',raw.replace(/[^A-Za-z0-9 '&-]/g,'').trim()];b.replaceChildren();const i=document.createElement('span');i.className='theme-choice-icon';i.setAttribute('aria-hidden','true');i.textContent=icon;const n=document.createElement('span');n.className='theme-choice-label';n.textContent=label;b.append(i,n)}return true}
+function init(){if(decorate())return;let tries=0;const timer=setInterval(()=>{if(decorate()||++tries>24)clearInterval(timer)},200)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();</script>
-</body></html>
+<style id="basement-theme-match-garage-v1">
+#basement-theme-page{justify-content:center!important;padding:clamp(10px,2vh,24px) clamp(12px,2vw,34px)!important;overflow:hidden!important}
+#basement-theme-page h2{font-size:clamp(26px,2.6vw,45px)!important;margin:0 0 4px!important}
+#basement-theme-page p{font-size:clamp(13px,1.1vw,19px)!important;margin:0 0 8px!important}
+#basement-theme-options{gap:clamp(7px,.8vw,14px)!important;margin:8px auto!important}
+#basement-theme-options button{box-sizing:border-box!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;height:clamp(65px,12.5vh,108px)!important;min-height:0!important;gap:3px!important;padding:4px 7px!important;overflow:hidden!important;border:3px solid #54b9ff!important}
+#basement-theme-options button .theme-choice-icon{display:block!important;flex:0 0 auto!important;font-size:clamp(27px,2.45vw,45px)!important;line-height:1!important}
+#basement-theme-options button .theme-choice-label{display:block!important;flex:0 1 auto!important;font-size:clamp(13px,1.17vw,22px)!important;line-height:1.1!important;white-space:normal!important;max-width:100%!important}
+#basement-theme-options button::before,#basement-theme-options button::after{content:none!important;display:none!important}
+#basement-theme-back{margin:12px auto 0!important;padding:9px 28px!important}
+#basement-theme-options button.selected{outline:3px solid #fff!important;outline-offset:-4px!important;box-shadow:0 0 0 3px #ffda64,0 0 16px #ffe08a!important}
+#basement-theme-options button[data-value="auto"]{background:#f2b744!important;background-image:linear-gradient(115deg,#f2b744,#ffdc7c)!important;color:#fff!important;text-shadow:0 2px 4px #0009!important}
+#basement-theme-options button[data-value="classic"]{background:#152e69!important;background-image:linear-gradient(115deg,#152e69,#2867c5)!important;color:#fff!important;text-shadow:0 2px 4px #0009!important}
+#basement-theme-options button[data-value="winter"]{background:#1264b1!important;background-image:linear-gradient(115deg,#1264b1,#67d4f2)!important;color:#fff!important;text-shadow:0 2px 4px #0009!important}
+#basement-theme-options button[data-value="spring"]{background:#15865d!important;background-image:linear-gradient(115deg,#15865d,#76d45b)!important;color:#fff!important;text-shadow:0 2px 4px #0009!important}
+#basement-theme-options button[data-value="summer"]{background:#e48a15!important;background-image:linear-gradient(115deg,#e48a15,#ffd45a)!important;color:#fff!important;text-shadow:0 2px 4px #0009!important}
+#basement-theme-options button[data-value="fall"]{background:#b33d18!important;background-image:linear-gradient(115deg,#b33d18,#ef8a26)!important;color:#fff!important;text-shadow:0 2px 4px #0009!important}
+#basement-theme-options button[data-value="groundhog"]{background:#996224!important;background-image:linear-gradient(115deg,#996224,#f1ba59)!important;color:#fff!important;text-shadow:0 2px 4px #0009!important}
+#basement-theme-options button[data-value="patrick"]{background:#096b44!important;background-image:linear-gradient(115deg,#096b44,#35c46e)!important;color:#fff!important;text-shadow:0 2px 4px #0009!important}
+#basement-theme-options button[data-value="easter"]{background:#a04eab!important;background-image:linear-gradient(115deg,#a04eab,#ed94c5)!important;color:#fff!important;text-shadow:0 2px 4px #0009!important}
+#basement-theme-options button[data-value="memorial"]{background:#173e88!important;background-image:linear-gradient(115deg,#173e88,#bc3449)!important;color:#fff!important;text-shadow:0 2px 4px #0009!important}
+#basement-theme-options button[data-value="july"]{background:#172b88!important;background-image:linear-gradient(115deg,#172b88,#c02b52)!important;color:#fff!important;text-shadow:0 2px 4px #0009!important}
+#basement-theme-options button[data-value="halloween"]{background:#49216d!important;background-image:linear-gradient(115deg,#49216d,#e8771c)!important;color:#fff!important;text-shadow:0 2px 4px #0009!important}
+#basement-theme-options button[data-value="thanksgiving"]{background:#a34b19!important;background-image:linear-gradient(115deg,#a34b19,#e6a63c)!important;color:#fff!important;text-shadow:0 2px 4px #0009!important}
+#basement-theme-options button[data-value="christmas"]{background:#12693d!important;background-image:linear-gradient(115deg,#12693d,#bd293f)!important;color:#fff!important;text-shadow:0 2px 4px #0009!important}
+#basement-theme-options button[data-value="newyear"]{background:#342080!important;background-image:linear-gradient(115deg,#342080,#a450cc)!important;color:#fff!important;text-shadow:0 2px 4px #0009!important}
+</style></body></html>
 <!-- Redeploy V66: restart stalled GitHub Pages build. -->
