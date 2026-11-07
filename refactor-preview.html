@@ -1044,6 +1044,20 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
 #line-games.line-six .line-matchup,#line-games.line-five .line-matchup{min-height:36px!important}
 #line-games.line-six .line-matchup .line-team,#line-games.line-five .line-matchup .line-team{font-size:clamp(15px,1.55vw,27px)!important}
 #daily-line-view .line-top>strong{font-family:Georgia,'Times New Roman',serif!important;font-weight:900!important;font-style:italic!important;letter-spacing:.065em!important;color:#ffe9a9!important;-webkit-text-stroke:.5px #ad500b;text-shadow:2px 3px 0 #7b2408,0 0 5px #ffbc38,0 0 14px #ff8100,0 0 24px #f64b08!important;border:2px solid #f9b345;border-radius:14px;padding:2px 16px;background:linear-gradient(180deg,rgba(86,19,8,.78),rgba(23,9,13,.85));box-shadow:inset 0 0 12px #ff9718,0 0 12px rgba(255,130,0,.65)}
+
+/* V27: compact odds strip, predictable four-row cards, no clipped ESPN attribution */
+#line-games .line-card{grid-template-rows:auto minmax(26px,1fr) auto auto!important;gap:2px!important;padding:clamp(5px,.48vw,9px)!important;overflow:hidden!important}
+#line-games .line-matchup{min-height:26px!important;padding:0!important;line-height:1.08!important}
+#line-games .line-metrics{min-height:0!important;height:auto!important;align-self:stretch!important;gap:clamp(4px,.45vw,8px)!important}
+#line-games .line-metrics>div{min-height:0!important;height:auto!important;padding:2px 7px!important;gap:0!important;border-radius:5px!important;justify-content:center!important}
+#line-games .line-metrics small{font-size:clamp(8px,.6vw,11px)!important;line-height:1.05!important}
+#line-games .line-metrics strong{font-size:clamp(16px,1.45vw,25px)!important;line-height:1.08!important}
+#line-games .line-source{min-height:0!important;line-height:1.05!important;font-size:clamp(9px,.67vw,12px)!important;padding:0!important;margin:0!important;white-space:nowrap!important}
+#line-games.line-six .line-card,#line-games.line-five .line-card{grid-template-rows:auto minmax(24px,1fr) auto auto!important;padding:clamp(4px,.4vw,8px)!important}
+#line-games.line-six .line-matchup,#line-games.line-five .line-matchup{min-height:24px!important}
+#line-games.line-six .line-metrics>div,#line-games.line-five .line-metrics>div{padding:2px 6px!important}
+#line-games.line-six .line-metrics strong,#line-games.line-five .line-metrics strong{font-size:clamp(15px,1.35vw,23px)!important}
+#line-games.line-six .line-source,#line-games.line-five .line-source{font-size:clamp(9px,.65vw,12px)!important}
 </style>
 <script id="v3819-interactions">
 (function(){
