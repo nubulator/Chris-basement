@@ -964,13 +964,49 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
   filterBar.querySelectorAll('[data-league]').forEach(b=>b.onclick=()=>filterTo(b.dataset.league));
   document.getElementById('daily-line-button').onclick=openDailyLine;
  };
+ let lineUpcoming=[],lineLastRefresh=0;
+ async function refreshLineUpcoming(){
+  const now=Date.now();
+  if(now-lineLastRefresh<10*60000&&lineUpcoming.length)return;
+  const fmt=d=>{const p=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);const v=k=>p.find(x=>x.type===k)?.value;return v('year')+v('month')+v('day')};
+  const from=fmt(new Date(now-3*3600000)),to=fmt(new Date(now+8*86400000));
+  const sources=[['NFL','football/nfl',''],['NCAA FOOTBALL','football/college-football','&groups=80'],['NCAA FOOTBALL','football/college-football','&groups=5'],['NCAA MEN','basketball/mens-college-basketball','&groups=50'],['NBA','basketball/nba',''],['NHL','hockey/nhl',''],['MLB','baseball/mlb','']];
+  const results=await Promise.allSettled(sources.map(async ([league,path,extra])=>{
+   const url='https://site.api.espn.com/apis/site/v2/sports/'+path+'/scoreboard?limit=500&dates='+from+'-'+to+extra;
+   const response=await fetch(url,{cache:'no-store'});if(!response.ok)throw Error(response.status);
+   const json=await response.json();return (json.events||[]).map(e=>readGame(e,league,extra)).filter(Boolean);
+  }));
+  const merged=new Map();
+  results.filter(r=>r.status==='fulfilled').flatMap(r=>r.value).forEach(g=>{
+   const key=g.league+':'+g.id,old=merged.get(key);
+   if(!old)merged.set(key,g);
+   else merged.set(key,{...old,...g,ar:g.ar||old.ar,hr:g.hr||old.hr,odds:g.odds||old.odds,top25:g.top25||old.top25,bigTen:g.bigTen||old.bigTen});
+  });
+  const upcoming=[...merged.values()].filter(g=>g.date>now-3*3600000&&!g.final&&(
+   g.league==='NFL'||g.league==='NCAA FOOTBALL'&&(g.top25||g.bigTen||g.fav)||
+   g.league==='NCAA MEN'&&(g.top25||g.fav)||g.league==='NBA'&&/Cavaliers|Cleveland/i.test(g.away+' '+g.home)||
+   g.league==='NHL'&&/Blue Jackets|Columbus/i.test(g.away+' '+g.home)||g.league==='MLB'&&/Reds|Cincinnati/i.test(g.away+' '+g.home)
+  )).sort((a,b)=>a.date-b.date);
+  if(results.some(r=>r.status==='fulfilled')){lineUpcoming=upcoming;lineLastRefresh=now}
+  if(dailyLineOpen)renderDailyLine();
+ }
  function lineData(){
-  const fav=myTeams.filter(Boolean);
-  const ids=new Set(fav.filter(g=>g.id).map(g=>g.id));
-  const others=games.filter(g=>!g.live&&!g.final&&g.id&&!ids.has(g.id)).sort((a,b)=>a.date-b.date);
-  if(lineFilter==='MY')return fav;
-  if(lineFilter==='ALL')return fav.concat(others);
-  return fav.filter(g=>favoriteTeams.some(t=>t.name===g.league&&t.league===lineFilter)).concat(others.filter(g=>g.league===lineFilter));
+  const fav=myTeams.filter(g=>g&&g.id&&!g.final);
+  const all=new Map();
+  [...lineUpcoming,...fav].forEach(g=>{
+   const league=favoriteTeams.find(t=>t.name===g.league)?.league||g.league;
+   const normalized={...g,league};
+   const key=league+':'+g.id,old=all.get(key);
+   if(!old)all.set(key,normalized);
+   else all.set(key,{...old,...normalized,ar:normalized.ar||old.ar,hr:normalized.hr||old.hr,odds:normalized.odds||old.odds});
+  });
+  const list=[...all.values()].sort((a,b)=>a.date-b.date);
+  if(lineFilter==='MY'){
+   const ids=new Set(fav.map(g=>g.id));
+   return list.filter(g=>ids.has(g.id));
+  }
+  if(lineFilter==='ALL')return list;
+  return list.filter(g=>g.league===lineFilter);
  }
  function gameCard(g){
   const when=g.date?new Date(g.date).toLocaleString('en-US',{timeZone:'America/New_York',weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'}):g.status;
@@ -978,7 +1014,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
   const spread=raw.match(/LINE:\s*(.*?)\s*(?:•|$)/i)?.[1]?.trim()||'—';
   const total=raw.match(/O\/U:\s*([^•]+)/i)?.[1]?.trim()||'—';
   const logo=(src,name)=>src?'<img class="line-team-logo" loading="lazy" src="'+safe(src)+'" alt="'+safe(name)+' logo">':'';
-  return '<article class="line-card"><div class="line-league">'+safe(g.league)+' <span class="line-date">• '+safe(when)+'</span></div><div class="line-teams"><div class="line-team">'+logo(g.awayLogo,g.away)+'<span>'+safe(g.away)+'</span></div><span class="line-versus">VS</span><div class="line-team">'+logo(g.homeLogo,g.home)+'<span>'+safe(g.home)+'</span></div></div><div class="line-metrics"><div><small>SPREAD</small><strong>'+safe(spread)+'</strong></div><div><small>OVER / UNDER</small><strong>'+safe(total)+'</strong></div></div><div class="line-source">'+(raw?'ESPN pregame odds':'Awaiting published ESPN odds')+'</div></article>';
+  return '<article class="line-card"><div class="line-league">'+safe(g.league)+' <span class="line-date">• '+safe(when)+'</span></div><div class="line-teams"><div class="line-team">'+logo(g.awayLogo,g.away)+'<span>'+(g.ar?'#'+g.ar+' ':'')+safe(g.away)+'</span></div><span class="line-versus">VS</span><div class="line-team">'+logo(g.homeLogo,g.home)+'<span>'+safe(g.home)+'</span></div></div><div class="line-metrics"><div><small>SPREAD</small><strong>'+safe(spread)+'</strong></div><div><small>OVER / UNDER</small><strong>'+safe(total)+'</strong></div></div><div class="line-source">'+(raw?'ESPN pregame odds':'Awaiting published ESPN odds')+'</div></article>';
  }
  window.renderDailyLine=function(){
   if(!dailyLineOpen)return;
@@ -993,14 +1029,14 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
   document.getElementById('line-auto').textContent='AUTO: '+(lineAuto?'ON':'OFF');
  };
  function turn(n){linePage+=n;renderDailyLine()}
- function openDailyLine(){dailyLineOpen=true;linePage=0;document.getElementById('daily-line-view').hidden=false;renderDailyLine()}
+ function openDailyLine(){dailyLineOpen=true;linePage=0;document.getElementById('daily-line-view').hidden=false;renderDailyLine();refreshLineUpcoming()}
  function closeDailyLine(){dailyLineOpen=false;document.getElementById('daily-line-view').hidden=true}
  document.getElementById('back-to-ticker').onclick=closeDailyLine;
  document.getElementById('line-prev').onclick=()=>turn(-1);
  document.getElementById('line-next').onclick=()=>turn(1);
  document.getElementById('line-auto').onclick=()=>{lineAuto=!lineAuto;renderDailyLine()};
  document.addEventListener('keydown',e=>{if(dailyLineOpen&&(e.key==='Escape'||e.key==='Backspace')){e.preventDefault();closeDailyLine()}});
- lineTimer=setInterval(()=>{if(dailyLineOpen&&lineAuto)turn(1)},15000);
+ lineTimer=setInterval(()=>{if(dailyLineOpen&&lineAuto)turn(1)},15000);setInterval(()=>{if(dailyLineOpen)refreshLineUpcoming()},600000);
  updateLeagueButtons();
 })();
 </script>
@@ -1743,7 +1779,7 @@ header h1 .cone-version-wrap{transform:translateX(5px)!important}
 #fun-feature.fun-long-lyric .fun-headline{font-size:clamp(14px,1.4vw,26px)!important;line-height:1.05!important;flex-shrink:1!important}
 #fun-feature.fun-long-lyric .fun-detail{font-size:clamp(11px,.88vw,17px)!important;line-height:1.08!important;flex-shrink:0!important}
 </style><style id="vegas-daily-line-v18">
-#daily-line-view{background:linear-gradient(90deg,#070b13e8,#07101bd9),url('https://images.unsplash.com/photo-1504016798967-59a258e9386d?auto=format&fit=crop&w=1600&q=75') center/cover!important;padding:clamp(8px,1vw,18px)!important;gap:clamp(4px,.5vw,9px)!important}
+#daily-line-view{background:linear-gradient(90deg,#070b13e8,#07101bd9),url('https://commons.wikimedia.org/wiki/Special:FilePath/Ohio_Stadium_Aerial.jpg?width=1600') center/cover!important;padding:clamp(8px,1vw,18px)!important;gap:clamp(4px,.5vw,9px)!important}
 #daily-line-view .line-top{border:3px double #ffcd63;border-radius:12px;background:linear-gradient(100deg,#370b12,#821a20 48%,#370b12);padding:clamp(5px,.7vw,12px) clamp(12px,1.5vw,26px);box-shadow:inset 0 0 22px #e4a52c55,0 0 16px #ffae3855}
 #daily-line-view .line-top strong{color:#ffe3a0;letter-spacing:.07em;text-shadow:0 0 7px #ff7d16,0 0 19px #ff981c;font-size:clamp(23px,3vw,50px)}
 #daily-line-view .line-top strong:before{content:'🎲 ♠ ';font-size:.7em}
@@ -1765,5 +1801,5 @@ header h1 .cone-version-wrap{transform:translateX(5px)!important}
 #daily-line-view .line-source{text-align:center;color:#a8b9c9;font-size:clamp(9px,.7vw,13px)!important}
 #daily-line-view #line-filters button.active{background:#f5b74d!important;color:#1a1110!important}
 @media(max-width:700px){#daily-line-view .line-team{font-size:12px}#daily-line-view .line-team-logo{width:25px;height:25px}#daily-line-view .line-top strong:before,#daily-line-view .line-top strong:after{content:''}}
-</style></body></html>
+</style><style id="daily-v19-corrections">#daily-line-view .line-team span{overflow-wrap:anywhere}#daily-line-view .line-team-logo{object-fit:contain}#daily-line-view:after{content:"Ohio Stadium photo: Lectrician2 / Wikimedia Commons, CC BY-SA 4.0";position:absolute;right:10px;bottom:2px;font-size:9px;color:#c1c7d1;opacity:.7;pointer-events:none}</style></body></html>
 <!-- Redeploy V66: restart stalled GitHub Pages build. -->
