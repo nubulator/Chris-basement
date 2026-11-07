@@ -1110,6 +1110,8 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
  document.addEventListener('keydown',e=>{if(dailyLineOpen&&(e.key==='Escape'||e.key==='Backspace')){e.preventDefault();closeDailyLine()}});
  lineTimer=setInterval(()=>{if(dailyLineOpen&&lineAuto)turn(1)},15000);setInterval(()=>{if(dailyLineOpen)refreshLineUpcoming()},600000);
  updateLeagueButtons();
+ // Direct entry for the shared Garage Daily Line; never show the Basement home screen.
+ if(new URLSearchParams(window.location.search).get('view')==='daily-line')openDailyLine();
 })();
 </script>
 <script id="v3821-funjs">(function(){
