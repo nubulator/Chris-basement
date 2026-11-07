@@ -719,13 +719,25 @@ function display(){
  $('games').style.gridTemplateRows='repeat(4,minmax(0,1fr))';
  function footballLiveDrive(g){
  if(!g.live||!['NFL','NCAA FOOTBALL'].includes(g.league))return '';
- const d=g.drive||{},yard=d.yard===null||d.yard===undefined?NaN:Number(d.yard);
- if(!d.hasData)return '';
- const valid=Number.isFinite(yard)&&yard>=0&&yard<=100;
- const pos=valid?Math.max(2,Math.min(98,yard)):50;
- const team=d.possession||'';
- const label=d.downDistance||'';
- return '<div class="live-drive" aria-label="Live football field position"><div class="drive-caption">'+safe(team?team+' BALL':'BALL POSITION')+(label?' · '+safe(label):'')+'</div><div class="drive-field"><span class="drive-yard y20">20</span><span class="drive-yard y50">50</span><span class="drive-yard y80">20</span><span class="drive-marker" style="left:'+pos+'%">🏈</span></div><div class="drive-caption drive-spot">'+safe(d.spot||'')+'</div></div>';
+ const d=g.drive||{};
+ const clean=v=>Number.isFinite(Number(v))&&Number(v)>0?Number(v):null;
+ const down=clean(d.down),distance=clean(d.distance);
+ const rawLabel=String(d.downDistance||'').trim();
+ const label=down&&distance?(['','1st','2nd','3rd','4th'][down]||down+'th')+' & '+distance:(/\b[1-4](?:st|nd|rd|th)\s*&\s*(?:goal|[1-9]\d*)/i.test(rawLabel)?rawLabel:'');
+ const spot=String(d.spot||'').trim();
+ const spotMatch=spot.match(/\b(?:at\s+)?([A-Z]{2,5})\s+(\d{1,2})\b/i);
+ const own=String(d.possession||'').trim().toUpperCase();
+ let yard=null;
+ if(spotMatch){
+  const n=Number(spotMatch[2]);
+  if(n>=0&&n<=50)yard=spotMatch[1].toUpperCase()===own?n:100-n;
+ }
+ if(yard===null&&d.yard!==null&&d.yard!==undefined&&Number.isFinite(Number(d.yard))&&Number(d.yard)>=0&&Number(d.yard)<=100)yard=Number(d.yard);
+ const show=!!(own||label||spotMatch);
+ if(!show)return '';
+ const marker=yard!==null?'<span class="drive-marker" style="left:'+Math.max(8,Math.min(92,8+yard*.84))+'%">🏈</span>':'';
+ const first=yard!==null&&distance&&yard+distance<=100?'<span class="drive-first" style="left:'+Math.max(8,Math.min(92,8+(yard+distance)*.84))+'%"></span>':'';
+ return '<div class="live-drive" aria-label="Live football situation"><div class="drive-caption">'+safe(own?own+' BALL':'LIVE FOOTBALL')+(label?' · '+safe(label):'')+'</div><div class="drive-field"><span class="drive-endzone left">EZ</span><span class="drive-yard y20">20</span><span class="drive-yard y50">50</span><span class="drive-yard y80">20</span>'+first+marker+'<span class="drive-endzone right">EZ</span></div><div class="drive-caption drive-spot">'+safe(spotMatch?spot:yard!==null?'Ball position':'')+'</div></div>';
 }
 function baseballLiveDiamond(g){
  if(!g.live||g.league!=='MLB')return '';
@@ -781,8 +793,8 @@ function readGame(e,league,query){
  let od=c.odds?.[0],spread=od?.details||od?.spread,ou=od?.overUnder;
  let situation=c?.situation||e?.situation||{},possId=String(situation.possession||situation.possessionTeamId||''),posTeam=c?.competitors?.find(x=>String(x.team?.id)===possId);
  let rawYard=situation.possessionYardLine??situation.yardLine??null,yard=rawYard===null?NaN:Number(rawYard);
- let dd=situation.downDistanceText||[situation.down,situation.distance].every(v=>v!=null)?(situation.downDistanceText||situation.down+' & '+situation.distance):'';
- let drive=(st.state==='in'&&['NFL','NCAA FOOTBALL'].includes(league))?{yard:Number.isFinite(yard)&&yard>=0&&yard<=100?yard:null,possession:posTeam?.team?.abbreviation||posTeam?.team?.shortDisplayName||'',downDistance:dd,spot:situation.possessionText||situation.yardLineText||'',hasData:!!(rawYard!=null||situation.downDistanceText||situation.down!=null||possId)}:null;
+ let dd=situation.downDistanceText||'';
+ let drive=(st.state==='in'&&['NFL','NCAA FOOTBALL'].includes(league))?{yard:Number.isFinite(yard)&&yard>=0&&yard<=100?yard:null,possession:posTeam?.team?.abbreviation||posTeam?.team?.shortDisplayName||'',downDistance:dd,down:situation.down,distance:situation.distance,spot:situation.possessionText||situation.yardLineText||'',hasData:!!(rawYard!=null||situation.downDistanceText||situation.down!=null||possId)}:null;
 
  let bs=c?.situation||e?.situation||{};
  let baseball=st.state==='in'&&league==='MLB'?{first:bs.onFirst,second:bs.onSecond,third:bs.onThird,balls:bs.balls??bs.count?.balls,strikes:bs.strikes??bs.count?.strikes,outs:bs.outs??bs.count?.outs,pitchCount:bs.pitchCount??bs.pitcher?.pitchCount}:null;
@@ -1971,5 +1983,11 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 #games .game:has(.live-drive) .teams{grid-template-columns:minmax(0,1fr) minmax(125px,40%) auto!important}
 #games .drive-field{height:clamp(25px,3vh,42px)!important;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(10% - 1px),#ffffff55 calc(10% - 1px),#ffffff55 10%),linear-gradient(90deg,#12633a,#218d50,#12633a)!important}
 #games .drive-caption{font-size:clamp(10px,.85vw,15px)!important}
+</style><style id="football-field-refinement-v3">
+#games .drive-field{overflow:hidden!important;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(8.4% - 1px),#ffffff50 calc(8.4% - 1px),#ffffff50 8.4%),linear-gradient(90deg,#155b35,#248a4e,#155b35)!important}
+#games .drive-endzone{position:absolute;top:0;bottom:0;width:8%;background:#183e75;border-inline:1px solid #fff8;color:#ffffffb8;font-size:clamp(6px,.45vw,9px);display:flex;align-items:center;justify-content:center;font-weight:900}
+#games .drive-endzone.left{left:0}#games .drive-endzone.right{right:0}
+#games .drive-first{position:absolute;top:0;bottom:0;border-left:2px dashed #ffd34d;filter:drop-shadow(0 0 2px #ffbd00)}
+#games .drive-marker{z-index:2}
 </style></body></html>
 <!-- Redeploy V66: restart stalled GitHub Pages build. -->
