@@ -93,7 +93,7 @@ main{display:grid!important;grid-template-columns:minmax(0,55fr) minmax(0,15fr) 
 .teamline{justify-content:flex-start}
 .teamline .score{margin-left:auto}
 @media(max-width:800px){main{grid-template-columns:minmax(0,54fr) minmax(0,16fr) minmax(0,30fr)!important;gap:4px!important;padding:4px!important}.sponsor-sign{padding:2px;border-radius:6px}.sponsor-column{gap:4px}.sponsor-heading{font-size:9px}.teams{font-size:clamp(12px,2.4vw,19px)!important}}
-</style>
+ .team-record{display:inline-block;font-size:.47em;font-weight:600;color:#a9c4d8;margin-left:.45em;vertical-align:middle;white-space:nowrap}.live-prob{flex:1;min-width:0;padding:0 .5vw;align-self:center}.prob-heading{text-align:center;font-size:clamp(10px,.8vw,15px);font-weight:800;color:#f6cf86;letter-spacing:.04em}.prob-content{display:flex;align-items:center;gap:.45vw;height:clamp(38px,5.8vh,85px)}.prob-content svg{flex:1;min-width:0;height:100%;background:rgba(7,23,48,.65);border:1px solid #56718c;border-radius:4px}.prob-label{width:clamp(38px,4vw,76px);font-size:clamp(9px,.73vw,14px);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.prob-label b{display:block;color:#ffcf7a;font-size:1.28em} </style>
 <style id="v38-adjustments">
 /* V3.8.11 is a targeted patch on the original V3.7, not a rebuild. */
 html,body{height:100%;overflow:hidden}
@@ -738,12 +738,15 @@ function display(){
 }
 function basketballLivePanel(g){
  if(!g.live||!['NBA','NCAA MEN'].includes(g.league))return '';
- const d=g.basketball||{},detail=g.basketballDetail||{};
- const period=String(d.period||'').trim();
+ const detail=g.basketballDetail||{},p=detail.winProb||[];
+ if(p.length>=2){
+  const values=p.length>180?p.filter((_,i)=>i%Math.ceil(p.length/180)===0||i===p.length-1):p;
+  const coords=values.map((v,i)=>(4+i*292/Math.max(1,values.length-1)).toFixed(1)+','+(74-v*68).toFixed(1)).join(' ');
+  const home=Math.round(p[p.length-1]*100),away=100-home;
+  return '<div class="live-prob" aria-label="ESPN win probability history"><div class="prob-heading">ESPN WIN PROBABILITY</div><div class="prob-content"><span class="prob-label">'+safe(g.away)+'<b>'+away+'%</b></span><svg viewBox="0 0 300 80" preserveAspectRatio="none" aria-hidden="true"><line x1="4" y1="40" x2="296" y2="40" stroke="#6b829d" stroke-dasharray="4 4"/><polyline fill="none" stroke="#f9bb63" stroke-width="3" vector-effect="non-scaling-stroke" points="'+coords+'"/></svg><span class="prob-label">'+safe(g.home)+'<b>'+home+'%</b></span></div></div>';
+ }
  const play=String(detail.lastPlay||'').trim();
- const shot=d.shotClock!=null&&d.shotClock!==''&&Number.isFinite(Number(d.shotClock))?String(d.shotClock):'';
- const info=play?'<span class="court-last-play">'+safe(play)+'</span>':'<span>Live play-by-play not available yet</span>';
- return '<div class="live-court" aria-label="Live basketball game details"><div class="court-info">'+(period?'<strong>'+safe(period)+'</strong>':'')+info+(shot?'<span>SHOT CLOCK '+safe(shot)+'</span>':'')+'</div></div>';
+ return '<div class="live-court"><div class="court-info"><strong>LIVE GAME</strong><span>'+safe(play||'ESPN win probability not available for this game')+'</span></div></div>';
 }
 function hockeyLivePanel(g){
  if(!g.live||g.league!=='NHL')return '';
@@ -760,7 +763,7 @@ function baseballLiveDiamond(g){
  const b=(v,cls)=>'<span class="baseball-base '+cls+(v===true?' occupied':'')+'"></span>';
  return '<div class="live-baseball" aria-label="Live baseball situation"><div class="baseball-count"><span>B '+num(d.balls)+'</span><span>S '+num(d.strikes)+'</span><span>O '+num(d.outs)+'</span></div><div class="baseball-diamond">'+b(d.second,'second')+b(d.third,'third')+b(d.first,'first')+'<span class="baseball-home"></span></div><div class="baseball-pitches">PITCHES '+num(d.pitchCount)+'</div></div>';
 }
-const nextGamesHtml=current.map(g=>`<div class="game ${g.fav?'favorite':''}" ${showingMyTeams?`style="--team-watermark:url('${safe(favoriteTeams.find(t=>t.name===g.league)?.logo||g.awayLogo)}')"`:``}><div class="meta"><span>${safe(g.league)} ${g.live?'● LIVE':''}</span><span>${safe(g.status)}</span></div><div class="teams"><span style="min-width:0"><span class="teamline"><img decoding="async" src="${safe(g.awayLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.ar?`<span class="rank">#${g.ar}</span>`:''}${safe(g.away)}</span></span><span class="teamline"><img decoding="async" src="${safe(g.homeLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.hr?`<span class="rank">#${g.hr}</span>`:''}${safe(g.home)}</span></span></span>${footballLiveDrive(g)}${basketballLivePanel(g)}${hockeyLivePanel(g)}${baseballLiveDiamond(g)}<span class="score">${!g.live&&!g.final?'VS':safe(g.as)+'<br>'+safe(g.hs)}</span></div>${showingMyTeams&&g.id?'<div class="basement-game-location"><span class="location-city">'+safe(g.venueCity||('Home: '+g.home))+'</span><span class="location-stadium">'+safe(g.venue||'Venue to be announced')+'</span></div>':''}</div>`).join('');
+const nextGamesHtml=current.map(g=>`<div class="game ${g.fav?'favorite':''}" ${showingMyTeams?`style="--team-watermark:url('${safe(favoriteTeams.find(t=>t.name===g.league)?.logo||g.awayLogo)}')"`:``}><div class="meta"><span>${safe(g.league)} ${g.live?'● LIVE':''}</span><span>${safe(g.status)}</span></div><div class="teams"><span style="min-width:0"><span class="teamline"><img decoding="async" src="${safe(g.awayLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.ar?`<span class="rank">#${g.ar}</span>`:''}${safe(g.away)}${g.awayRecord?`<small class="team-record">(${safe(g.awayRecord)})</small>`:''}</span></span><span class="teamline"><img decoding="async" src="${safe(g.homeLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.hr?`<span class="rank">#${g.hr}</span>`:''}${safe(g.home)}${g.homeRecord?`<small class="team-record">(${safe(g.homeRecord)})</small>`:''}</span></span></span>${footballLiveDrive(g)}${basketballLivePanel(g)}${hockeyLivePanel(g)}${baseballLiveDiamond(g)}<span class="score">${!g.live&&!g.final?'VS':safe(g.as)+'<br>'+safe(g.hs)}</span></div>${showingMyTeams&&g.id?'<div class="basement-game-location"><span class="location-city">'+safe(g.venueCity||('Home: '+g.home))+'</span><span class="location-stadium">'+safe(g.venue||'Venue to be announced')+'</span></div>':''}</div>`).join('');
  // V70: Keep existing game DOM and decoded team logos when visible content is unchanged.
  const gamesNode=$('games');
  // V74 rollback: restore the original Sports Center grid and card sizing.
@@ -804,6 +807,8 @@ function teamLogo(league,t){
 function readGame(e,league,query){
  let c=e.competitions?.[0],a=c?.competitors?.find(x=>x.homeAway==='away'),h=c?.competitors?.find(x=>x.homeAway==='home');if(!a||!h)return null;
  let away=a.team?.shortDisplayName||a.team?.displayName||'TBD',home=h.team?.shortDisplayName||h.team?.displayName||'TBD',st=e.status?.type||{},ar=rank(a),hr=rank(h);
+ const record=x=>{const entries=x.records||[];const total=entries.find(r=>r.type==='total'||r.name==='overall')||entries[0];const val=total?.summary||x.record||'';return /^\d+-\d+(?:-\d+)?$/.test(String(val).trim())?String(val).trim():''};
+ const awayRecord=record(a),homeRecord=record(h);
  let od=c.odds?.[0],spread=od?.details||od?.spread,ou=od?.overUnder;
  let situation=c?.situation||e?.situation||{},possId=String(situation.possession||situation.possessionTeamId||''),posTeam=c?.competitors?.find(x=>String(x.team?.id)===possId);
  let rawYard=situation.possessionYardLine??situation.yardLine??null,yard=rawYard===null?NaN:Number(rawYard);
@@ -817,7 +822,7 @@ function readGame(e,league,query){
  let runner=v=>v===true||v===1||v==='1'||(v&&typeof v==='object');
  let baseball=st.state==='in'&&league==='MLB'?{first:runner(bs.onFirst),second:runner(bs.onSecond),third:runner(bs.onThird),balls:bs.balls??bs.count?.balls,strikes:bs.strikes??bs.count?.strikes,outs:bs.outs??bs.count?.outs,pitchCount:bs.pitchCount??bs.pitcher?.pitchCount}:null;
  let odds=spread!=null||ou!=null?`LINE: ${spread??'—'}  •  O/U: ${ou??'—'}` :'';
- return {id:String(e.id),league,away,home,awayLogo:a.team?.logo||a.team?.logos?.[0]?.href||teamLogo(league,a.team),homeLogo:h.team?.logo||h.team?.logos?.[0]?.href||teamLogo(league,h.team),as:a.score??'',hs:h.score??'',ar,hr,odds,venue:c?.venue?.fullName||'',venueCity:[c?.venue?.address?.city,c?.venue?.address?.state].filter(Boolean).join(', '),status:st.shortDetail||'Scheduled',drive,basketball,hockey,baseball,live:st.state==='in',final:st.state==='post',date:Date.parse(e.date),fav:/Ohio State|Buckeyes|Cleveland Browns|Cleveland Cavaliers|Cleveland Guardians|Columbus Blue Jackets/i.test(away+' '+home),bigTen:bigTen(a)||bigTen(h),top25:!!(ar||hr),fromTop25:false,fromBigTen:false};
+ return {id:String(e.id),league,away,home,awayRecord,homeRecord,awayLogo:a.team?.logo||a.team?.logos?.[0]?.href||teamLogo(league,a.team),homeLogo:h.team?.logo||h.team?.logos?.[0]?.href||teamLogo(league,h.team),as:a.score??'',hs:h.score??'',ar,hr,odds,venue:c?.venue?.fullName||'',venueCity:[c?.venue?.address?.city,c?.venue?.address?.state].filter(Boolean).join(', '),status:st.shortDetail||'Scheduled',drive,basketball,hockey,baseball,live:st.state==='in',final:st.state==='post',date:Date.parse(e.date),fav:/Ohio State|Buckeyes|Cleveland Browns|Cleveland Cavaliers|Cleveland Guardians|Columbus Blue Jackets/i.test(away+' '+home),bigTen:bigTen(a)||bigTen(h),top25:!!(ar||hr),fromTop25:false,fromBigTen:false};
 }
 
 const favoriteTeams=[
@@ -886,7 +891,9 @@ async function enrichLiveBasketball(list){
    if(!r.ok)return;
    const j=await r.json(),plays=Array.isArray(j.plays)?j.plays:[];
    const last=[...plays].reverse().find(p=>p.text&&String(p.text).trim());
-   const data={lastPlay:last?String(last.text).slice(0,115):''};
+   const wp=Array.isArray(j.winprobability)?j.winprobability:Array.isArray(j.winProbability)?j.winProbability:[];
+   const points=wp.map(p=>Number(p.homeWinPercentage??p.homeWinProbability)).filter(v=>Number.isFinite(v)&&v>=0&&v<=1);
+   const data={lastPlay:last?String(last.text).slice(0,115):'',winProb:points.length>=2?points:[]};
    basketballDetailCache.set(g.id,{at:Date.now(),data});g.basketballDetail=data;
   }catch(e){console.warn('Basketball play-by-play unavailable',g.id,e)}
  }));
@@ -1181,7 +1188,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
   const spread=raw.match(/LINE:\s*(.*?)\s*(?:•|$)/i)?.[1]?.trim()||'—';
   const total=raw.match(/O\/U:\s*([^•]+)/i)?.[1]?.trim()||'—';
   const logo=(src,name)=>src?'<img class="line-team-logo" loading="lazy" src="'+safe(src)+'" alt="'+safe(name)+' logo">':'';
-  return '<article class="line-card"><div class="line-league">'+safe(g.league)+' <span class="line-date">• '+safe(when)+'</span></div><div class="line-teams"><div class="line-team">'+logo(g.awayLogo,g.away)+'<span>'+(g.ar?'#'+g.ar+' ':'')+safe(g.away)+'</span></div><span class="line-versus">VS</span><div class="line-team">'+logo(g.homeLogo,g.home)+'<span>'+(g.hr?'#'+g.hr+' ':'')+safe(g.home)+'</span></div></div><div class="line-metrics"><div><small>SPREAD</small><strong>'+safe(spread)+'</strong></div><div><small>OVER / UNDER</small><strong>'+safe(total)+'</strong></div></div><div class="line-source">'+(raw?'ESPN pregame odds':'Awaiting published ESPN odds')+'</div></article>';
+  return '<article class="line-card"><div class="line-league">'+safe(g.league)+' <span class="line-date">• '+safe(when)+'</span></div><div class="line-teams"><div class="line-team">'+logo(g.awayLogo,g.away)+'<span>'+(g.ar?'#'+g.ar+' ':'')+safe(g.away)+(g.awayRecord?'<small class="team-record"> ('+safe(g.awayRecord)+')</small>':'')+'</span></div><span class="line-versus">VS</span><div class="line-team">'+logo(g.homeLogo,g.home)+'<span>'+(g.hr?'#'+g.hr+' ':'')+safe(g.home)+(g.homeRecord?'<small class="team-record"> ('+safe(g.homeRecord)+')</small>':'')+'</span></div></div><div class="line-metrics"><div><small>SPREAD</small><strong>'+safe(spread)+'</strong></div><div><small>OVER / UNDER</small><strong>'+safe(total)+'</strong></div></div><div class="line-source">'+(raw?'ESPN pregame odds':'Awaiting published ESPN odds')+'</div></article>';
  }
  window.renderDailyLine=function(){
   if(!dailyLineOpen)return;
