@@ -1011,7 +1011,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
  async function enrichLineOdds(list){
   if(lineOddsBusy)return;lineOddsBusy=true;
   const paths={'NFL':'football/nfl','NCAA FOOTBALL':'football/college-football','NCAA MEN':'basketball/mens-college-basketball','NBA':'basketball/nba','NHL':'hockey/nhl','MLB':'baseball/mlb'};
-  const targets=list.filter(g=>g.id&&!g.odds).slice(0,35);
+  const targets=list.filter(g=>g.id&&!g.odds).slice(0,70);
   for(let i=0;i<targets.length;i+=6){
    await Promise.allSettled(targets.slice(i,i+6).map(async g=>{
     const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/'+paths[g.league]+'/summary?event='+encodeURIComponent(g.id),{cache:'no-store'});
@@ -1054,7 +1054,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
   document.getElementById('line-filters').innerHTML=tabs.map(([id,name])=>'<button type="button" data-line="'+safe(id)+'" class="'+(lineFilter===id?'active':'')+'">'+safe(name)+'</button>').join('');
   document.querySelectorAll('[data-line]').forEach(b=>b.onclick=()=>{lineFilter=b.dataset.line;linePage=0;renderDailyLine()});
   const data=lineData(),perPage=5,pages=Math.max(1,Math.ceil(data.length/perPage));linePage=(linePage+pages)%pages;
-  const visible=data.slice(linePage*perPage,(linePage+1)*perPage);
+  const visible=data.slice(linePage*perPage,(linePage+1)*perPage);if(visible.some(g=>g.id&&!g.odds))enrichLineOdds(visible);
   document.getElementById('line-games').innerHTML=visible.length?visible.map(gameCard).join(''):'<article class="line-card line-empty">No upcoming games available for this filter. Checking again automatically.</article>';
   document.getElementById('line-page-label').textContent=(lineFilter==='MY'?'MY TEAMS':lineFilter==='ALL'?'ALL GAMES':names[lineFilter])+' • '+data.length+' games • page '+(linePage+1)+'/'+pages;
   document.getElementById('line-page-dots').textContent=Array.from({length:Math.min(pages,12)},(_,i)=>i===linePage?'●':'○').join(' ');
