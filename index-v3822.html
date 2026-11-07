@@ -1880,5 +1880,34 @@ header h1 .cone-version-wrap{transform:translateX(5px)!important}
 .bright-street-basemap .leaflet-tile,.leaflet-tile.bright-street-basemap{filter:none!important;opacity:1!important}
 #radarMap,#radarMapBig{background:#e8eef2!important}
 </style>
+
+<style id="shared-theme-selector-v2">
+#basement-theme-page{padding:clamp(10px,1.5vh,25px) clamp(16px,2.4vw,45px)!important;justify-content:flex-start!important;overflow-y:auto!important}
+#basement-theme-page h2{font-size:clamp(26px,2.7vw,50px)!important;margin:2px 0 1px!important}
+#basement-theme-page p{font-size:clamp(13px,1vw,19px)!important;margin:0 0 5px!important}
+#basement-theme-options{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;width:min(1350px,96vw)!important;gap:clamp(7px,.75vw,14px)!important;margin:7px auto!important}
+#basement-theme-options button{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;min-height:clamp(57px,8vh,94px)!important;padding:clamp(5px,.7vw,12px)!important;font-size:clamp(15px,1.45vw,27px)!important;line-height:1.12!important;text-align:center!important;overflow-wrap:anywhere!important;white-space:normal!important}
+#basement-theme-options button .theme-choice-icon{display:block;font-size:clamp(21px,2.1vw,39px)!important;line-height:1.05!important}
+#basement-theme-options button .theme-choice-label{display:block;font-size:inherit;font-weight:900}
+#basement-theme-back{position:relative!important;margin:10px auto 5px!important;padding:9px 28px!important;font-size:clamp(14px,1.2vw,23px)!important}
+@media(max-width:650px){#basement-theme-options{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+</style>
+<script id="shared-theme-selector-icons-v2">(function(){
+const icons={auto:'✨',classic:'⭐',winter:'❄️',spring:'🌷',summer:'☀️',fall:'🍁',autumn:'🍁',groundhog:'🦫',patrick:'☘️',easter:'🐰',memorial:'🇺🇸',independence:'🎆',july:'🎆',labor:'🛠️',halloween:'🎃',thanksgiving:'🦃',christmas:'🎄',newyear:'🎉',valentine:'❤️',president:'🇺🇸',veteran:'🇺🇸'};
+function decorate(){
+ const root=document.getElementById('basement-theme-options');if(!root||!root.children.length)return false;
+ for(const b of root.querySelectorAll('button')){
+  if(b.querySelector('.theme-choice-icon'))continue;
+  const raw=b.textContent.trim(),v=(b.dataset.value||'').toLowerCase(),label=raw.replace(/^[✦★♦✧◆✨⭐🎃🍁🎄]\s*/u,'').trim();
+  const match=Object.keys(icons).find(k=>v.includes(k))||Object.keys(icons).find(k=>label.toLowerCase().includes(k));
+  const icon=icons[match]||'🎈';b.textContent='';
+  const i=document.createElement('span');i.className='theme-choice-icon';i.setAttribute('aria-hidden','true');i.textContent=icon;
+  const n=document.createElement('span');n.className='theme-choice-label';n.textContent=label;b.append(i,n);
+ }
+ return true;
+}
+function init(){if(decorate())return;let attempts=0;const timer=setInterval(()=>{if(decorate()||++attempts>24)clearInterval(timer)},200)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();</script>
 </body></html>
 <!-- Redeploy V66: restart stalled GitHub Pages build. -->
