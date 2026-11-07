@@ -739,6 +739,23 @@ function display(){
  const first=yard!==null&&distance&&yard+distance<=100?'<span class="drive-first" style="left:'+Math.max(8,Math.min(92,8+(yard+distance)*.84))+'%"></span>':'';
  return '<div class="live-drive" aria-label="Live football situation"><div class="drive-caption">'+safe(own?own+' BALL':'LIVE FOOTBALL')+(label?' · '+safe(label):'')+'</div><div class="drive-field"><span class="drive-endzone left">EZ</span><span class="drive-yard y20">20</span><span class="drive-yard y50">50</span><span class="drive-yard y80">20</span>'+first+marker+'<span class="drive-endzone right">EZ</span></div><div class="drive-caption drive-spot">'+safe(spotMatch?spot:yard!==null?'Ball position':'')+'</div></div>';
 }
+function basketballLivePanel(g){
+ if(!g.live||!['NBA','NCAA MEN'].includes(g.league))return '';
+ const d=g.basketball||{};
+ const num=v=>Number.isFinite(Number(v))&&Number(v)>=0?String(v):'—';
+ const period=String(d.period||'').trim();
+ const shot=num(d.shotClock);
+ const foulsA=num(d.awayFouls),foulsH=num(d.homeFouls);
+ return '<div class="live-court" aria-label="Live basketball game details"><div class="court-art"><span class="court-hoop left">◉</span><span class="court-mid">●</span><span class="court-hoop right">◉</span></div><div class="court-info">'+(period?'<strong>'+safe(period)+'</strong>':'')+(shot!=='—'?'<span>SHOT CLOCK '+shot+'</span>':'')+((foulsA!=='—'||foulsH!=='—')?'<span>TEAM FOULS '+safe(d.awayAbbr||'AWAY')+' '+foulsA+' · '+safe(d.homeAbbr||'HOME')+' '+foulsH+'</span>':'')+'</div></div>';
+}
+function hockeyLivePanel(g){
+ if(!g.live||g.league!=='NHL')return '';
+ const d=g.hockey||{};
+ const num=v=>Number.isFinite(Number(v))&&Number(v)>=0?String(v):'—';
+ const a=num(d.awayShots),h=num(d.homeShots);
+ const pp=String(d.powerPlay||'').trim();
+ return '<div class="live-rink" aria-label="Live hockey game details"><div class="rink-art"><span class="rink-goal left">▣</span><span class="rink-faceoff">●</span><span class="rink-goal right">▣</span></div><div class="rink-info"><strong>SHOTS ON GOAL</strong><span>'+safe(d.awayAbbr||'AWAY')+' '+a+' · '+safe(d.homeAbbr||'HOME')+' '+h+'</span>'+(pp?'<span class="rink-pp">POWER PLAY '+safe(pp)+'</span>':'')+'</div></div>';
+}
 function baseballLiveDiamond(g){
  if(!g.live||g.league!=='MLB')return '';
  const d=g.baseball||{};
@@ -746,7 +763,7 @@ function baseballLiveDiamond(g){
  const b=(v,cls)=>'<span class="baseball-base '+cls+(v===true?' occupied':'')+'"></span>';
  return '<div class="live-baseball" aria-label="Live baseball situation"><div class="baseball-count"><span>B '+num(d.balls)+'</span><span>S '+num(d.strikes)+'</span><span>O '+num(d.outs)+'</span></div><div class="baseball-diamond">'+b(d.second,'second')+b(d.third,'third')+b(d.first,'first')+'<span class="baseball-home"></span></div><div class="baseball-pitches">PITCHES '+num(d.pitchCount)+'</div></div>';
 }
-const nextGamesHtml=current.map(g=>`<div class="game ${g.fav?'favorite':''}" ${showingMyTeams?`style="--team-watermark:url('${safe(favoriteTeams.find(t=>t.name===g.league)?.logo||g.awayLogo)}')"`:``}><div class="meta"><span>${safe(g.league)} ${g.live?'● LIVE':''}</span><span>${safe(g.status)}</span></div><div class="teams"><span style="min-width:0"><span class="teamline"><img decoding="async" src="${safe(g.awayLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.ar?`<span class="rank">#${g.ar}</span>`:''}${safe(g.away)}</span></span><span class="teamline"><img decoding="async" src="${safe(g.homeLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.hr?`<span class="rank">#${g.hr}</span>`:''}${safe(g.home)}</span></span></span>${footballLiveDrive(g)}${baseballLiveDiamond(g)}<span class="score">${!g.live&&!g.final?'VS':safe(g.as)+'<br>'+safe(g.hs)}</span></div>${showingMyTeams&&g.id?'<div class="basement-game-location"><span class="location-city">'+safe(g.venueCity||('Home: '+g.home))+'</span><span class="location-stadium">'+safe(g.venue||'Venue to be announced')+'</span></div>':''}</div>`).join('');
+const nextGamesHtml=current.map(g=>`<div class="game ${g.fav?'favorite':''}" ${showingMyTeams?`style="--team-watermark:url('${safe(favoriteTeams.find(t=>t.name===g.league)?.logo||g.awayLogo)}')"`:``}><div class="meta"><span>${safe(g.league)} ${g.live?'● LIVE':''}</span><span>${safe(g.status)}</span></div><div class="teams"><span style="min-width:0"><span class="teamline"><img decoding="async" src="${safe(g.awayLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.ar?`<span class="rank">#${g.ar}</span>`:''}${safe(g.away)}</span></span><span class="teamline"><img decoding="async" src="${safe(g.homeLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.hr?`<span class="rank">#${g.hr}</span>`:''}${safe(g.home)}</span></span></span>${footballLiveDrive(g)}${basketballLivePanel(g)}${hockeyLivePanel(g)}${baseballLiveDiamond(g)}<span class="score">${!g.live&&!g.final?'VS':safe(g.as)+'<br>'+safe(g.hs)}</span></div>${showingMyTeams&&g.id?'<div class="basement-game-location"><span class="location-city">'+safe(g.venueCity||('Home: '+g.home))+'</span><span class="location-stadium">'+safe(g.venue||'Venue to be announced')+'</span></div>':''}</div>`).join('');
  // V70: Keep existing game DOM and decoded team logos when visible content is unchanged.
  const gamesNode=$('games');
  // V74 rollback: restore the original Sports Center grid and card sizing.
@@ -797,9 +814,13 @@ function readGame(e,league,query){
  let drive=(st.state==='in'&&['NFL','NCAA FOOTBALL'].includes(league))?{yard:Number.isFinite(yard)&&yard>=0&&yard<=100?yard:null,possession:posTeam?.team?.abbreviation||posTeam?.team?.shortDisplayName||'',downDistance:dd,down:situation.down,distance:situation.distance,spot:situation.possessionText||situation.yardLineText||'',hasData:!!(rawYard!=null||situation.downDistanceText||situation.down!=null||possId)}:null;
 
  let bs=c?.situation||e?.situation||{};
- let baseball=st.state==='in'&&league==='MLB'?{first:bs.onFirst,second:bs.onSecond,third:bs.onThird,balls:bs.balls??bs.count?.balls,strikes:bs.strikes??bs.count?.strikes,outs:bs.outs??bs.count?.outs,pitchCount:bs.pitchCount??bs.pitcher?.pitchCount}:null;
+ let stats=(x,key)=>{const v=(x?.statistics||[]).find(z=>String(z.name||z.abbreviation||z.displayName||'').toLowerCase()===key.toLowerCase());return v?.value??v?.displayValue??null;};
+ let basketball=st.state==='in'&&['NBA','NCAA MEN'].includes(league)?{period:e.status?.period?((league==='NBA'?'Q':'H')+e.status.period):'',shotClock:situation.shotClock??null,awayFouls:stats(a,'fouls'),homeFouls:stats(h,'fouls'),awayAbbr:a.team?.abbreviation,homeAbbr:h.team?.abbreviation}:null;
+ let hockey=st.state==='in'&&league==='NHL'?{awayShots:stats(a,'shotsOnGoal')??stats(a,'shots'),homeShots:stats(h,'shotsOnGoal')??stats(h,'shots'),awayAbbr:a.team?.abbreviation,homeAbbr:h.team?.abbreviation,powerPlay:bs.powerPlay?.team?.abbreviation||''}:null;
+ let runner=v=>v===true||v===1||v==='1'||(v&&typeof v==='object');
+ let baseball=st.state==='in'&&league==='MLB'?{first:runner(bs.onFirst),second:runner(bs.onSecond),third:runner(bs.onThird),balls:bs.balls??bs.count?.balls,strikes:bs.strikes??bs.count?.strikes,outs:bs.outs??bs.count?.outs,pitchCount:bs.pitchCount??bs.pitcher?.pitchCount}:null;
  let odds=spread!=null||ou!=null?`LINE: ${spread??'—'}  •  O/U: ${ou??'—'}` :'';
- return {id:String(e.id),league,away,home,awayLogo:a.team?.logo||a.team?.logos?.[0]?.href||teamLogo(league,a.team),homeLogo:h.team?.logo||h.team?.logos?.[0]?.href||teamLogo(league,h.team),as:a.score??'',hs:h.score??'',ar,hr,odds,venue:c?.venue?.fullName||'',venueCity:[c?.venue?.address?.city,c?.venue?.address?.state].filter(Boolean).join(', '),status:st.shortDetail||'Scheduled',drive,baseball,live:st.state==='in',final:st.state==='post',date:Date.parse(e.date),fav:/Ohio State|Buckeyes|Cleveland Browns|Cleveland Cavaliers|Cleveland Guardians|Columbus Blue Jackets/i.test(away+' '+home),bigTen:bigTen(a)||bigTen(h),top25:!!(ar||hr),fromTop25:false,fromBigTen:false};
+ return {id:String(e.id),league,away,home,awayLogo:a.team?.logo||a.team?.logos?.[0]?.href||teamLogo(league,a.team),homeLogo:h.team?.logo||h.team?.logos?.[0]?.href||teamLogo(league,h.team),as:a.score??'',hs:h.score??'',ar,hr,odds,venue:c?.venue?.fullName||'',venueCity:[c?.venue?.address?.city,c?.venue?.address?.state].filter(Boolean).join(', '),status:st.shortDetail||'Scheduled',drive,basketball,hockey,baseball,live:st.state==='in',final:st.state==='post',date:Date.parse(e.date),fav:/Ohio State|Buckeyes|Cleveland Browns|Cleveland Cavaliers|Cleveland Guardians|Columbus Blue Jackets/i.test(away+' '+home),bigTen:bigTen(a)||bigTen(h),top25:!!(ar||hr),fromTop25:false,fromBigTen:false};
 }
 
 const favoriteTeams=[
@@ -1989,5 +2010,20 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 #games .drive-endzone.left{left:0}#games .drive-endzone.right{right:0}
 #games .drive-first{position:absolute;top:0;bottom:0;border-left:2px dashed #ffd34d;filter:drop-shadow(0 0 2px #ffbd00)}
 #games .drive-marker{z-index:2}
+</style><style id="basement-live-court-rink-v1">
+#games .game:has(.live-court) .teams,#games .game:has(.live-rink) .teams{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(125px,40%) auto!important;align-items:center!important;column-gap:clamp(4px,.5vw,10px)!important}
+#games .live-court,#games .live-rink{min-width:0;text-align:center;color:#f6faff;display:flex;flex-direction:column;gap:3px;align-items:stretch}
+#games .court-art{height:clamp(26px,3.1vh,44px);position:relative;border:2px solid #eabf80;border-radius:3px;background:linear-gradient(90deg,#b97837,#e3ac65,#b97837);box-shadow:inset 0 0 6px #0008}
+#games .court-art:before{content:'';position:absolute;top:0;bottom:0;left:50%;border-left:2px solid #fff9}
+#games .court-art:after{content:'';position:absolute;left:50%;top:50%;width:22px;height:22px;border:1px solid #fff9;border-radius:50%;transform:translate(-50%,-50%)}
+#games .court-hoop{position:absolute;top:50%;transform:translateY(-50%);color:#fff;font-size:16px}.court-hoop.left{left:6%}.court-hoop.right{right:6%}
+#games .court-mid{display:none}
+#games .rink-art{height:clamp(26px,3.1vh,44px);position:relative;border:2px solid #9cdaff;border-radius:30%/40%;background:linear-gradient(90deg,#cceefb 0%,#e9f8ff 48%,#cceefb 100%);box-shadow:inset 0 0 6px #0005}
+#games .rink-art:before{content:'';position:absolute;top:0;bottom:0;left:50%;border-left:2px solid #e33}
+#games .rink-art:after{content:'';position:absolute;left:50%;top:50%;width:25px;height:25px;border:2px solid #d45b5b;border-radius:50%;transform:translate(-50%,-50%)}
+#games .rink-goal{position:absolute;top:50%;transform:translateY(-50%);color:#c33;font-size:15px}.rink-goal.left{left:5%}.rink-goal.right{right:5%}.rink-faceoff{display:none}
+#games .court-info,#games .rink-info{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 7px;font-size:clamp(8px,.7vw,12px);font-weight:800;line-height:1.2}
+#games .rink-pp{color:#ffe173}
+#games .baseball-base.occupied{background:#ffdc38!important}
 </style></body></html>
 <!-- Redeploy V66: restart stalled GitHub Pages build. -->
