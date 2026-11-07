@@ -969,13 +969,19 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
   const now=Date.now();
   if(now-lineLastRefresh<10*60000&&lineUpcoming.length)return;
   const fmt=d=>{const p=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);const v=k=>p.find(x=>x.type===k)?.value;return v('year')+v('month')+v('day')};
-  const from=fmt(new Date(now-3*3600000)),to=fmt(new Date(now+8*86400000));
+  const days=Array.from({length:9},(_,i)=>fmt(new Date(now+i*86400000)));
   const sources=[['NFL','football/nfl',''],['NCAA FOOTBALL','football/college-football','&groups=80'],['NCAA FOOTBALL','football/college-football','&groups=5'],['NCAA MEN','basketball/mens-college-basketball','&groups=50'],['NBA','basketball/nba',''],['NHL','hockey/nhl',''],['MLB','baseball/mlb','']];
-  const results=await Promise.allSettled(sources.map(async ([league,path,extra])=>{
-   const url='https://site.api.espn.com/apis/site/v2/sports/'+path+'/scoreboard?limit=500&dates='+from+'-'+to+extra;
-   const response=await fetch(url,{cache:'no-store'});if(!response.ok)throw Error(response.status);
-   const json=await response.json();return (json.events||[]).map(e=>readGame(e,league,extra)).filter(Boolean);
-  }));
+  const jobs=sources.flatMap(([league,path,extra])=>days.map(date=>({league,path,extra,date})));
+  const results=[];
+  // ESPN Site API rejects date ranges for some sports. Use individual YYYYMMDD days.
+  for(let i=0;i<jobs.length;i+=12){
+   const batch=await Promise.allSettled(jobs.slice(i,i+12).map(async ({league,path,extra,date})=>{
+    const url='https://site.api.espn.com/apis/site/v2/sports/'+path+'/scoreboard?limit=500&dates='+date+extra;
+    const response=await fetch(url,{cache:'no-store'});if(!response.ok)throw Error(response.status);
+    const json=await response.json();return (json.events||[]).map(e=>readGame(e,league,extra)).filter(Boolean);
+   }));
+   results.push(...batch);
+  }
   const merged=new Map();
   results.filter(r=>r.status==='fulfilled').flatMap(r=>r.value).forEach(g=>{
    const key=g.league+':'+g.id,old=merged.get(key);
