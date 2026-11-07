@@ -977,7 +977,7 @@ async function weather(){
   $('forecast').innerHTML=j.daily.time.slice(0,6).map((d,i)=>'<div class="forecast-day"><b>'+new Date(d+'T12:00').toLocaleDateString('en-US',{weekday:'short'})+'</b><span>'+Math.round(j.daily.temperature_2m_max[i])+'° / '+Math.round(j.daily.temperature_2m_min[i])+'°</span><small>Rain '+(j.daily.precipitation_probability_max[i]??'—')+'%</small></div>').join('');
  }catch(e){console.warn('Weather',e);$('weather').textContent='Weather unavailable — retrying';$('forecast').textContent='Forecast temporarily unavailable'}
 }
-sports();loadMyTeams();weather();setInterval(sports,60000);setInterval(loadMyTeams,900000);setInterval(weather,600000);setInterval(()=>{if(!dailyLineOpen&&leagueFilter==='ALL'){requestAnimationFrame(()=>{page++;display()})}},15000);setInterval(setTheme,3600000);setInterval(updateGameDay,60000);
+sports();loadMyTeams();weather();setInterval(sports,15000);setInterval(loadMyTeams,900000);setInterval(weather,600000);setInterval(()=>{if(!dailyLineOpen&&leagueFilter==='ALL'){requestAnimationFrame(()=>{page++;display()})}},15000);setInterval(setTheme,3600000);setInterval(updateGameDay,60000);
 
 // Best-effort screen wake lock. Fire TV may still enforce its own screensaver.
 let screenWakeLock=null;
