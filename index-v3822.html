@@ -917,7 +917,7 @@ window.addEventListener('popstate',()=>closeRadar());
  const loc=[40.01,-82.81];
  function setup(id,zoom){
   const m=L.map(id,{center:loc,zoom,zoomControl:id!=='radarMap',attributionControl:true,keyboard:false});
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,className:'dark-basemap',attribution:'© OpenStreetMap contributors'}).addTo(m);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,maxNativeZoom:19,className:'bright-street-basemap',attribution:'© OpenStreetMap contributors'}).addTo(m);
   L.circleMarker(loc,{radius:4,color:'#fff',fillColor:'#ff8d38',fillOpacity:1}).addTo(m);return m;
  }
  function overlay(m,path){return L.tileLayer('https://tilecache.rainviewer.com'+path+'/256/{z}/{x}/{y}/2/1_1.png',{opacity:.92,maxNativeZoom:7,maxZoom:19,attribution:'Radar © RainViewer'}).addTo(m)}
@@ -1875,5 +1875,10 @@ header h1 .cone-version-wrap{transform:translateX(5px)!important}
 #daily-line-view .line-source{text-align:center;color:#a8b9c9;font-size:clamp(9px,.7vw,13px)!important}
 #daily-line-view #line-filters button.active{background:#f5b74d!important;color:#1a1110!important}
 @media(max-width:700px){#daily-line-view .line-team{font-size:12px}#daily-line-view .line-team-logo{width:25px;height:25px}#daily-line-view .line-top strong:before,#daily-line-view .line-top strong:after{content:''}}
-</style><style id="daily-v19-corrections">#daily-line-view .line-team span{overflow-wrap:anywhere}#daily-line-view .line-team-logo{object-fit:contain}#daily-line-view:after{content:"Ohio Stadium photo: Lectrician2 / Wikimedia Commons, CC BY-SA 4.0";position:absolute;right:10px;bottom:2px;font-size:9px;color:#c1c7d1;opacity:.7;pointer-events:none}</style></body></html>
+</style><style id="daily-v19-corrections">#daily-line-view .line-team span{overflow-wrap:anywhere}#daily-line-view .line-team-logo{object-fit:contain}#daily-line-view:after{content:"Ohio Stadium photo: Lectrician2 / Wikimedia Commons, CC BY-SA 4.0";position:absolute;right:10px;bottom:2px;font-size:9px;color:#c1c7d1;opacity:.7;pointer-events:none}</style>
+<style id="basement-bright-radar-v28">
+.bright-street-basemap .leaflet-tile,.leaflet-tile.bright-street-basemap{filter:none!important;opacity:1!important}
+#radarMap,#radarMapBig{background:#e8eef2!important}
+</style>
+</body></html>
 <!-- Redeploy V66: restart stalled GitHub Pages build. -->
