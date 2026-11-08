@@ -1861,7 +1861,85 @@ function basementBandLogo(artist,holder){
  basementLogoCache.set(artist,lookup);
  lookup.then(url=>{if(!url||!holder.isConnected)return;const img=document.createElement('img');img.className='basement-band-logo';img.alt=artist+' logo';img.onload=()=>holder.classList.add('has-logo');img.onerror=()=>img.remove();img.src=url;holder.prepend(img)}).catch(()=>{});
 }
-function show(){const d=dayNumber();const lyric=lyricQuestions[(d*37)%lyricQuestions.length];const features=[['GUESS THE CLASSIC ROCK LYRIC',lyric[0],'Answer on slide 9 of 9'],['WORD OF THE DAY',...words[(d*37)%words.length]],['DAD JOKE',...jokes[(d*37)%jokes.length]],['BAR TRIVIA',...trivia[(d*37)%trivia.length]],['ROCK HISTORY & FACTS',...rock[(d*37)%rock.length]],['HAZEL & DUCKY’S CORNER',...dogs[(d*37)%dogs.length]],['STAR WARS TRIVIA',...starWarsTrivia[(d*37)%starWarsTrivia.length]],['PEANUTS TRIVIA',...peanutsTrivia[(d*37)%peanutsTrivia.length]],['CLASSIC ROCK LYRIC — ANSWER',lyric[1],lyric[2]]];const f=features[index%features.length];document.getElementById('fun-counter').textContent=(index+1)+' / '+features.length;const panel=document.getElementById('fun-feature');panel.classList.toggle('fun-long-lyric',index%features.length===0);['fun-category','fun-headline','fun-detail'].forEach((cls,i)=>{let el=panel.querySelector('.'+cls);if(!el){el=document.createElement('div');el.className=cls;panel.appendChild(el)}if(el.textContent!==f[i])el.textContent=f[i]});const answerSlide=index%features.length===features.length-1;panel.classList.toggle('fun-rock-answer',answerSlide);panel.classList.toggle('fun-star-wars',f[0]==='STAR WARS TRIVIA');panel.classList.toggle('fun-peanuts',f[0]==='PEANUTS TRIVIA');if(answerSlide){const headline=panel.querySelector('.fun-headline');const mark=document.createElement('div');mark.className='basement-band-wordmark';mark.textContent=lyric[2];mark.setAttribute('aria-label','Band: '+lyric[2]);headline.appendChild(mark);basementBandLogo(lyric[2],mark);panel.querySelector('.fun-detail').textContent='';}// Defer expensive fitting until the browser has a chance to paint the ticker.
+function show(){
+// Curated harder questions for Chris's Basement. Existing question banks remain as fallback.
+const advancedBar=[
+["Which U.S. president was the first to appear on television?","Franklin D. Roosevelt (1939)"],
+["What element has the chemical symbol W?","Tungsten"],
+["Which country has the most time zones when overseas territories are counted?","France"],
+["What was the first feature-length animated film released by Disney?","Snow White and the Seven Dwarfs (1937)"],
+["Which novel begins with the line 'Call me Ishmael'?","Moby-Dick"],
+["What is the only planet in our solar system that rotates clockwise when viewed from above its north pole?","Venus"],
+["Which artist painted The Persistence of Memory?","Salvador Dalí"],
+["What 1976 film won the Oscar for Best Picture over Taxi Driver?","Rocky"],
+["Which British prime minister was in office at the start of World War II?","Neville Chamberlain"],
+["Which band was originally named The New Yardbirds?","Led Zeppelin"],
+["Who produced the landmark album Thriller?","Quincy Jones"],
+["What was the first music video aired on MTV?","Video Killed the Radio Star — The Buggles"]
+];
+const advancedStarWars=[
+["What is the designation of the stormtrooper who defects and becomes Finn?","FN-2187"],
+["What species is Admiral Ackbar?","Mon Calamari"],
+["What is the name of the creature that drags Luke beneath the ice on Hoth?","Wampa"],
+["Which planet houses the cloning facilities seen in Attack of the Clones?","Kamino"],
+["What is the name of the Jedi archive librarian?","Jocasta Nu"],
+["What was Count Dooku's Sith title?","Darth Tyranus"],
+["Which podracer sabotages Anakin's vehicle before the Boonta Eve race?","Sebulba"],
+["What is the name of the Star Destroyer commanded by Darth Vader in The Empire Strikes Back?","Executor"],
+["Which Rebel pilot uses the callsign Red Five at the Battle of Yavin?","Luke Skywalker"],
+["What is the name of the creature living in the Death Star trash compactor?","Dianoga"],
+["Who was the original owner of the Millennium Falcon before Lando Calrissian?","Cikatro Vizago is not established as its prior owner; Lando's earlier ownership is the best-known pre-Han era"],
+["What is the name of the ancient Jedi world where Rey finds Luke?","Ahch-To"]
+].filter((x,i)=>i!==10);
+const advancedPeanuts=[
+["What year did the Peanuts comic strip debut?","1950"],
+["What was the original working title of Schulz's strip before Peanuts?","Li'l Folks"],
+["What is the name of Snoopy's brother who lives in the desert?","Spike"],
+["Which Peanuts character first called Charlie Brown 'Chuck'?","Peppermint Patty"],
+["What is the surname of Peppermint Patty?","Reichardt"],
+["What is the name of the little red-haired girl revealed in later animated adaptations?","Heather"],
+["Which composer wrote the jazz score for A Charlie Brown Christmas?","Vince Guaraldi"],
+["What year did A Charlie Brown Christmas first air?","1965"],
+["What is the name of the Peanuts character who is perpetually covered in dust?","Pig-Pen"],
+["Which character regularly calls Charlie Brown 'Charles'?","Marcie"],
+["What is the name of Snoopy's bird scout troop leader?","Woodstock"],
+["What is the title of the final Peanuts Sunday strip published in 2000?","The final Sunday strip was a farewell message, published February 13, 2000"]
+];
+const advancedLyric=[
+["Which song includes the line 'The screen door slams'?","Thunder Road","Bruce Springsteen"],
+["Which song includes the line 'There's a lady who's sure'?","Stairway to Heaven","Led Zeppelin"],
+["Which song includes the line 'I pulled into Nazareth'?","The Weight","The Band"],
+["Which song includes the line 'I saw a werewolf with a Chinese menu'?","Werewolves of London","Warren Zevon"],
+["Which song includes the line 'There is a house in New Orleans'?","The House of the Rising Sun","The Animals"],
+["Which song includes the line 'I've been to Hollywood'?","A Horse with No Name","America"],
+["Which song includes the line 'Sitting on a park bench'?","Aqualung","Jethro Tull"],
+["Which song includes the line 'I can see clearly now'?","I Can See Clearly Now","Johnny Nash"],
+["Which song includes the line 'Well, I woke up this morning'?","Hard to Handle","Otis Redding / Black Crowes"],
+["Which song includes the line 'I went down to the crossroads'?","Cross Road Blues / Crossroads","Robert Johnson / Cream"],
+["Which song includes the line 'We skipped the light fandango'?","A Whiter Shade of Pale","Procol Harum"],
+["Which song includes the line 'Hello darkness, my old friend'?","The Sound of Silence","Simon & Garfunkel"]
+];
+const thisDayEvents=[
+["01-01",1953,"Hank Williams died at age 29"],
+["02-03",1959,"Buddy Holly, Ritchie Valens and J. P. Richardson died in a plane crash"],
+["02-09",1964,"The Beatles made their first appearance on The Ed Sullivan Show"],
+["03-01",1973,"Pink Floyd released The Dark Side of the Moon in the United States"],
+["04-04",1968,"Martin Luther King Jr. was assassinated in Memphis"],
+["04-22",1970,"The first Earth Day was observed"],
+["05-08",1970,"The Beatles released Let It Be in the United Kingdom"],
+["06-01",1967,"The Beatles released Sgt. Pepper's Lonely Hearts Club Band in the United Kingdom"],
+["07-13",1985,"Live Aid concerts took place in London and Philadelphia"],
+["07-20",1969,"Apollo 11 landed on the Moon"],
+["08-01",1981,"MTV began broadcasting"],
+["08-16",1977,"Elvis Presley died in Memphis"],
+["09-18",1970,"Jimi Hendrix died in London"],
+["10-09",1940,"John Lennon was born in Liverpool"],
+["11-08",1971,"Led Zeppelin released their fourth studio album in the United States"],
+["11-22",1963,"President John F. Kennedy was assassinated in Dallas"],
+["12-08",1980,"John Lennon was killed in New York City"]
+];
+function onThisDayFeature(d){const now=new Date(),key=String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');const hit=thisDayEvents.find(x=>x[0]===key);if(hit)return ['On this day in '+hit[1]+'…',hit[2]];const item=rock[(d*37)%rock.length];return ['THIS DAY IN HISTORY • ARCHIVE',item[0]+' '+item[1]]}
+const d=dayNumber();const lyric=advancedLyric[(d*37)%advancedLyric.length];const features=[['GUESS THE CLASSIC ROCK LYRIC',lyric[0],'Answer on slide 9 of 9'],['WORD OF THE DAY',...words[(d*37)%words.length]],['DAD JOKE',...jokes[(d*37)%jokes.length]],['BAR TRIVIA',...advancedBar[(d*37)%advancedBar.length]],['ON THIS DAY IN HISTORY',...onThisDayFeature(d)],['HAZEL & DUCKY’S CORNER',...dogs[(d*37)%dogs.length]],['STAR WARS TRIVIA',...advancedStarWars[(d*37)%advancedStarWars.length]],['PEANUTS TRIVIA',...advancedPeanuts[(d*37)%advancedPeanuts.length]],['CLASSIC ROCK LYRIC — ANSWER',lyric[1],lyric[2]]];const f=features[index%features.length];document.getElementById('fun-counter').textContent=(index+1)+' / '+features.length;const panel=document.getElementById('fun-feature');panel.classList.toggle('fun-long-lyric',index%features.length===0);['fun-category','fun-headline','fun-detail'].forEach((cls,i)=>{let el=panel.querySelector('.'+cls);if(!el){el=document.createElement('div');el.className=cls;panel.appendChild(el)}if(el.textContent!==f[i])el.textContent=f[i]});const answerSlide=index%features.length===features.length-1;panel.classList.toggle('fun-rock-answer',answerSlide);panel.classList.toggle('fun-star-wars',f[0]==='STAR WARS TRIVIA');panel.classList.toggle('fun-peanuts',f[0]==='PEANUTS TRIVIA');if(answerSlide){const headline=panel.querySelector('.fun-headline');const mark=document.createElement('div');mark.className='basement-band-wordmark';mark.textContent=lyric[2];mark.setAttribute('aria-label','Band: '+lyric[2]);headline.appendChild(mark);basementBandLogo(lyric[2],mark);panel.querySelector('.fun-detail').textContent='';}// Defer expensive fitting until the browser has a chance to paint the ticker.
  if(window.requestIdleCallback)requestIdleCallback(fitFunText,{timeout:500});else setTimeout(fitFunText,80);}
 const funFitCache=new Map();
 function fitFunText(){
