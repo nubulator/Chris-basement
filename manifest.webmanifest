@@ -1,0 +1,19 @@
+{
+  "id": "/Chris-basement/index-v3822.html",
+  "name": "Chris's Basement",
+  "short_name": "Chris's Basement",
+  "description": "Chris's Basement Sports Center",
+  "start_url": "./index-v3822.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0a101c",
+  "theme_color": "#0a101c",
+  "icons": [
+    {
+      "src": "./basement-app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
