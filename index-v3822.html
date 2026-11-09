@@ -1931,7 +1931,7 @@ const thisDayEvents=[
 ["11-22",1963,"President John F. Kennedy was assassinated in Dallas"],
 ["12-08",1980,"John Lennon was killed in New York City"]
 ];
-function onThisDayFeature(d){const now=new Date(),key=String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');const hit=thisDayEvents.find(x=>x[0]===key);if(hit)return ['On this day in '+hit[1]+'…',hit[2]];const item=rock[(d*37)%rock.length];return ['THIS DAY IN HISTORY • ARCHIVE',item[0]+' '+item[1]]}
+function onThisDayFeature(d){const now=new Date(),key=String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');const hit=thisDayEvents.find(x=>x[0]===key);if(hit)return ['On this day in '+hit[1]+'…',hit[2]];const item=rock[(d*37)%rock.length];return ['HISTORY ARCHIVE • NOT TODAY’S DATE',item[0]+' '+item[1]]}
 const d=dayNumber();const lyric=advancedLyric[(d*37)%advancedLyric.length];const features=[['GUESS THE CLASSIC ROCK LYRIC',lyric[0],'Answer on slide 9 of 9'],['WORD OF THE DAY',...words[(d*37)%words.length]],['DAD JOKE',...jokes[(d*37)%jokes.length]],['BAR TRIVIA',...advancedBar[(d*37)%advancedBar.length]],['ON THIS DAY IN HISTORY',...onThisDayFeature(d)],['HAZEL & DUCKY’S CORNER',...dogs[(d*37)%dogs.length]],['STAR WARS TRIVIA',...advancedStarWars[(d*37)%advancedStarWars.length]],['PEANUTS TRIVIA',...advancedPeanuts[(d*37)%advancedPeanuts.length]],['CLASSIC ROCK LYRIC — ANSWER',lyric[1],lyric[2]]];const f=features[index%features.length];document.getElementById('fun-counter').textContent=(index+1)+' / '+features.length;const panel=document.getElementById('fun-feature');panel.classList.toggle('fun-long-lyric',index%features.length===0);['fun-category','fun-headline','fun-detail'].forEach((cls,i)=>{let el=panel.querySelector('.'+cls);if(!el){el=document.createElement('div');el.className=cls;panel.appendChild(el)}if(el.textContent!==f[i])el.textContent=f[i]});const answerSlide=index%features.length===features.length-1;panel.classList.toggle('fun-rock-answer',answerSlide);panel.classList.toggle('fun-star-wars',f[0]==='STAR WARS TRIVIA');panel.classList.toggle('fun-peanuts',f[0]==='PEANUTS TRIVIA');panel.classList.toggle('fun-trivia-card',['BAR TRIVIA','STAR WARS TRIVIA','PEANUTS TRIVIA'].includes(f[0]));if(answerSlide){const headline=panel.querySelector('.fun-headline');const mark=document.createElement('div');mark.className='basement-band-wordmark';mark.textContent=lyric[2];mark.setAttribute('aria-label','Band: '+lyric[2]);headline.appendChild(mark);basementBandLogo(lyric[2],mark);panel.querySelector('.fun-detail').textContent='';}// Defer expensive fitting until the browser has a chance to paint the ticker.
  if(window.requestIdleCallback)requestIdleCallback(fitFunText,{timeout:500});else setTimeout(fitFunText,80);}
 const funFitCache=new Map();
@@ -2784,5 +2784,13 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 #daily-line-view #line-games .line-versus{font-size:clamp(12px,3cqw,21px)!important}
 #daily-line-view #line-games .line-teams{gap:clamp(1px,.25vh,4px)!important}
 @media(max-width:700px){#daily-line-view #line-games .line-team{font-size:clamp(13px,4.1cqw,23px)!important}#daily-line-view #line-games .line-team-logo{width:clamp(28px,9cqw,56px)!important;height:clamp(28px,9cqw,56px)!important}}
-</style></body></html>
+</style>
+<style id="basement-radar-trivia-fix-20261109">
+/* Keep radar expansion control in the heading, outside the map. */
+.side .panel:has(.radar-preview){position:relative!important}
+.side .panel:has(.radar-preview)>h2{display:flex;align-items:center;justify-content:space-between;padding-right:clamp(112px,12vw,180px)!important;min-height:clamp(25px,3vh,42px)}
+#basement-radar-expand-v43{position:absolute!important;top:clamp(2px,.35vh,6px)!important;right:clamp(5px,.5vw,10px)!important;bottom:auto!important;padding:clamp(3px,.28vw,6px) clamp(6px,.5vw,10px)!important;font-size:clamp(9px,.72vw,13px)!important;border-width:1px!important;border-radius:6px!important;box-shadow:0 0 4px #19aaff!important;line-height:1.2!important}
+#fun-feature.fun-peanuts .fun-detail{color:#9a4200!important;text-shadow:none!important;font-weight:900!important}
+</style>
+</body></html>
 <!-- Redeploy V66: restart stalled GitHub Pages build. -->
