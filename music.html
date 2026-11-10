@@ -218,4 +218,16 @@ upload.onclick=async()=>{if(!ref)return;if(!confirm('Publish this device’s com
 reload.onclick=reloadCloud;
 try{if(!window.firebase||!firebase.firestore)throw Error('Firebase library unavailable');firebase.initializeApp(config,'music-shared');ref=firebase.app('music-shared').firestore().collection('gameRoom').doc('music');reloadCloud()}catch(e){note('Shared Hall of Fame unavailable: '+e.message)}
 })();
+</script><script>
+/* Fire TV: one browser Back press returns directly to the Game Room. */
+(function(){
+  if(window.__gameRoomBackInstalled)return;
+  window.__gameRoomBackInstalled=true;
+  try{
+    history.pushState({gameRoomBackGuard:true},'',location.href);
+    window.addEventListener('popstate',function(){
+      location.replace(new URL('./games.html',location.href).href);
+    });
+  }catch(e){}
+})();
 </script></body></html>
