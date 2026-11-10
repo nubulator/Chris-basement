@@ -94,4 +94,16 @@ $('start').onclick=start;$('draw').onclick=draw;$('next').onclick=next;$('restar
 
 $('home').onclick=()=>{location.replace('./games.html?from=kings')};
 window.addEventListener('error',e=>{const el=document.getElementById('error');if(el){el.textContent='Game error: '+e.message;el.classList.remove('hidden')}});
-</script><script>(function(){var b=document.getElementById('pageRefresh');if(b)b.addEventListener('click',function(){var u=new URL(location.href);u.searchParams.set('refresh',Date.now().toString());location.replace(u.toString())})})();</script></body></html>
+</script><script>(function(){var b=document.getElementById('pageRefresh');if(b)b.addEventListener('click',function(){var u=new URL(location.href);u.searchParams.set('refresh',Date.now().toString());location.replace(u.toString())})})();</script><script>
+/* Fire TV: one browser Back press returns directly to the Game Room. */
+(function(){
+  if(window.__gameRoomBackInstalled)return;
+  window.__gameRoomBackInstalled=true;
+  try{
+    history.pushState({gameRoomBackGuard:true},'',location.href);
+    window.addEventListener('popstate',function(){
+      location.replace(new URL('./games.html',location.href).href);
+    });
+  }catch(e){}
+})();
+</script></body></html>
