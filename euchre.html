@@ -67,7 +67,7 @@ main{max-width:1160px}
  #standingsPanel .travel-prize{margin-top:5px;padding:6px 10px;gap:8px}
  #standingsPanel .travel-prize .icon{font-size:22px}#standingsPanel .travel-prize strong{font-size:13px}#standingsPanel .travel-prize p{font-size:12px;margin:1px 0}
 }
-</style></head><body><main><div class="top"><a href="./games.html">← GAME ROOM</a><span class="version-tag" aria-label="Euchre scoreboard version"><svg class="traffic-cone" viewBox="0 0 32 36" width="23" height="26" role="img" aria-label="Orange traffic cone" xmlns="http://www.w3.org/2000/svg"><path d="M12 3h8l8 27H4z" fill="#ff821b" stroke="#ffce75" stroke-width="1.5"/><path d="M9 15h14l2.6 7H6.4z" fill="#fff7e8"/><path d="M3 29h26v5H3z" fill="#ef8b24" stroke="#ffe2a0" stroke-width="1.2"/></svg> EUCHRE V2.3 <small>BUILD 2026.11.09</small></span><a href="./">CHRIS'S BASEMENT</a><button id="pageRefresh" class="game-refresh" type="button">↻ REFRESH</button></div><section class="travel-hero"><div class="hero-kicker">THE ANNUAL TRAVEL CHAMPIONSHIP</div><h1>♠ GEHRIG / ISON EUCHRE NIGHT ♥</h1><p class="subtitle">PLAY THE CARDS. WIN THE TRIP.</p><div class="flightpath">THE ROAD TO THE NEXT ADVENTURE ✈</div><div class="travel-stamps"><div class="stamp"><b>♠</b><small>DEAL<br>THE CARDS</small></div><div class="stamp"><b>🏆</b><small>WIN<br>THE SEASON</small></div><div class="stamp"><b>✈</b><small>CHOOSE<br>THE TRIP</small></div></div></section>
+</style></head><body><main><div class="top"><a href="./games.html">← GAME ROOM</a><span class="version-tag" aria-label="Euchre scoreboard version"><svg class="traffic-cone" viewBox="0 0 32 36" width="23" height="26" role="img" aria-label="Orange traffic cone" xmlns="http://www.w3.org/2000/svg"><path d="M12 3h8l8 27H4z" fill="#ff821b" stroke="#ffce75" stroke-width="1.5"/><path d="M9 15h14l2.6 7H6.4z" fill="#fff7e8"/><path d="M3 29h26v5H3z" fill="#ef8b24" stroke="#ffe2a0" stroke-width="1.2"/></svg> EUCHRE V2.4 <small>BUILD 2026.11.09</small></span><a href="./">CHRIS'S BASEMENT</a><button id="pageRefresh" class="game-refresh" type="button">↻ REFRESH</button></div><section class="travel-hero"><div class="hero-kicker">THE ANNUAL TRAVEL CHAMPIONSHIP</div><h1>♠ GEHRIG / ISON EUCHRE NIGHT ♥</h1><p class="subtitle">PLAY THE CARDS. WIN THE TRIP.</p><div class="flightpath">THE ROAD TO THE NEXT ADVENTURE ✈</div><div class="travel-stamps"><div class="stamp"><b>♠</b><small>DEAL<br>THE CARDS</small></div><div class="stamp"><b>🏆</b><small>WIN<br>THE SEASON</small></div><div class="stamp"><b>✈</b><small>CHOOSE<br>THE TRIP</small></div></div></section>
 <nav class="euchre-tabs" aria-label="Euchre sections"><button type="button" class="tab active" data-panel="standingsPanel">STANDINGS</button><button type="button" class="tab secondary" data-panel="recordPanel">RECORD NIGHT</button><button type="button" class="tab secondary" data-panel="historyPanel">RESULTS</button><button type="button" class="tab secondary" data-panel="championsPanel">CHAMPIONS</button><button type="button" class="tab secondary" data-panel="backupPanel">BACKUPS</button></nav><section class="panel tab-panel" id="standingsPanel"><div class="bar"><h2 style="margin:0">Season Standings</h2><label style="margin-left:auto">Season <select id="season"></select></label></div><div class="teams"><div class="team"><strong>♠ Jim &amp; Chris</strong><div class="score" id="winsA">0</div><div class="muted">Nights won</div><div id="gamesA" class="pill">0 individual games</div></div><div class="team"><strong>♥ Beth &amp; Amy</strong><div class="score" id="winsB">0</div><div class="muted">Nights won</div><div id="gamesB" class="pill">0 individual games</div></div></div><p id="lead" style="text-align:center"></p><div id="euchreQuip" class="euchre-quip" aria-live="polite">♠ Stick the dealer. Take the points. Claim the trip.</div><div class="travel-prize"><span class="icon">🏝️</span><div><strong>THE ULTIMATE PRIZE: DESTINATION RIGHTS</strong><p>The season champions choose the next adventure for all four travelers. No recounts without the scorebook!</p></div></div></section>
 <section class="panel tab-panel" id="recordPanel" hidden><h2 id="formtitle">Record Euchre Night</h2><form id="nightForm" class="formgrid"><label>Date<input id="date" type="date" required></label><label>Jim &amp; Chris — games won<input id="a" type="number" min="0" max="999" required></label><label>Beth &amp; Amy — games won<input id="b" type="number" min="0" max="999" required></label><label class="wide">Notes (optional)<textarea id="notes" maxlength="400" placeholder="Big comeback, disputed reneges, memorable trash talk…"></textarea></label><div class="wide actions"><button id="save" type="submit">Save Night</button><button class="secondary" id="cancel" type="button" hidden>Cancel Edit</button></div></form><p class="notice">The team with more individual game wins earns one season night win. Tied nights are recorded but do not award a win. Total games are tracked separately.</p><div id="status" role="status"></div></section>
 <section class="panel tab-panel" id="historyPanel" hidden><h2>Night-by-Night Results</h2><div class="tablewrap"><table><thead><tr><th>Date</th><th>Jim &amp; Chris</th><th>Beth &amp; Amy</th><th>Night Winner</th><th>Correction</th></tr></thead><tbody id="history"></tbody></table></div></section>
@@ -117,5 +117,38 @@ upload.onclick=async()=>{
 };
 reload.onclick=reloadCloud;
 try{if(!window.firebase||!firebase.firestore)throw Error('Firebase library unavailable on this browser');firebase.initializeApp(config,'euchre-shared');ref=firebase.app('euchre-shared').firestore().collection('gameRoom').doc('euchre');reloadCloud()}catch(e){note('Cloud unavailable: '+e.message)}
+})();
+</script><style>
+/* V2.4 Fire TV remote keyboard focus */
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,
+.tv-focused{outline:4px solid #ffe68b!important;outline-offset:3px!important;box-shadow:0 0 0 7px #10243a,0 0 22px #ffc963!important}
+</style><script>
+/* D-pad spatial navigation for Fire TV Silk, without changing forms or cloud data. */
+(function(){
+ const selector='button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled])';
+ const visible=el=>{const r=el.getBoundingClientRect(),s=getComputedStyle(el);return r.width>0&&r.height>0&&s.visibility!=='hidden'&&s.display!=='none'&&!el.closest('[hidden]')};
+ const choices=()=>Array.from(document.querySelectorAll(selector)).filter(visible);
+ const center=el=>{const r=el.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2}};
+ document.addEventListener('focusin',e=>{document.querySelectorAll('.tv-focused').forEach(x=>x.classList.remove('tv-focused'));if(e.target.matches(selector))e.target.classList.add('tv-focused')});
+ document.addEventListener('keydown',e=>{
+  const k=e.key,dir={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0]}[k];
+  if(!dir)return;
+  const active=document.activeElement;
+  // Preserve editing and native date, select, and numeric input behavior.
+  if(active&&active.matches('input,textarea,select'))return;
+  const all=choices();if(!all.length)return;
+  if(!all.includes(active)){e.preventDefault();(document.querySelector('.euchre-tabs .tab.active')||all[0]).focus();return}
+  // A down press on the selected tab should enter its panel rather than another tab.
+  if(k==='ArrowDown'&&active.closest('.euchre-tabs')){
+    const panel=document.querySelector('.tab-panel:not([hidden])');
+    const first=panel&&Array.from(panel.querySelectorAll(selector)).find(visible);
+    if(first){e.preventDefault();first.focus();return}
+  }
+  const a=center(active),axis=dir[0]?'x':'y',other=dir[0]?'y':'x',sign=dir[0]||dir[1];
+  let best=null,score=Infinity;
+  for(const el of all){if(el===active)continue;const b=center(el),forward=(b[axis]-a[axis])*sign;if(forward<5)continue;const sideways=Math.abs(b[other]-a[other]);const cost=forward+sideways*2.2;if(cost<score){score=cost;best=el}}
+  if(best){e.preventDefault();best.focus();best.scrollIntoView({block:'nearest',inline:'nearest'})}
+ });
+ window.addEventListener('load',()=>{if(document.activeElement===document.body){const active=document.querySelector('.euchre-tabs .tab.active');if(active)active.focus({preventScroll:true})}});
 })();
 </script></body></html>
