@@ -315,4 +315,16 @@ upload.onclick=async()=>{if(!ref)return;if(!confirm('Publish this device’s com
 reload.onclick=reloadCloud;
 try{if(!window.firebase||!firebase.firestore)throw Error('Firebase library unavailable');firebase.initializeApp(config,'trivia-shared');ref=firebase.app('trivia-shared').firestore().collection('gameRoom').doc('trivia');reloadCloud()}catch(e){note('Shared standings unavailable: '+e.message)}
 })();
+</script><script>
+/* Fire TV: one browser Back press returns directly to the Game Room. */
+(function(){
+  if(window.__gameRoomBackInstalled)return;
+  window.__gameRoomBackInstalled=true;
+  try{
+    history.pushState({gameRoomBackGuard:true},'',location.href);
+    window.addEventListener('popstate',function(){
+      location.replace(new URL('./games.html',location.href).href);
+    });
+  }catch(e){}
+})();
 </script></body></html>
