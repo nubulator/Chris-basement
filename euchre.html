@@ -163,4 +163,16 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
  });
  window.addEventListener('load',()=>{if(document.activeElement===document.body){const active=document.querySelector('.euchre-tabs .tab.active');if(active)active.focus({preventScroll:true})}});
 })();
+</script><script>
+/* Fire TV: one browser Back press returns directly to the Game Room. */
+(function(){
+  if(window.__gameRoomBackInstalled)return;
+  window.__gameRoomBackInstalled=true;
+  try{
+    history.pushState({gameRoomBackGuard:true},'',location.href);
+    window.addEventListener('popstate',function(){
+      location.replace(new URL('./games.html',location.href).href);
+    });
+  }catch(e){}
+})();
 </script></body></html>
