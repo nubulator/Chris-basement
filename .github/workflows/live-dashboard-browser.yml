@@ -9,10 +9,9 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - name: Install Playwright and Chromium
+      - name: Install Playwright
         run: |
           npm install --no-save --ignore-scripts playwright@1.58.2
-          npx --no-install playwright install --with-deps chromium
       - name: Inspect public pages without writes
         run: |
           node --input-type=module <<'JS'
@@ -21,7 +20,7 @@ jobs:
 
           const basement = 'https://nubulator.github.io/Chris-basement/';
           const garage = 'https://nubulator.github.io/Jim-Amys-Garage/';
-          const browser = await chromium.launch();
+          const browser = await chromium.launch({ channel: 'chrome' });
           const context = await browser.newContext({
             viewport: { width: 1280, height: 720 },
             serviceWorkers: 'block'
