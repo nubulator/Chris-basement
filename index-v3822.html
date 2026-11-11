@@ -2832,7 +2832,7 @@ button.fun-kings-link[data-family-hub-gate]{font-family:inherit;cursor:pointer;l
    const bytes=new TextEncoder().encode(value);
    const result=await crypto.subtle.digest('SHA-256',bytes);
    const hex=Array.from(new Uint8Array(result)).map(b=>b.toString(16).padStart(2,'0')).join('');
-   if(hex===digest){close();window.open('https://ison-family-hub.web.app','_blank','noopener');}
+   if(hex===digest){close();window.open('https://isonfamilyhome.com/','_blank','noopener');}
    else {err.textContent='Incorrect PIN. Try again.';value='';update();pad.querySelector('button').focus()}
   }catch(e){err.textContent='PIN check unavailable in this browser.';value='';update()}
   busy=false;
