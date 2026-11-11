@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Chris's Game Room V2.8</title><style>*{box-sizing:border-box}html,body{margin:0;min-height:100%}body{color:#fff4e5;--panel-width:clamp(78px,13vw,235px);
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Chris's Game Room V2.9</title><style>*{box-sizing:border-box}html,body{margin:0;min-height:100%}body{color:#fff4e5;--panel-width:clamp(78px,13vw,235px);
  background-color:#59321f;
  /* Wood grain photograph by Rachel Kelli (Unsplash, n7MMvJFAp8Q). */
  background-image:
@@ -16,11 +16,63 @@
 .tile.bernie .name{font-family:Georgia,serif;letter-spacing:-.03em;color:#f9e5b8}
 .tile.bernie .symbol{font-family:Georgia,serif;color:#f5e7c9;font-size:clamp(32px,5.5vh,65px);letter-spacing:-.12em}
 .tile.bernie .desc{color:#dfd1af}
-</style></head><body><div class="shell"><header><div class="lights">✦ ✦ ✦ ✦ ✦ ✦ ✦ ✦ ✦</div><div class="eyebrow">WELCOME TO THE ARCADE</div><div class="marquee"><h1>CHRIS'S GAME ROOM</h1></div><p class="tagline">EIGHT GAMES · ONE LEGENDARY RIVALRY · ENDLESS GAME NIGHTS</p></header><nav class="nav"><a href="./">CHRIS'S BASEMENT</a><a href="https://nubulator.github.io/Jim-Amys-Garage/">JIM &amp; AMY'S GARAGE</a><button id="refreshPage" type="button">↻ REFRESH</button></nav><main class="grid">
+
+/* Game room V2.9: game-specific interiors and seasonal wall gallery. */
+.tile{transition:transform .2s,box-shadow .2s;background:radial-gradient(ellipse at 50% 0%,var(--glow),transparent 78%),linear-gradient(145deg,var(--surface),var(--shade));}
+.tile[href="./kings.html"]{--glow:#ac763d;--surface:#50371f;--shade:#251b13}
+.tile[href="./euchre.html"]{--glow:#347888;--surface:#163e4d;--shade:#10222f}
+.tile[href="./trivia.html"]{--glow:#9b642d;--surface:#52301e;--shade:#28180f}
+.tile[href="./music.html"]{--glow:#834574;--surface:#45234f;--shade:#21132f}
+.tile[href="./survey.html"]{--glow:#345da0;--surface:#243d78;--shade:#131e43}
+.tile[href="./casino.html"]{--accent:#ffe0a0;--glow:#853b51;--surface:#63152e;--shade:#251c28}
+.tile[href="./last-call.html"]{--glow:#35716d;--surface:#0d383b;--shade:#0d2224}
+.tile .desc{color:#f0e5db}.tile .status{padding:7px 12px;border-top:1px solid #ffffff26}
+.tile.bernie .symbol{display:flex;gap:6px;letter-spacing:0;filter:none}
+.suit-card{display:inline-flex;align-items:center;justify-content:center;background:#fff1d5;border:1px solid #d7b67c;border-radius:5px;width:.76em;height:1.04em;font-size:.83em;box-shadow:0 3px 8px #0007;transform:rotate(-10deg);color:#182326}
+.suit-card.heart{color:#c51f3a;transform:translateY(-5px)}.suit-card:last-child{transform:rotate(10deg)}
+body{--season-glow:#eaa34c;--season-ink:#57321e}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at top,var(--season-glow),transparent 65%);opacity:.13}
+.shell{position:relative;z-index:1;max-width:min(1450px,80vw)}
+.wall-gallery{position:fixed;inset:0;pointer-events:none;z-index:0}
+.wall-picture{position:absolute;top:34%;width:8.3vw;max-width:160px;margin:0;padding:9px;background:linear-gradient(135deg,#d0a15a,#634026 45%,#b78543);border:2px solid #42291b;box-shadow:4px 9px 15px #0009;transform:rotate(-5deg)}
+.wall-picture:before{content:"";position:absolute;width:65%;height:45px;border-left:2px solid #bda478;border-top:2px solid #bda478;transform:rotate(45deg);top:-26px;left:18%;z-index:-1}
+.wall-picture:first-child{left:1.1%}.wall-picture:last-child{right:1.1%;top:55%;transform:rotate(5deg)}
+.picture-art{border:5px solid #f3dfb9;background:radial-gradient(circle at 50% 30%,var(--season-glow),var(--season-ink));min-height:130px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:12px 3px;color:#fff5dc;text-align:center}
+.picture-art span{font-size:clamp(28px,3.5vw,65px);filter:drop-shadow(0 3px 3px #0006)}
+.picture-art small{font:700 clamp(8px,.75vw,13px) Georgia,serif;letter-spacing:.1em;text-transform:uppercase}
+.lights{color:var(--season-glow);text-shadow:0 0 8px var(--season-glow)}
+@media(max-width:1100px){.shell{max-width:1450px}.wall-gallery{display:none}}
+@media(prefers-reduced-motion:reduce){.tile{transition:none}.tile:hover{transform:none}}
+</style></head><body><aside class="wall-gallery" aria-hidden="true"><figure class="wall-picture"><div class="picture-art"><span id="seasonArtLeft"></span><small id="seasonLabelLeft"></small></div></figure><figure class="wall-picture"><div class="picture-art"><span id="seasonArtRight"></span><small id="seasonLabelRight"></small></div></figure></aside><div class="shell"><header><div class="lights">✦ ✦ ✦ ✦ ✦ ✦ ✦ ✦ ✦</div><div class="eyebrow">WELCOME TO THE ARCADE</div><div class="marquee"><h1>CHRIS'S GAME ROOM</h1></div><p class="tagline">EIGHT GAMES · ONE LEGENDARY RIVALRY · ENDLESS GAME NIGHTS</p></header><nav class="nav"><a href="./">CHRIS'S BASEMENT</a><a href="https://nubulator.github.io/Jim-Amys-Garage/">JIM &amp; AMY'S GARAGE</a><button id="refreshPage" type="button">↻ REFRESH</button></nav><main class="grid">
 <a class="tile live" href="./kings.html"><div class="symbol">👑</div><div class="name">KING'S ISON</div><div class="desc">Campfire Edition · Multiplayer card game</div><div class="status">PLAY NOW</div></a>
 <a class="tile live" href="./euchre.html"><div class="symbol">🂡</div><div class="name">GEHRIG / ISON EUCHRE NIGHT</div><div class="desc">Season standings · Nightly results · Travel champions</div><div class="status">OPEN SCOREBOARD</div></a>
 <a class="tile live" href="./trivia.html"><div class="symbol">🍺</div><div class="name">CHRIS’S TRIVIA TAVERN</div><div class="desc">English pub quiz · 25 or 50 questions · All-time leaderboard</div><div class="status">PLAY NOW</div></a>
 <a class="tile live" href="./music.html"><div class="symbol">🎸</div><div class="name">MUSIC CHALLENGE</div><div class="desc">Rock · Rap · Pop · 1970–Today · 3 difficulty levels</div><div class="status">PLAY NOW</div></a>
 <a class="tile live" href="./survey.html"><div class="symbol">🎲</div><div class="name">SURVEY SHOWDOWN</div><div class="desc">Two-team TV game show · Big answers · Strikes & steals</div><div class="status">PLAY NOW</div></a>
 <a class="tile live" href="./casino.html"><div class="symbol">🃏</div><div class="name">HIGH STAKES CASINO</div><div class="desc">Higher or Lower · Vegas Nights · Double or Nothing</div><div class="status">PLAY NOW</div></a>
-<a class="tile live" href="./last-call.html"><div class="symbol roulette-symbol" aria-label="Roulette wheel"><svg class="roulette-icon" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="#b98035" stroke="#ffe2a1" stroke-width="4"/><circle cx="50" cy="50" r="37" fill="#17233b" stroke="#fff0c0" stroke-width="2"/><g id="rouletteSegments"></g><circle cx="50" cy="50" r="9" fill="#e5bc71" stroke="#fff1c8" stroke-width="3"/><circle cx="50" cy="50" r="3" fill="#fff5d5"/></svg></div><div class="name">LAST CALL ROULETTE</div><div class="desc">Spin the bar wheel · Tongue twisters · Party challenges</div><div class="status">SPIN NOW</div></a><a class="tile live bernie" href="./bernie.html"><div class="symbol" aria-hidden="true">♠♥♣</div><div class="name">BERNIE BERNIE</div><div class="desc">The Ison family tradition · Private phone hands · 3–10 players</div><div class="status">PULL UP A CHAIR</div></a></main><footer>Built for TV, tablet, and phone <span class="corner-version">V2.8</span></footer></div><script>document.getElementById("refreshPage").addEventListener("click",function(){var u=new URL(window.location.href);u.searchParams.set("refresh",Date.now().toString());window.location.replace(u.toString())});(function(){var g=document.getElementById("rouletteSegments");if(!g)return;var ns="http://www.w3.org/2000/svg";for(var i=0;i<16;i++){var a=(i*22.5-90)*Math.PI/180,b=((i+1)*22.5-90)*Math.PI/180;var p=document.createElementNS(ns,"path");var x=function(t){return 50+35*Math.cos(t)},y=function(t){return 50+35*Math.sin(t)};p.setAttribute("d","M50 50 L"+x(a)+" "+y(a)+" A35 35 0 0 1 "+x(b)+" "+y(b)+" Z");p.setAttribute("fill",i===0?"#258e52":i%2?"#111827":"#d73535");p.setAttribute("stroke","#dfbd7b");p.setAttribute("stroke-width",".65");g.appendChild(p)}})();</script></body></html>
+<a class="tile live" href="./last-call.html"><div class="symbol roulette-symbol" aria-label="Roulette wheel"><svg class="roulette-icon" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="#b98035" stroke="#ffe2a1" stroke-width="4"/><circle cx="50" cy="50" r="37" fill="#17233b" stroke="#fff0c0" stroke-width="2"/><g id="rouletteSegments"></g><circle cx="50" cy="50" r="9" fill="#e5bc71" stroke="#fff1c8" stroke-width="3"/><circle cx="50" cy="50" r="3" fill="#fff5d5"/></svg></div><div class="name">LAST CALL ROULETTE</div><div class="desc">Spin the bar wheel · Tongue twisters · Party challenges</div><div class="status">SPIN NOW</div></a><a class="tile live bernie" href="./bernie.html"><div class="symbol" aria-hidden="true"><span class="suit-card">♠</span><span class="suit-card heart">♥</span><span class="suit-card">♣</span></div><div class="name">BERNIE BERNIE</div><div class="desc">The Ison family tradition · Private phone hands · 3–10 players</div><div class="status">PULL UP A CHAIR</div></a></main><footer>Built for TV, tablet, and phone <span class="corner-version">V2.9</span></footer></div><script>document.getElementById("refreshPage").addEventListener("click",function(){var u=new URL(window.location.href);u.searchParams.set("refresh",Date.now().toString());window.location.replace(u.toString())});(function(){var g=document.getElementById("rouletteSegments");if(!g)return;var ns="http://www.w3.org/2000/svg";for(var i=0;i<16;i++){var a=(i*22.5-90)*Math.PI/180,b=((i+1)*22.5-90)*Math.PI/180;var p=document.createElementNS(ns,"path");var x=function(t){return 50+35*Math.cos(t)},y=function(t){return 50+35*Math.sin(t)};p.setAttribute("d","M50 50 L"+x(a)+" "+y(a)+" A35 35 0 0 1 "+x(b)+" "+y(b)+" Z");p.setAttribute("fill",i===0?"#258e52":i%2?"#111827":"#d73535");p.setAttribute("stroke","#dfbd7b");p.setAttribute("stroke-width",".65");g.appendChild(p)}})();</script><script>/* Holiday windows include the 14 days before and the holiday itself.
+   Dates use America/New_York so the room follows the family calendar. */
+function roomTheme(date=new Date()){
+ const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'numeric',day:'numeric'}).formatToParts(date);
+ const value=t=>Number(parts.find(p=>p.type===t).value);
+ const y=value('year'),m=value('month'),d=value('day'),today=Date.UTC(y,m-1,d),day=86400000;
+ const themes={winter:['Winter nights','Stay cozy','❄️','🌲','#a4d9ef','#243b55'],spring:['Hello spring','Fresh starts','🌷','🦋','#edb4cf','#3b5260'],summer:['Summer nights','Good times','☀️','🌴','#f4c365','#275663'],fall:['Autumn nights','Gather & play','🍁','🎃','#e7a44b','#713e29'],newyear:['Happy New Year','One more round','🎆','🥂','#e9ce81','#34304d'],valentine:['Happy Valentine’s','Love & luck','💝','♥️','#ef96ac','#6d243f'],patrick:['Lucky nights','Feeling lucky','☘️','🌈','#93d491','#1e563d'],easter:['Happy Easter','Hello spring','🐣','🌷','#dfb2e9','#554770'],july:['Happy Fourth','Stars & stripes','🇺🇸','🎆','#a9c9ff','#563444'],halloween:['Happy Halloween','Fright night','🎃','👻','#f0a04d','#432545'],thanksgiving:['Give thanks','Gather together','🦃','🍂','#e8b775','#653c28'],christmas:['Merry Christmas','Merry & bright','🎄','🎁','#9fd3ae','#663331']};
+ const events=[];
+ const add=(year,month,date,key)=>events.push({at:Date.UTC(year,month-1,date),key});
+ for(const year of [y-1,y,y+1]){
+  [[1,1,'newyear'],[2,14,'valentine'],[3,17,'patrick'],[7,4,'july'],[10,31,'halloween'],[12,25,'christmas']].forEach(([a,b,k])=>add(year,a,b,k));
+  const first=new Date(Date.UTC(year,10,1)).getUTCDay();add(year,11,1+(4-first+7)%7+21,'thanksgiving');
+  const a=year%19,b=Math.floor(year/100),c=year%100,h=(19*a+b-Math.floor(b/4)-Math.floor((b-Math.floor((b+8)/25)+1)/3)+15)%30,l=(32+2*(b%4)+2*Math.floor(c/4)-h-c%4)%7,n=Math.floor((a+11*h+22*l)/451),p=h+l-7*n+114;
+  add(year,Math.floor(p/31),p%31+1,'easter');
+ }
+ const holiday=events.filter(e=>today>=e.at-14*day&&today<=e.at).sort((a,b)=>a.at-b.at)[0];
+ const key=holiday?holiday.key:m>=3&&m<=5?'spring':m>=6&&m<=8?'summer':m>=9&&m<=11?'fall':'winter';
+ return {key,art:themes[key]};
+}
+function updateRoomTheme(){
+ const {key,art}=roomTheme();document.body.dataset.season=key;
+ ['seasonLabelLeft','seasonLabelRight','seasonArtLeft','seasonArtRight'].forEach((id,i)=>document.getElementById(id).textContent=art[i]);
+ document.body.style.setProperty('--season-glow',art[4]);document.body.style.setProperty('--season-ink',art[5]);
+}
+updateRoomTheme();setInterval(updateRoomTheme,60000);
+</script></body></html>
