@@ -41,15 +41,35 @@ dialog p{color:#c1cdd1}dialog .actions{margin-top:10px}
  .head{align-items:flex-start}.studio-grid{grid-template-columns:1fr}.preview{aspect-ratio:16/9}.studio-footer{align-items:flex-start}
 }
 @media(prefers-reduced-motion:reduce){.slide{transition:none!important}}
-.viewer{position:fixed;inset:0;background:#090d17;display:none;overflow:hidden;z-index:10}.viewer.active{display:block}.slide{position:absolute;inset:0;opacity:0;transition:opacity 1.8s ease;background-position:center;background-size:cover}.slide.active{opacity:1}.slide img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}.slide img[hidden]{display:none}.photo-credits a{color:#ffcc70}.photo-credits li{margin:.45rem 0}.slide:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(0,0,0,.65))}.slide-title{position:absolute;bottom:9%;left:5%;z-index:2;font-size:clamp(1.5rem,4vw,4rem);font-weight:800;text-shadow:0 3px 15px #0008}.clock{position:absolute;right:4%;top:5%;z-index:3;text-align:right;text-shadow:0 3px 12px #000;font-size:clamp(1.6rem,4vw,4rem);font-weight:700}.clock small{display:block;font-size:.35em;font-weight:500}.exit{position:absolute;z-index:5;bottom:3%;right:3%;opacity:.3}.exit:focus,.exit:hover{opacity:1}.notice{position:absolute;top:3%;left:4%;z-index:5;color:#fff9;font-size:.8rem}.empty{background:linear-gradient(135deg,#14273e,#35405e)}</style></head><body>
+.viewer{position:fixed;inset:0;background:#090d17;display:none;overflow:hidden;z-index:10}.viewer.active{display:block}.slide{position:absolute;inset:0;opacity:0;transition:opacity 1.8s ease;background-position:center;background-size:cover}.slide.active{opacity:1}.slide img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}.slide img[hidden]{display:none}.photo-credits a{color:#ffcc70}.photo-credits li{margin:.45rem 0}.slide:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(0,0,0,.65))}.slide-title{position:absolute;bottom:9%;left:5%;z-index:2;font-size:clamp(1.5rem,4vw,4rem);font-weight:800;text-shadow:0 3px 15px #0008}.clock{position:absolute;right:4%;top:5%;z-index:3;text-align:right;text-shadow:0 3px 12px #000;font-size:clamp(1.6rem,4vw,4rem);font-weight:700}.clock small{display:block;font-size:.35em;font-weight:500}.exit{position:absolute;z-index:5;bottom:3%;right:3%;opacity:.3}.exit:focus,.exit:hover{opacity:1}.notice{position:absolute;top:3%;left:4%;z-index:5;color:#fff9;font-size:.8rem}.empty{background:linear-gradient(135deg,#14273e,#35405e)}
+.preview img[hidden]{display:none}
+.preview-album img{object-fit:contain;background:#14222e}
+#previewArtist{display:block;color:#ffda95;margin-top:3px}
+#previewArtist[hidden]{display:none}
+.slide-description{display:block;font-size:clamp(14px,1.6vw,28px);font-weight:550;margin-top:.3em;max-width:75vw}
+.slide.album-slide{background:radial-gradient(ellipse at 20% 30%,#314758,#0a121d 71%)!important}
+.slide.album-slide:after{content:none}
+.album-card{
+ position:absolute;inset:11% 7% 12%;display:grid;
+ grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:6vw;
+}
+.album-card img{max-height:76vh;width:100%;height:100%;object-fit:contain;min-width:0;min-height:0}
+.album-info{min-width:0}
+.album-info h2{margin:.18em 0 .3em;font-size:clamp(26px,5vw,86px);line-height:1.03;letter-spacing:-.035em}
+.album-artist{color:#ffd18a;font-size:clamp(13px,2vw,34px);font-weight:750;margin:0}
+.album-description{font-size:clamp(14px,2.2vw,37px);line-height:1.38;color:#e1eaf0;margin:0}
+@media(max-aspect-ratio:4/3){
+ .album-card{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;gap:3vh;inset:12% 8% 13%}
+}
+</style></head><body>
 <main class="shell" id="studio">
 <header class="head"><div><div class="eyebrow">Ison Home</div><h1>Screensaver Studio</h1></div><button id="start" class="primary" type="button">▶ Start Screensaver</button></header>
 <div class="studio-grid">
-<figure class="preview"><img id="previewImage" alt=""><figcaption><strong id="previewTitle"></strong><button id="previewNext" type="button" aria-label="Preview next travel photo">Next photo ›</button></figcaption></figure>
+<figure class="preview"><img id="previewImage" alt=""><figcaption><div><strong id="previewTitle"></strong><small id="previewArtist" hidden></small></div><button id="previewNext" type="button" aria-label="Preview next slide">Next slide ›</button></figcaption></figure>
 <section class="panel" aria-labelledby="settingsTitle">
 <h2 id="settingsTitle">Slideshow settings</h2>
 <div class="controls">
-<div class="field wide"><label for="collection">Collection</label><select id="collection"><option value="mixed">Mixed — photos & artwork</option><option value="family">Family & pets</option><option value="travel">Travel &amp; signposts</option><option value="sports">Sports & classic rock</option><option value="seasonal">Seasonal artwork</option></select></div>
+<div class="field wide"><label for="collection">Collection</label><select id="collection"><option value="mixed">Mixed — photos & artwork</option><option value="family">Family & pets</option><option value="travel">Travel &amp; signposts</option><option value="sports">Ohio sports &amp; album covers</option><option value="ohio-sports">Ohio sports</option><option value="albums">Album covers</option><option value="seasonal">Seasonal artwork</option></select></div>
 <div class="field"><label for="interval">Slide interval</label><select id="interval"><option value="15">15 seconds</option><option value="30">30 seconds</option><option value="60">60 seconds</option></select></div>
 <div class="field"><label for="profile">TV profile</label><select id="profile"><option value="ison-family-hub">Ison Family Hub</option><option value="chris-basement">Chris's Basement</option><option value="jim-amys-garage">Jim & Amy's Garage</option></select></div>
 </div>
@@ -60,12 +80,12 @@ dialog p{color:#c1cdd1}dialog .actions{margin-top:10px}
 <button id="managePhotos" type="button">Manage photos</button>
 </section>
 </div>
-<footer class="studio-footer"><a href="./#fun-zone">‹ Back to Chris’s Basement</a><span>Select Exit to return · v1.1</span></footer>
+<footer class="studio-footer"><a href="./#fun-zone">‹ Back to Chris’s Basement</a><span>v1.2</span></footer>
 </main>
 <dialog class="panel" id="photoDialog" aria-labelledby="photoTitle">
 <div class="dialog-head"><h2 id="photoTitle">Manage photos</h2><form method="dialog"><button>Done</button></form></div>
 <p>Add family, pet, or travel photos. Imports are saved on this device.</p>
-<div class="controls"><div class="field"><label for="photoFiles">Choose photos</label><input id="photoFiles" type="file" accept="image/*" multiple></div><div class="field"><label for="photoCollection">Add to collection</label><select id="photoCollection"><option value="family">Family &amp; pets</option><option value="travel">Travel &amp; signposts</option></select></div><div class="field"><label for="photoCaption">Caption or place name</label><input id="photoCaption" maxlength="100" placeholder="Sarasota Sands, Florida"></div></div>
+<div class="controls"><div class="field"><label for="photoFiles">Choose photos</label><input id="photoFiles" type="file" accept="image/*" multiple></div><div class="field"><label for="photoCollection">Add to collection</label><select id="photoCollection"><option value="family">Family &amp; pets</option><option value="travel">Travel &amp; signposts</option></select></div><div class="field"><label for="photoCaption">Caption or place name (optional)</label><input id="photoCaption" maxlength="100"></div></div>
 
 <div class="actions"><button id="addPhotos" type="button">Add photos</button><button id="reset" type="button">Restore slideshow defaults</button></div>
 <p id="photoStatus" role="status"></p><ul id="photoList"></ul>
@@ -73,8 +93,27 @@ dialog p{color:#c1cdd1}dialog .actions{margin-top:10px}
 <p>Images resized to 3,840 pixels wide and cropped to fit the display.</p>
 <ul><li><a href="https://commons.wikimedia.org/wiki/File:Sunset_on_Lido_Beach-1.jpg">Lido Beach, Sarasota</a> by Visitor7 · <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a></li>
 <li><a href="https://commons.wikimedia.org/wiki/File:Yosemite_Valley_from_Tunnel.jpg">Yosemite National Park</a> by Williamgayde · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></li>
-<li><a href="https://commons.wikimedia.org/wiki/File:Vineyard_in_Napa_Valley_4.jpg">Napa Valley, California</a> by Brocken Inaglory · <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a></li></ul></details></dialog>
-<div id="viewer" class="viewer" aria-label="Screensaver" tabindex="-1"><div id="slideA" class="slide active"></div><div id="slideB" class="slide"></div><div class="notice">ISON HOME · SCREENSAVER</div><div id="clock" class="clock"></div><button id="exit" class="exit">Exit screensaver</button></div>
+<li><a href="https://commons.wikimedia.org/wiki/File:Vineyard_in_Napa_Valley_4.jpg">Napa Valley, California</a> by Brocken Inaglory · <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a></li></ul></details>
+<details class="photo-credits"><summary>Ohio sports photo credits</summary>
+<ul><li><a href="https://commons.wikimedia.org/wiki/File:Ohio_Stadium_during_OSU_vs_Purdue_11-13-21.jpg">Ohio State Buckeyes</a> · Quintin Soloviev · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> · cropped to fit playback</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:FirstEnergy_Stadium_crowd_-_east.jpg">Cleveland Browns</a> · Cards84664 · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> · cropped to fit playback</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:Cincinnati_Reds_game_at_Great_American_Ball_Park_2023.jpg">Cincinnati Reds</a> · Bpluke01 · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> · cropped to fit playback</li></ul></details>
+<details class="photo-credits"><summary>Album artwork and sources</summary>
+<ul><li><a href="https://music.apple.com/us/album/stairway-to-heaven/674271135?i=674272186&amp;uo=4">Led Zeppelin IV</a> · Led Zeppelin</li>
+<li><a href="https://music.apple.com/us/album/with-or-without-you/1443155637?i=1443155645&amp;uo=4">The Joshua Tree</a> · U2</li>
+<li><a href="https://music.apple.com/us/album/into-the-mystic/712727450?i=712727466&amp;uo=4">Moondance</a> · Van Morrison</li>
+<li><a href="https://music.apple.com/us/album/she-talks-to-angels/1440810644?i=1440810842&amp;uo=4">Shake Your Money Maker</a> · The Black Crowes</li>
+<li><a href="https://music.apple.com/us/album/time/1065973699?i=1065973706&amp;uo=4">The Dark Side of the Moon</a> · Pink Floyd</li>
+<li><a href="https://music.apple.com/us/album/jump/976831013?i=976832495&amp;uo=4">1984</a> · Van Halen</li>
+<li><a href="https://music.apple.com/us/album/gimme-shelter-mono/1440774096?i=1440775097&amp;uo=4">Let It Bleed</a> · The Rolling Stones</li>
+<li><a href="https://music.apple.com/us/album/baba-oriley/1440850317?i=1440850320&amp;uo=4">Who's Next</a> · The Who</li>
+<li><a href="https://music.apple.com/us/album/paid-in-full/1440841577?i=1440841589&amp;uo=4">Paid In Full</a> · Eric B. &amp; Rakim</li>
+<li><a href="https://music.apple.com/us/album/no-sleep-till-brooklyn/1440912031?i=1440912354&amp;uo=4">Licensed to Ill</a> · Beastie Boys</li>
+<li><a href="https://music.apple.com/us/album/in-the-wee-small-hours-of-the-morning/1440815019?i=1440815501&amp;uo=4">In the Wee Small Hours</a> · Frank Sinatra</li>
+<li><a href="https://music.apple.com/us/album/purple-haze/357225315?i=357225355&amp;uo=4">Are You Experienced</a> · Jimi Hendrix</li>
+<li><a href="https://music.apple.com/us/album/jamming/1625213430?i=1625213804&amp;uo=4">Exodus</a> · Bob Marley &amp; The Wailers</li></ul></details>
+</dialog>
+<div id="viewer" class="viewer" aria-label="Screensaver" tabindex="-1"><div id="slideA" class="slide active"></div><div id="slideB" class="slide"></div><div class="notice">ISON HOME · SCREENSAVER</div><div id="clock" class="clock"></div><button id="exit" class="exit">Exit slideshow</button></div>
 <script>
 (()=>{'use strict';
 const defaults={collection:'mixed',pictureIntervalSeconds:30,showClock:true,shuffle:true};
@@ -84,9 +123,136 @@ const travelPhotos=[
   {type:'travel',title:"Yosemite National Park",src:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Yosemite_Valley_from_Tunnel.jpg/3840px-Yosemite_Valley_from_Tunnel.jpg"},
   {type:'travel',title:"Napa Valley, California",src:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Vineyard_in_Napa_Valley_4.jpg/3840px-Vineyard_in_Napa_Valley_4.jpg"}
 ];
+const sportsPhotos=[
+ {
+  "type": "ohio-sports",
+  "title": "Ohio State Buckeyes",
+  "description": "The Horseshoe before Ohio State took on Purdue in Columbus, November 2021.",
+  "src": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Ohio_Stadium_during_OSU_vs_Purdue_11-13-21.jpg",
+  "preview": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Ohio_Stadium_during_OSU_vs_Purdue_11-13-21.jpg/960px-Ohio_Stadium_during_OSU_vs_Purdue_11-13-21.jpg"
+ },
+ {
+  "type": "ohio-sports",
+  "title": "Cleveland Browns",
+  "description": "Game-day crowds in the east stands at Cleveland’s lakefront stadium.",
+  "src": "https://upload.wikimedia.org/wikipedia/commons/8/8f/FirstEnergy_Stadium_crowd_-_east.jpg",
+  "preview": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/FirstEnergy_Stadium_crowd_-_east.jpg/960px-FirstEnergy_Stadium_crowd_-_east.jpg"
+ },
+ {
+  "type": "ohio-sports",
+  "title": "Cincinnati Reds",
+  "description": "Reds baseball at Great American Ball Park, 2023.",
+  "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Cincinnati_Reds_game_at_Great_American_Ball_Park_2023.jpg/3840px-Cincinnati_Reds_game_at_Great_American_Ball_Park_2023.jpg",
+  "preview": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Cincinnati_Reds_game_at_Great_American_Ball_Park_2023.jpg/960px-Cincinnati_Reds_game_at_Great_American_Ball_Park_2023.jpg"
+ }
+];
+const albumCards=[
+ {
+  "type": "albums",
+  "title": "Led Zeppelin IV",
+  "artist": "Led Zeppelin",
+  "year": "1971",
+  "description": "Hard rock and acoustic folk share the stage, from the drive of “Black Dog” to the slow build of “Stairway to Heaven.”",
+  "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/47/31/8e/47318e93-c0fa-35d1-8b84-809691955124/603497926121.jpg/1200x1200bb.jpg"
+ },
+ {
+  "type": "albums",
+  "title": "The Joshua Tree",
+  "artist": "U2",
+  "year": "1987",
+  "description": "Wide-open guitar textures and American roots influences frame “Where the Streets Have No Name” and “With or Without You.”",
+  "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/8f/e2/c3/8fe2c384-f6cb-9af7-371d-2b6a9b204e59/17UMGIM79292.rgb.jpg/1200x1200bb.jpg"
+ },
+ {
+  "type": "albums",
+  "title": "Moondance",
+  "artist": "Van Morrison",
+  "year": "1970",
+  "description": "A warm blend of soul, jazz, and folk with “Moondance,” “Crazy Love,” and “Into the Mystic.”",
+  "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/9a/c7/e2/9ac7e266-1f0d-997a-fe43-6741bc96eda6/081227963637.jpg/1200x1200bb.jpg"
+ },
+ {
+  "type": "albums",
+  "title": "Shake Your Money Maker",
+  "artist": "The Black Crowes",
+  "year": "1990",
+  "description": "The band’s debut mixes blues-rock swagger with the acoustic soul of “She Talks to Angels.”",
+  "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/64/c4/6b/64c46bf5-3bcb-75e7-048c-791907f62639/00602537349883.rgb.jpg/1200x1200bb.jpg"
+ },
+ {
+  "type": "albums",
+  "title": "The Dark Side of the Moon",
+  "artist": "Pink Floyd",
+  "year": "1973",
+  "description": "A continuous album journey built from layered studio sound, with “Time,” “Money,” and “Us and Them.”",
+  "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/3e/76/b0/3e76b0e3-762b-2286-a019-8afb19cee541/886445635829.jpg/1200x1200bb.jpg"
+ },
+ {
+  "type": "albums",
+  "title": "1984",
+  "artist": "Van Halen",
+  "year": "1984",
+  "description": "Eddie Van Halen’s synthesizer hooks meet arena-rock guitar on “Jump,” “Panama,” and “Hot for Teacher.”",
+  "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/79/98/f7/7998f761-20e0-aa8e-4fb2-190062af1638/603497894161.jpg/1200x1200bb.jpg"
+ },
+ {
+  "type": "albums",
+  "title": "Let It Bleed",
+  "artist": "The Rolling Stones",
+  "year": "1969",
+  "description": "Blues and country run through the record, from the tension of “Gimme Shelter” to the chorus of “You Can’t Always Get What You Want.”",
+  "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/67/45/d2/6745d207-4e9e-18ad-cd04-ece9b6d9536b/16ABKIM00067.rgb.jpg/1200x1200bb.jpg"
+ },
+ {
+  "type": "albums",
+  "title": "Who's Next",
+  "artist": "The Who",
+  "year": "1971",
+  "description": "Synth patterns and power chords drive “Baba O’Riley,” “Behind Blue Eyes,” and “Won’t Get Fooled Again.”",
+  "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/1c/e8/a4/1ce8a442-eef1-0af2-cf09-30ef0e734731/00602547269683.rgb.jpg/1200x1200bb.jpg"
+ },
+ {
+  "type": "albums",
+  "title": "Paid In Full",
+  "artist": "Eric B. & Rakim",
+  "year": "1987",
+  "description": "Eric B.’s sample-driven production and Rakim’s precise rhymes come together on “I Ain’t No Joke” and the title track.",
+  "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/13/11/10/13111001-0c28-9fd7-9d50-194e72e23f53/00602547742254.rgb.jpg/1200x1200bb.jpg"
+ },
+ {
+  "type": "albums",
+  "title": "Licensed to Ill",
+  "artist": "Beastie Boys",
+  "year": "1986",
+  "description": "The trio’s debut puts hard-rock riffs alongside hip-hop beats, with “No Sleep Till Brooklyn” and “Brass Monkey.”",
+  "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/e4/d7/81/e4d781e8-bd3f-486a-cd18-e9b3a7d12b34/00731452735126.rgb.jpg/1200x1200bb.jpg"
+ },
+ {
+  "type": "albums",
+  "title": "In the Wee Small Hours",
+  "artist": "Frank Sinatra",
+  "year": "1955",
+  "description": "Nelson Riddle’s arrangements and Sinatra’s quiet delivery make this a late-night set of songs about heartbreak.",
+  "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/97/a7/42/97a7424f-8161-052f-ce3c-93730c2d30de/14UMGIM32540.rgb.jpg/1200x1200bb.jpg"
+ },
+ {
+  "type": "albums",
+  "title": "Are You Experienced",
+  "artist": "Jimi Hendrix",
+  "year": "1967",
+  "description": "The Jimi Hendrix Experience debut moves between psychedelic blues and explosive guitar on the U.S. edition’s “Purple Haze” and “Hey Joe.”",
+  "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/00/67/45/006745f5-95d5-5a06-35ed-d515e9cfd7d8/dj.tbwlxwoh.jpg/1200x1200bb.jpg"
+ },
+ {
+  "type": "albums",
+  "title": "Exodus",
+  "artist": "Bob Marley & The Wailers",
+  "year": "1977",
+  "description": "Roots reggae moves between urgency and warmth on “Exodus,” “Jamming,” and “Three Little Birds.”",
+  "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/23/fa/f8/23faf820-c4fa-2bf1-d672-846971f5cf5c/06UMGIM31355.rgb.jpg/1200x1200bb.jpg"
+ }
+];
 const artworks=[
-{type:'sports',title:'Game Day',bg:'linear-gradient(125deg,#392a15 0%,#bc6c25 45%,#22170d 100%)'},
-{type:'sports',title:'Classic Rock Nights',bg:'radial-gradient(circle at 30% 20%,#813c61,#21142e 65%,#080a17)'},
 {type:'seasonal',title:'Autumn Evenings',bg:'linear-gradient(125deg,#2d3629,#ad6332 55%,#40221b)'},
 {type:'seasonal',title:'Winter Glow',bg:'linear-gradient(125deg,#112a4b,#4879a3 55%,#101e36)'},
 ];
@@ -172,7 +338,12 @@ const photosReady=refreshPhotos().catch(()=>{
 const key=()=> 'ison.screensaver.'+$('profile').value;
 function load(){let s;try{s=JSON.parse(localStorage.getItem(key())||'{}')}catch{s={}}s={...defaults,...s};$('collection').value=s.collection;$('interval').value=String(s.pictureIntervalSeconds);$('clockToggle').checked=s.showClock;$('shuffle').checked=s.shuffle;}
 function save(){const s={collection:$('collection').value,pictureIntervalSeconds:Number($('interval').value),showClock:$('clockToggle').checked,shuffle:$('shuffle').checked};try{localStorage.setItem(key(),JSON.stringify(s))}catch{}return s}
-function pool(s){let p=[...travelPhotos,...photos,...artworks].filter(a=>s.collection==='mixed'||a.type===s.collection);if(s.shuffle){p=[...p];for(let i=p.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[p[i],p[j]]=[p[j],p[i]]}}return p.length?p:[{title:'Add photos to this collection in Screensaver Studio',bg:'linear-gradient(125deg,#14273e,#35405e)'}]}
+function collectionItems(collection){
+ return [...travelPhotos,...photos,...sportsPhotos,...albumCards,...artworks].filter(item=>
+  collection==='mixed'||item.type===collection||
+  (collection==='sports'&&(item.type==='ohio-sports'||item.type==='albums')));
+}
+function pool(s){let p=collectionItems(s.collection);if(s.shuffle){p=[...p];for(let i=p.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[p[i],p[j]]=[p[j],p[i]]}}return p.length?p:[{title:'Add photos to this collection in Screensaver Studio',bg:'linear-gradient(125deg,#14273e,#35405e)'}]}
 function show(){const item=slides[idx++%slides.length],el=$('slide'+(front?'B':'A')),other=$('slide'+(front?'A':'B'));if(el.dataset.photoUrl) URL.revokeObjectURL(el.dataset.photoUrl);
 if(item.file){
   el.dataset.photoUrl=URL.createObjectURL(item.file);
@@ -182,6 +353,27 @@ if(item.file){
   el.style.backgroundImage=item.bg||'linear-gradient(125deg,#14273e,#35405e)';
 }
 el.replaceChildren();
+el.classList.toggle('album-slide',!!item.cover);
+if(item.cover){
+  const album=document.createElement('article');
+  album.className='album-card';
+  const cover=new Image();
+  cover.alt=item.title+' cover';
+  cover.src=item.cover;
+  const info=document.createElement('div');
+  info.className='album-info';
+  const artist=document.createElement('p');
+  artist.className='album-artist';
+  artist.textContent=item.artist+' · '+item.year;
+  const title=document.createElement('h2');
+  title.textContent=item.title;
+  const description=document.createElement('p');
+  description.className='album-description';
+  description.textContent=item.description;
+  info.append(artist,title,description);
+  album.append(cover,info);
+  el.append(album);
+}else{
 if(item.src){
   const image=new Image();
   image.alt='';
@@ -193,7 +385,15 @@ if(item.src){
 const title=document.createElement('div');
 title.className='slide-title';
 title.textContent=item.title;
-el.append(title);el.classList.add('active');other.classList.remove('active');front=1-front}
+if(item.description){
+  const description=document.createElement('small');
+  description.className='slide-description';
+  description.textContent=item.description;
+  title.append(description);
+}
+el.append(title);
+}
+el.classList.add('active');other.classList.remove('active');front=1-front}
 function tickClock(){const d=new Date();$('clock').innerHTML=d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})+'<small>'+d.toLocaleDateString([],{weekday:'long',month:'long',day:'numeric'})+'</small>'}
 function start(){if(viewer.classList.contains('active'))return;const s=save();slides=pool(s);idx=0;front=0;$('slideA').classList.remove('active');$('slideB').classList.remove('active');lastFocus=document.activeElement;viewer.classList.add('active');$('clock').style.display=s.showClock?'block':'none';show();tickClock();timer=setInterval(show,s.pictureIntervalSeconds*1000);clockTimer=setInterval(tickClock,10000);$('exit').focus();if(viewer.requestFullscreen) viewer.requestFullscreen().catch(()=>{});}
 function stop(){if(!viewer.classList.contains('active'))return;clearInterval(timer);clearInterval(clockTimer);viewer.classList.remove('active');
@@ -204,21 +404,33 @@ for(const el of [$('slideA'),$('slideB')]){
   el.replaceChildren();
 }
 if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});if(lastFocus&&lastFocus.focus)lastFocus.focus()}
-let previewIndex=0;
+let previewIndex=0,previewUrl;
 function showPreview(){
-  const photo=travelPhotos[previewIndex];
-  $('previewImage').src=photo.src.replace('/3840px-','/960px-');
-  $('previewTitle').textContent=photo.title;
+  if(previewUrl)URL.revokeObjectURL(previewUrl);
+  previewUrl=null;
+  const items=collectionItems($('collection').value);
+  const item=items[previewIndex%Math.max(items.length,1)];
+  const image=$('previewImage'),artist=$('previewArtist');
+  if(item?.file)previewUrl=URL.createObjectURL(item.file);
+  const source=previewUrl||item?.preview||item?.cover?.replace('/1200x1200bb','/600x600bb')||item?.src?.replace('/3840px-','/960px-');
+  image.hidden=!source;
+  if(source)image.src=source;else image.removeAttribute('src');
+  image.parentElement.classList.toggle('preview-album',!!item?.cover);
+  image.parentElement.style.backgroundImage=item?.bg||'';
+  $('previewTitle').textContent=item?.title||'Add photos to this collection';
+  artist.textContent=item?.artist||'';
+  artist.hidden=!item?.artist;
+  $('previewNext').disabled=items.length<2;
 }
-$('previewNext').onclick=()=>{
-  previewIndex=(previewIndex+1)%travelPhotos.length;
-  showPreview();
-};
+function resetPreview(){previewIndex=0;showPreview();}
+$('previewNext').onclick=()=>{previewIndex++;showPreview();};
+$('collection').addEventListener('change',resetPreview);
+$('photoDialog').addEventListener('close',resetPreview);
 $('start').onclick=start;
 $('exit').onclick=stop;
 $('managePhotos').onclick=()=>$('photoDialog').showModal();
-$('reset').onclick=()=>{try{localStorage.removeItem(key())}catch{}load()};
-$('profile').onchange=load;
+$('reset').onclick=()=>{try{localStorage.removeItem(key())}catch{}load();resetPreview()};
+$('profile').onchange=()=>{load();resetPreview();};
 ['collection','interval','clockToggle','shuffle'].forEach(id=>$(id).addEventListener('change',save));
 document.addEventListener('keydown',e=>{
   if(!['Escape','Backspace','BrowserBack','GoBack'].includes(e.key))return;
@@ -235,7 +447,7 @@ document.addEventListener('fullscreenchange',()=>{
 });
 window.addEventListener('popstate',()=>{if(viewer.classList.contains('active'))stop()});
 $('start').disabled=true;
-photosReady.finally(()=>{$('start').disabled=false});
+photosReady.finally(()=>{$('start').disabled=false;resetPreview();});
 load();
 showPreview();
 })();
