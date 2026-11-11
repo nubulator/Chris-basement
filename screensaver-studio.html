@@ -73,6 +73,27 @@ dialog p{color:#c1cdd1}dialog .actions{margin-top:10px}
 #viewer[data-transition="slide"] .slide.active,#viewer[data-transition="zoom"] .slide.active{transform:none}
 #viewer[data-transition="cut"] .slide{transition:none}
 @media(prefers-reduced-motion:reduce){#viewer .slide{transition:none!important;transform:none!important}}
+
+/* Keep the slideshow overlays readable over bright photos. */
+#viewer .clock,#viewer .slide-title{
+ text-shadow:-1px -1px #000,0 -2px #000,1px -1px #000,2px 0 #000,
+  1px 1px #000,0 2px #000,-1px 1px #000,-2px 0 #000,0 2px 5px #000a;
+}
+#viewer .clock small,#viewer .slide-description{
+ text-shadow:-1px -1px #000,0 -1px #000,1px -1px #000,1px 0 #000,
+  1px 1px #000,0 1px #000,-1px 1px #000,-1px 0 #000,0 2px 4px #000a;
+}
+@supports (paint-order:stroke fill) and (-webkit-text-stroke:1px black){
+ #viewer .clock,#viewer .slide-title{
+  paint-order:stroke fill;
+  -webkit-text-stroke:clamp(2px,.2vw,4px) #000;
+  text-shadow:0 2px 5px #000a;
+ }
+ #viewer .clock small,#viewer .slide-description{
+  -webkit-text-stroke:clamp(1.5px,.14vw,2.5px) #000;
+  text-shadow:0 2px 4px #000a;
+ }
+}
 </style></head><body>
 <main class="shell" id="studio">
 <header class="head"><div><div class="eyebrow">Ison Home</div><h1>Screensaver Studio</h1></div><button id="start" class="primary" type="button">▶ Start Screensaver</button></header>
@@ -95,7 +116,7 @@ dialog p{color:#c1cdd1}dialog .actions{margin-top:10px}
 <button id="managePhotos" type="button">Manage photos</button>
 </section>
 </div>
-<footer class="studio-footer"><a href="./#fun-zone">‹ Back to Chris’s Basement</a><span>v1.3</span></footer>
+<footer class="studio-footer"><a href="./#fun-zone">‹ Back to Chris’s Basement</a><span>v1.4</span></footer>
 </main>
 <dialog class="panel" id="photoDialog" aria-labelledby="photoTitle">
 <div class="dialog-head"><h2 id="photoTitle">Manage photos</h2><form method="dialog"><button>Done</button></form></div>
