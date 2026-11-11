@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ison Home · Screensaver Studio</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#101827;color:#f7f7f7}*{box-sizing:border-box}body{margin:0}button,select,input{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:13px 18px;background:#31425d;color:white}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #ffcc70;outline-offset:3px}.primary{background:#e7a647;color:#1c160c;font-weight:800}.shell{max-width:1000px;margin:auto;padding:32px 22px}.head{display:flex;justify-content:space-between;gap:12px;align-items:center}.eyebrow{color:#f1bb72;letter-spacing:.16em;font-size:.75rem;text-transform:uppercase}h1{font-size:clamp(2rem,5vw,3.5rem);margin:.2em 0}p{color:#c1cada;line-height:1.55}.panel{background:#1c283a;border:1px solid #3a4b63;border-radius:20px;padding:22px;margin:20px 0}.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px}.field{display:flex;flex-direction:column;gap:9px}.field label{font-weight:700}.field select{width:100%;background:#111b2b;color:#fff;border:1px solid #60718b;border-radius:10px;padding:12px}.toggle{display:flex;gap:10px;align-items:center;padding:8px 0}.toggle input{width:20px;height:20px;accent-color:#e7a647}.actions{display:flex;gap:12px;flex-wrap:wrap}.hint{font-size:.85rem;color:#9faec3}.viewer{position:fixed;inset:0;background:#090d17;display:none;overflow:hidden;z-index:10}.viewer.active{display:block}.slide{position:absolute;inset:0;opacity:0;transition:opacity 1.8s ease;background-position:center;background-size:cover}.slide.active{opacity:1}.slide img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}.slide img[hidden]{display:none}.photo-credits a{color:#ffcc70}.photo-credits li{margin:.45rem 0}.slide:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(0,0,0,.65))}.slide-title{position:absolute;bottom:9%;left:5%;z-index:2;font-size:clamp(1.5rem,4vw,4rem);font-weight:800;text-shadow:0 3px 15px #0008}.clock{position:absolute;right:4%;top:5%;z-index:3;text-align:right;text-shadow:0 3px 12px #000;font-size:clamp(1.6rem,4vw,4rem);font-weight:700}.clock small{display:block;font-size:.35em;font-weight:500}.exit{position:absolute;z-index:5;bottom:3%;right:3%;opacity:.3}.exit:focus,.exit:hover{opacity:1}.notice{position:absolute;top:3%;left:4%;z-index:5;color:#fff9;font-size:.8rem}.empty{background:linear-gradient(135deg,#14273e,#35405e)}@media(max-width:600px){.shell{padding:20px 14px}.panel{padding:16px}}
+</style></head><body><main class="shell" id="studio"><div class="head"><div><div class="eyebrow">Ison Home</div><h1>Screensaver Studio</h1></div><button id="start" class="primary">▶ Start Screensaver</button></div><p>Choose a collection and leave it running. Each device remembers its own preferences. Press Back or Escape to return here.</p><section class="panel"><h2>Settings</h2><div class="controls"><div class="field"><label for="collection">Collection</label><select id="collection"><option value="mixed">Mixed — photos & artwork</option><option value="family">Family & pets</option><option value="travel">Travel &amp; signposts</option><option value="sports">Sports & classic rock</option><option value="seasonal">Seasonal artwork</option></select></div><div class="field"><label for="interval">Picture interval</label><select id="interval"><option value="15">15 seconds</option><option value="30">30 seconds</option><option value="60">60 seconds</option></select></div><div class="field"><label for="activation">Activation</label><select id="activation"><option value="manual">Manual — Start button</option><option value="idle">Idle (future app integration)</option><option value="scheduled">Scheduled (future app integration)</option></select></div><div class="field"><label for="profile">TV profile</label><select id="profile"><option value="ison-family-hub">Ison Family Hub</option><option value="chris-basement">Chris's Basement</option><option value="jim-amys-garage">Jim & Amy's Garage</option></select></div></div><div class="toggle"><input id="clockToggle" type="checkbox"><label for="clockToggle">Show clock and date</label></div><div class="toggle"><input id="shuffle" type="checkbox"><label for="shuffle">Shuffle pictures</label></div><div class="toggle"><input id="keepRunning" type="checkbox"><label for="keepRunning">Keep running until I exit</label></div><p class="hint">Manual mode works now. Automatic idle and scheduling require Fire TV app integration. Photos added here are saved in this browser on this device.</p></section><section class="panel"><h2>Photo collections</h2><p>Add family, pet, or travel photos from this device. Add a place name to display it on your travel slides.</p>
+<div class="controls"><div class="field"><label for="photoFiles">Choose photos</label><input id="photoFiles" type="file" accept="image/*" multiple></div><div class="field"><label for="photoCollection">Add to collection</label><select id="photoCollection"><option value="family">Family &amp; pets</option><option value="travel">Travel &amp; signposts</option></select></div><div class="field"><label for="photoCaption">Caption or place name</label><input id="photoCaption" maxlength="100" placeholder="Sarasota Sands, Florida"></div></div>
+<div class="actions"><button id="addPhotos" type="button">Add photos</button><a href="./#fun-zone" style="color:#ffcc70;align-self:center">Back to Chris’s Basement</a></div>
+<p id="photoStatus" role="status"></p><ul id="photoList"></ul>
+<details class="photo-credits"><summary>Built-in travel photo credits</summary>
+<p>Images resized to 3,840 pixels wide and cropped to fit the display.</p>
+<ul><li><a href="https://commons.wikimedia.org/wiki/File:Sunset_on_Lido_Beach-1.jpg">Lido Beach, Sarasota</a> by Visitor7 · <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a></li>
+<li><a href="https://commons.wikimedia.org/wiki/File:Yosemite_Valley_from_Tunnel.jpg">Yosemite National Park</a> by Williamgayde · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></li>
+<li><a href="https://commons.wikimedia.org/wiki/File:Vineyard_in_Napa_Valley_4.jpg">Napa Valley, California</a> by Brocken Inaglory · <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a></li></ul></details><div class="actions"><button id="reset">Restore defaults for this TV</button><button id="start2" class="primary">▶ Turn On & Keep Running</button></div></section></main><div id="viewer" class="viewer" aria-label="Screensaver" tabindex="-1"><div id="slideA" class="slide active"></div><div id="slideB" class="slide"></div><div class="notice">ISON HOME · SCREENSAVER</div><div id="clock" class="clock"></div><button id="exit" class="exit">Exit screensaver</button></div>
+<script>
+(()=>{'use strict';
+const defaults={collection:'mixed',activation:'manual',pictureIntervalSeconds:30,showClock:true,shuffle:true,keepRunning:true};
+const $=id=>document.getElementById(id), viewer=$('viewer');let timer=null,clockTimer=null,idx=0,front=0,slides=[],lastFocus=null;
+const travelPhotos=[
+  {type:'travel',title:"Lido Beach, Sarasota",src:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Sunset_on_Lido_Beach-1.jpg/3840px-Sunset_on_Lido_Beach-1.jpg"},
+  {type:'travel',title:"Yosemite National Park",src:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Yosemite_Valley_from_Tunnel.jpg/3840px-Yosemite_Valley_from_Tunnel.jpg"},
+  {type:'travel',title:"Napa Valley, California",src:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Vineyard_in_Napa_Valley_4.jpg/3840px-Vineyard_in_Napa_Valley_4.jpg"}
+];
+const artworks=[
+{type:'sports',title:'Game Day',bg:'linear-gradient(125deg,#392a15 0%,#bc6c25 45%,#22170d 100%)'},
+{type:'sports',title:'Classic Rock Nights',bg:'radial-gradient(circle at 30% 20%,#813c61,#21142e 65%,#080a17)'},
+{type:'seasonal',title:'Autumn Evenings',bg:'linear-gradient(125deg,#2d3629,#ad6332 55%,#40221b)'},
+{type:'seasonal',title:'Winter Glow',bg:'linear-gradient(125deg,#112a4b,#4879a3 55%,#101e36)'},
+];
+let photos=[];
+let photoDatabase;
+function openPhotos(){
+  if(!photoDatabase) photoDatabase=new Promise((resolve,reject)=>{
+    const request=indexedDB.open('ison-screensaver',1);
+    request.onupgradeneeded=()=>request.result.createObjectStore('photos',{autoIncrement:true});
+    request.onsuccess=()=>resolve(request.result);
+    request.onerror=()=>reject(request.error);
+  });
+  return photoDatabase;
+}
+async function photoTransaction(mode,work){
+  const db=await openPhotos();
+  return new Promise((resolve,reject)=>{
+    const transaction=db.transaction('photos',mode);
+    const result=work(transaction.objectStore('photos'));
+    transaction.oncomplete=()=>resolve(result());
+    transaction.onabort=()=>reject(transaction.error);
+  });
+}
+async function refreshPhotos(){
+  photos=await photoTransaction('readonly',store=>{
+    const records=store.getAll(),keys=store.getAllKeys();
+    return ()=>records.result.map((record,i)=>({...record,key:keys.result[i]}));
+  });
+  $('photoList').replaceChildren();
+  for(const photo of photos){
+    const row=document.createElement('li'),remove=document.createElement('button');
+    row.textContent=photo.title+' ';
+    remove.textContent='Remove';
+    remove.setAttribute('aria-label','Remove '+photo.title);
+    remove.onclick=async()=>{
+      remove.disabled=true;
+      try{
+        await photoTransaction('readwrite',store=>{store.delete(photo.key);return ()=>{}});
+        await refreshPhotos();
+        $('photoStatus').textContent='Photo removed.';
+        $('addPhotos').focus();
+      }catch{
+        remove.disabled=false;
+        $('photoStatus').textContent='Could not remove this photo.';
+      }
+    };
+    row.append(remove);
+    $('photoList').append(row);
+  }
+}
+$('addPhotos').onclick=async()=>{
+  const files=[...$('photoFiles').files];
+  const caption=$('photoCaption').value.trim(),type=$('photoCollection').value;
+  if(!files.length){$('photoStatus').textContent='Choose at least one photo.';return;}
+  $('addPhotos').disabled=true;
+  try{
+    const checked=await Promise.allSettled(files.map(async file=>{
+      const bitmap=await createImageBitmap(file);
+      bitmap.close();
+      return {file,type,title:caption||file.name.replace(/\.[^.]+$/,'')};
+    }));
+    const valid=checked.filter(result=>result.status==='fulfilled').map(result=>result.value);
+    if(valid.length){
+      await photoTransaction('readwrite',store=>{
+        for(const photo of valid) store.add(photo);
+        return ()=>{};
+      });
+      $('photoFiles').value='';
+      $('photoCaption').value='';
+      await refreshPhotos();
+    }
+    const skipped=files.length-valid.length;
+    $('photoStatus').textContent=valid.length+' added.'+(skipped?' '+skipped+' could not be opened as photos.':'');
+  }catch{
+    $('photoStatus').textContent='Could not save photos. Check available browser storage and try again.';
+  }finally{
+    $('addPhotos').disabled=false;
+  }
+};
+const photosReady=refreshPhotos().catch(()=>{
+  $('photoStatus').textContent='Photo storage is unavailable in this browser.';
+});
+const key=()=> 'ison.screensaver.'+$('profile').value;
+function load(){let s;try{s=JSON.parse(localStorage.getItem(key())||'{}')}catch{s={}}s={...defaults,...s};$('collection').value=s.collection;$('interval').value=String(s.pictureIntervalSeconds);$('activation').value=s.activation;$('clockToggle').checked=s.showClock;$('shuffle').checked=s.shuffle;$('keepRunning').checked=s.keepRunning;}
+function save(){const s={collection:$('collection').value,activation:$('activation').value,pictureIntervalSeconds:Number($('interval').value),showClock:$('clockToggle').checked,shuffle:$('shuffle').checked,keepRunning:$('keepRunning').checked};try{localStorage.setItem(key(),JSON.stringify(s))}catch{}return s}
+function pool(s){let p=[...travelPhotos,...photos,...artworks].filter(a=>s.collection==='mixed'||a.type===s.collection);if(s.shuffle){p=[...p];for(let i=p.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[p[i],p[j]]=[p[j],p[i]]}}return p.length?p:[{title:'Add photos to this collection in Screensaver Studio',bg:'linear-gradient(125deg,#14273e,#35405e)'}]}
+function show(){const item=slides[idx++%slides.length],el=$('slide'+(front?'B':'A')),other=$('slide'+(front?'A':'B'));if(el.dataset.photoUrl) URL.revokeObjectURL(el.dataset.photoUrl);
+if(item.file){
+  el.dataset.photoUrl=URL.createObjectURL(item.file);
+  el.style.backgroundImage='url("'+el.dataset.photoUrl+'")';
+}else{
+  delete el.dataset.photoUrl;
+  el.style.backgroundImage=item.bg||'linear-gradient(125deg,#14273e,#35405e)';
+}
+el.replaceChildren();
+if(item.src){
+  const image=new Image();
+  image.alt='';
+  image.hidden=true;
+  image.onload=()=>{image.hidden=false};
+  image.src=item.src;
+  el.append(image);
+}
+const title=document.createElement('div');
+title.className='slide-title';
+title.textContent=item.title;
+el.append(title);el.classList.add('active');other.classList.remove('active');front=1-front}
+function tickClock(){const d=new Date();$('clock').innerHTML=d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})+'<small>'+d.toLocaleDateString([],{weekday:'long',month:'long',day:'numeric'})+'</small>'}
+function start(){if(viewer.classList.contains('active'))return;const s=save();slides=pool(s);idx=0;front=0;$('slideA').classList.remove('active');$('slideB').classList.remove('active');lastFocus=document.activeElement;viewer.classList.add('active');$('clock').style.display=s.showClock?'block':'none';show();tickClock();timer=setInterval(show,s.pictureIntervalSeconds*1000);clockTimer=setInterval(tickClock,10000);viewer.focus();if(viewer.requestFullscreen) viewer.requestFullscreen().catch(()=>{});}
+function stop(){if(!viewer.classList.contains('active'))return;clearInterval(timer);clearInterval(clockTimer);viewer.classList.remove('active');
+for(const el of [$('slideA'),$('slideB')]){
+  if(el.dataset.photoUrl) URL.revokeObjectURL(el.dataset.photoUrl);
+  delete el.dataset.photoUrl;
+  el.style.backgroundImage='';
+  el.replaceChildren();
+}
+if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});if(lastFocus&&lastFocus.focus)lastFocus.focus()}
+$('start').onclick=start;$('start2').onclick=start;$('exit').onclick=stop;$('reset').onclick=()=>{try{localStorage.removeItem(key())}catch{}load()};$('profile').onchange=load;['collection','interval','activation','clockToggle','shuffle','keepRunning'].forEach(id=>$(id).addEventListener('change',save));document.addEventListener('keydown',e=>{if(viewer.classList.contains('active')&&['Escape','Backspace','BrowserBack'].includes(e.key)){e.preventDefault();stop()}});window.addEventListener('popstate',()=>{if(viewer.classList.contains('active'))stop()});$('start').disabled=$('start2').disabled=true;
+photosReady.finally(()=>{$('start').disabled=$('start2').disabled=false});load();
+})();
+</script></body></html>
