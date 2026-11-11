@@ -1,0 +1,132 @@
+name: Live dashboard browser pilot
+on:
+  push:
+    branches: [maintenance/playwright-live-check]
+    paths: [.github/workflows/live-dashboard-browser.yml]
+permissions: {}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Install Playwright and Chromium
+        run: |
+          npm install --no-save --ignore-scripts playwright@1.58.2
+          npx --no-install playwright install --with-deps chromium
+      - name: Inspect public pages without writes
+        run: |
+          node --input-type=module <<'JS'
+          import { chromium } from 'playwright';
+          import { appendFileSync } from 'node:fs';
+
+          const basement = 'https://nubulator.github.io/Chris-basement/';
+          const garage = 'https://nubulator.github.io/Jim-Amys-Garage/';
+          const browser = await chromium.launch();
+          const context = await browser.newContext({
+            viewport: { width: 1280, height: 720 },
+            serviceWorkers: 'block'
+          });
+          await context.route('**/*', route => {
+            const request = route.request();
+            const readable = ['GET', 'HEAD', 'OPTIONS'].includes(request.method());
+            return readable ? route.continue() : route.abort();
+          });
+          await context.routeWebSocket('**/*', socket => socket.close());
+          const report = [];
+          const problems = new Set();
+          const safeUrl = value => {
+            const url = new URL(value);
+            return url.origin + url.pathname;
+          };
+          async function open(url) {
+            const page = await context.newPage();
+            page.on('pageerror', error => problems.add('JavaScript: ' + error.message.split('\n')[0]));
+            page.on('response', response => {
+              if (response.status() >= 400) problems.add(response.status() + ' ' + safeUrl(response.url()));
+            });
+            page.on('requestfailed', request => {
+              if (request.method() === 'GET' && request.failure()?.errorText !== 'net::ERR_ABORTED') {
+                problems.add(request.failure()?.errorText + ' ' + safeUrl(request.url()));
+              }
+            });
+            const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+            if (!response?.ok()) throw Error('Navigation failed: ' + url + ' (' + response?.status() + ')');
+            await page.waitForFunction(() => document.body?.innerText.trim().length > 30, { timeout: 15000 });
+            report.push('Rendered ' + safeUrl(page.url()) + ' — ' + await page.title());
+            return page;
+          }
+          async function control(label, action) {
+            try { report.push(label + ': ' + await action()); }
+            catch (error) { report.push(label + ': ' + error.message.split('\n')[0]); }
+          }
+          async function dashboard(url, label, next) {
+            const page = await open(url);
+            await control(label + ' ticker', async () => {
+              const track = page.locator('#garage-ap-ticker [style*="animation"]').first();
+              await track.waitFor({ state: 'attached', timeout: 55000 });
+              const before = await track.evaluate(node => node.getBoundingClientRect().x);
+              await page.waitForFunction(start => {
+                const node = document.querySelector('#garage-ap-ticker [style*="animation"]');
+                return node && Math.abs(node.getBoundingClientRect().x - start) > 2;
+              }, before, { timeout: 5000 });
+              return 'headlines populated and moving';
+            });
+            await control(label + ' weather', async () => {
+              const weather = page.getByRole('heading', { name: /Columbus Weather|New Albany Weather/i });
+              const text = await weather.locator('..').innerText({ timeout: 6000 });
+              return /d+°/.test(text) ? 'temperature rendered' : 'temperature missing';
+            });
+            await control(label + ' NBA filter', async () => {
+              await page.getByRole('button', { name: 'NBA', exact: true }).click({ timeout: 6000 });
+              await page.getByText(/NBA games|No NBA/i).first().waitFor({ timeout: 6000 });
+              return 'NBA state rendered';
+            });
+            await control(label + ' Fun Zone', async () => {
+              const slide = page.locator('#fun-feature, #garage-fun-content');
+              const before = await slide.innerText({ timeout: 6000 });
+              await page.getByRole('button', { name: next }).click({ timeout: 6000 });
+              return before === await slide.innerText() ? 'content did not change' : 'content advanced';
+            });
+            await control(label + ' Daily Line', async () => {
+              await page.getByRole('button', { name: 'DAILY LINE', exact: true }).click({ timeout: 6000 });
+              await page.getByText(/THE DAILY LINE/).first().waitFor({ timeout: 15000 });
+              const odds = page.getByText('ESPN pregame odds', { exact: true });
+              const pending = page.getByText('Awaiting published ESPN odds', { exact: true });
+              await odds.or(pending).first().waitFor({ timeout: 12000 }).catch(() => {});
+              return (await odds.count()) + ' published cards, ' + (await pending.count()) + ' awaiting odds';
+            });
+          }
+          try {
+            const dashboards = await Promise.allSettled([
+              dashboard(basement + 'index-v3822.html', 'Basement', /Next entertainment feature/i),
+              dashboard(garage, 'Garage', /^NEXT/),
+              open(basement + 'game-day.html')
+            ]);
+            for (const result of dashboards) if (result.status === 'rejected') throw result.reason;
+            const room = await open(basement + 'games.html');
+            const filenames = ['kings', 'euchre', 'trivia', 'music', 'survey', 'casino', 'last-call', 'bernie'];
+            for (const name of filenames) {
+              const link = room.locator('a[href$="/' + name + '.html"], a[href="' + name + '.html"]').first();
+              const href = await link.getAttribute('href', { timeout: 6000 });
+              const game = await open(new URL(href, room.url()).href);
+              if (name === 'bernie') {
+                await game.getByRole('heading', { name: /Bernie Bernie/i }).waitFor({ timeout: 15000 });
+                report.push('Bernie Bernie redirect rendered the external landing screen');
+              }
+              if (name === 'trivia') {
+                await control('Trivia round selector', async () => {
+                  await game.getByRole('button', { name: /Tonight.s Round/ }).click({ timeout: 6000 });
+                  await game.getByRole('button', { name: /50 Questions/ }).waitFor({ timeout: 6000 });
+                  return '50-question option visible';
+                });
+              }
+              await game.close();
+            }
+            report.push('Unattended Chromium navigation completed');
+          } finally {
+            const output = [...report, ...[...problems].slice(0, 35)].map(line => '- ' + line).join('\n');
+            console.log(output);
+            appendFileSync(process.env.GITHUB_STEP_SUMMARY, '# Live dashboard browser check\n\n' + output + '\n');
+            await browser.close();
+          }
+          JS
