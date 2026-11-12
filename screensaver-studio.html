@@ -94,37 +94,53 @@ dialog p{color:#c1cdd1}dialog .actions{margin-top:10px}
   text-shadow:0 2px 4px #000a;
  }
 }
-</style></head><body>
+</style><link rel="stylesheet" href="screensaver-studio.css?v=1.5"></head><body>
 <main class="shell" id="studio">
-<header class="head"><div><div class="eyebrow">Ison Home</div><h1>Screensaver Studio</h1></div><button id="start" class="primary" type="button">▶ Start Screensaver</button></header>
+<header class="head"><div><div class="eyebrow">Ison Home</div><h1>Screensaver Studio</h1><p class="studio-intro">Your memories. Your favorite places. Your kind of music.</p></div><button id="start" class="primary" type="button">▶ Start Screensaver</button></header>
 <div class="studio-grid">
-<figure class="preview"><img id="previewImage" alt=""><figcaption><div><strong id="previewTitle"></strong><small id="previewArtist" hidden></small></div><button id="previewNext" type="button" aria-label="Preview next slide">Next slide ›</button></figcaption></figure>
+<figure class="preview"><span class="preview-badge">YOUR SCREEN, YOUR MIX</span><img id="previewImage" alt=""><figcaption><div><strong id="previewTitle"></strong><small id="previewArtist" hidden></small></div><button id="previewNext" type="button" aria-label="Preview next slide">Next slide ›</button></figcaption></figure>
 <section class="panel" aria-labelledby="settingsTitle">
-<h2 id="settingsTitle">Slideshow settings</h2>
+<div class="settings-heading"><h2 id="settingsTitle">Make it your own</h2><span class="saved-pill">Auto-saved</span></div>
 <div class="controls">
-<div class="field wide"><label for="collection">Collection</label><select id="collection"><option value="mixed">Mixed — photos & artwork</option><option value="family">Family & pets</option><option value="travel">Travel &amp; signposts</option><option value="sports">Ohio sports &amp; album covers</option><option value="ohio-sports">Ohio sports</option><option value="albums">Album covers</option><option value="seasonal">Seasonal artwork</option></select></div>
+<div class="field wide"><label for="collection">What would you like to see?</label><select id="collection"><option value="mixed">Mixed — everything</option><option value="custom">My mix — selected groups</option><option value="family">Family &amp; pets only</option><option value="travel">Travel only</option><option value="signposts">Signposts only</option><option value="albums">Album covers only</option><option value="ohio-sports">Ohio sports only</option><option value="seasonal">Seasonal artwork only</option></select></div>
+<fieldset class="collection-groups wide"><legend>Choose one or more groups</legend>
+<label class="group-chip family"><input type="checkbox" name="group" value="family"><span><b aria-hidden="true">♡</b> Family &amp; pets</span></label>
+<label class="group-chip travel"><input type="checkbox" name="group" value="travel"><span><b aria-hidden="true">◈</b> Travel</span></label>
+<label class="group-chip signposts"><input type="checkbox" name="group" value="signposts"><span><b aria-hidden="true">➜</b> Signposts</span></label>
+<label class="group-chip albums"><input type="checkbox" name="group" value="albums"><span><b aria-hidden="true">♫</b> Album covers</span></label>
+<label class="group-chip sports"><input type="checkbox" name="group" value="ohio-sports"><span><b aria-hidden="true">★</b> Ohio sports</span></label>
+<label class="group-chip seasonal"><input type="checkbox" name="group" value="seasonal"><span><b aria-hidden="true">✳</b> Seasonal art</span></label>
+</fieldset>
+<p id="mixSummary" class="mix-summary wide" role="status"></p>
 <div class="field"><label for="interval">Slide interval</label><select id="interval"><option value="15">15 seconds</option><option value="30">30 seconds</option><option value="60">60 seconds</option></select></div>
-<div class="field"><label for="profile">Settings preset</label><select id="profile"><option value="ison-family-hub">Ison Family Hub</option><option value="chris-basement">Chris's Basement</option><option value="jim-amys-garage">Jim & Amy's Garage</option></select></div>
+<div class="field"><label for="profile">Save settings under</label><select id="profile"><option value="ison-family-hub">Ison Family Hub</option><option value="chris-basement">Chris's Basement</option><option value="jim-amys-garage">Jim & Amy's Garage</option></select></div>
 <div class="field"><label for="transition">Transition</label><select id="transition"><option value="fade">Crossfade</option><option value="slide">Slide</option><option value="zoom">Soft zoom</option><option value="cut">Instant</option></select></div>
 <div class="field" id="seasonField" hidden><label for="seasonTheme">Season or holiday</label><select id="seasonTheme"></select></div>
 </div>
-<p class="preset-help">Each preset saves separate settings on this device.</p>
+<p class="preset-help">These are named presets, not photo albums. Each remembers its own mix, timing and style <strong>on this device</strong>.</p>
 <div class="toggles">
 <label class="toggle"><input id="clockToggle" type="checkbox"> Show clock</label>
 <label class="toggle"><input id="shuffle" type="checkbox"> Shuffle photos</label>
 </div>
-<button id="managePhotos" type="button">Manage photos</button>
+<button id="managePhotos" type="button">＋ Add &amp; manage family photos <span>Phone QR &amp; shared gallery ›</span></button>
 </section>
 </div>
-<footer class="studio-footer"><a href="./#fun-zone">‹ Back to Chris’s Basement</a><span>v1.4</span></footer>
+<footer class="studio-footer"><a href="./#fun-zone">‹ Back to Chris’s Basement</a><span>v1.5 · <button class="refresh-studio" onclick="location.reload()">↻ Refresh</button></span></footer>
 </main>
 <dialog class="panel" id="photoDialog" aria-labelledby="photoTitle">
 <div class="dialog-head"><h2 id="photoTitle">Manage photos</h2><form method="dialog"><button>Done</button></form></div>
-<p>Add family, pet, or travel photos. Imports are saved on this device.</p>
+<section class="phone-upload">
+<div class="qr-tile"><img id="uploadQr" width="208" height="208" alt="Scan to open the family photo upload page"><span>SCAN WITH YOUR PHONE</span></div>
+<div><div class="eyebrow">Memories, on every screen</div><h3>Upload from your phone or iPad</h3><p id="uploadHelp">Scan the QR code, sign in with your family Google account, then choose your photos. They join your shared Family &amp; pets collection.</p>
+<a id="uploadLink" class="button-link primary" href="https://isonfamilyhome.com/?photos=1" target="_blank" rel="noopener">Open photo uploads on this device ↗</a>
+<p id="familySyncStatus" role="status">Connect this screen once to show your shared family photos.</p>
+<button id="connectFamily" type="button">Connect this screen</button><p id="pairCodeText" class="pair-code" hidden></p></div>
+</section>
+<details id="localPhotos"><summary>Photos saved only on this device</summary><p>Existing device-only photos stay here. For photos that appear on your Fire TVs, use the shared gallery above.</p>
 <div class="controls"><div class="field"><label for="photoFiles">Choose photos</label><input id="photoFiles" type="file" accept="image/*" multiple></div><div class="field"><label for="photoCollection">Add to collection</label><select id="photoCollection"><option value="family">Family &amp; pets</option><option value="travel">Travel &amp; signposts</option></select></div><div class="field"><label for="photoCaption">Caption or place name (optional)</label><input id="photoCaption" maxlength="100"></div></div>
 
 <div class="actions"><button id="addPhotos" type="button">Add photos</button><button id="reset" type="button">Restore slideshow defaults</button></div>
-<p id="photoStatus" role="status"></p><ul id="photoList"></ul>
+<p id="photoStatus" role="status"></p><ul id="photoList"></ul></details>
 <details class="photo-credits"><summary>Built-in travel photo credits</summary>
 <p>Images resized to 3,840 pixels wide and cropped to fit the display.</p>
 <ul><li><a href="https://commons.wikimedia.org/wiki/File:Sunset_on_Lido_Beach-1.jpg">Lido Beach, Sarasota</a> by Visitor7 · <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a></li>
@@ -171,9 +187,10 @@ dialog p{color:#c1cdd1}dialog .actions{margin-top:10px}
 <details class="photo-credits" id="seasonCredits"><summary>Seasonal artwork credits</summary><ul id="seasonCreditList"></ul></details>
 </dialog>
 <div id="viewer" class="viewer" aria-label="Screensaver" tabindex="-1"><div id="slideA" class="slide active"></div><div id="slideB" class="slide"></div><div class="notice">ISON HOME · SCREENSAVER</div><div id="clock" class="clock"></div><button id="exit" class="exit">Exit slideshow</button></div>
+<script src="vendor/qrcode.js"></script><script src="screensaver-collections.js?v=1.5"></script>
 <script>
 (()=>{'use strict';
-const defaults={collection:'mixed',pictureIntervalSeconds:30,showClock:true,shuffle:true,transition:'fade',seasonTheme:'auto'};
+const defaults={collection:'mixed',selectedGroups:[...StudioCollections.groups],pictureIntervalSeconds:30,showClock:true,shuffle:true,transition:'fade',seasonTheme:'auto'};
 const $=id=>document.getElementById(id), viewer=$('viewer');let timer=null,clockTimer=null,idx=0,front=0,slides=[],lastFocus=null,activeSettings,activeSeason;
 const seasonNames={spring:'Spring',summer:'Summer',fall:'Fall',winter:'Winter',groundhog:'Groundhog Day',patrick:'St. Patrick’s Day',easter:'Easter',memorial:'Memorial Day',july4:'Fourth of July',halloween:'Halloween',thanksgiving:'Thanksgiving',christmas:'Christmas',newyear:'New Year'};
 function easter(y){let a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k+7)%7,m=Math.floor((a+11*h+22*l)/451),n=h+l-7*m+114;return new Date(y,Math.floor(n/31)-1,n%31+1)}
@@ -223,7 +240,9 @@ const sportsPhotos=[
 ];
 const albumCards=[{"type":"albums","title":"Led Zeppelin IV","artist":"Led Zeppelin","year":"1971","description":"Hard rock and acoustic folk share the stage, from the drive of “Black Dog” to the slow build of “Stairway to Heaven.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/47/31/8e/47318e93-c0fa-35d1-8b84-809691955124/603497926121.jpg/1200x1200bb.jpg"},{"type":"albums","title":"The Joshua Tree","artist":"U2","year":"1987","description":"Wide-open guitar textures and American roots influences frame “Where the Streets Have No Name” and “With or Without You.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/8f/e2/c3/8fe2c384-f6cb-9af7-371d-2b6a9b204e59/17UMGIM79292.rgb.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Moondance","artist":"Van Morrison","year":"1970","description":"A warm blend of soul, jazz, and folk with “Moondance,” “Crazy Love,” and “Into the Mystic.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/9a/c7/e2/9ac7e266-1f0d-997a-fe43-6741bc96eda6/081227963637.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Shake Your Money Maker","artist":"The Black Crowes","year":"1990","description":"The band’s debut mixes blues-rock swagger with the acoustic soul of “She Talks to Angels.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/64/c4/6b/64c46bf5-3bcb-75e7-048c-791907f62639/00602537349883.rgb.jpg/1200x1200bb.jpg"},{"type":"albums","title":"The Dark Side of the Moon","artist":"Pink Floyd","year":"1973","description":"A continuous album journey built from layered studio sound, with “Time,” “Money,” and “Us and Them.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/3e/76/b0/3e76b0e3-762b-2286-a019-8afb19cee541/886445635829.jpg/1200x1200bb.jpg"},{"type":"albums","title":"1984","artist":"Van Halen","year":"1984","description":"Eddie Van Halen’s synthesizer hooks meet arena-rock guitar on “Jump,” “Panama,” and “Hot for Teacher.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/79/98/f7/7998f761-20e0-aa8e-4fb2-190062af1638/603497894161.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Let It Bleed","artist":"The Rolling Stones","year":"1969","description":"Blues and country run through the record, from the tension of “Gimme Shelter” to the chorus of “You Can’t Always Get What You Want.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/67/45/d2/6745d207-4e9e-18ad-cd04-ece9b6d9536b/16ABKIM00067.rgb.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Who's Next","artist":"The Who","year":"1971","description":"Synth patterns and power chords drive “Baba O’Riley,” “Behind Blue Eyes,” and “Won’t Get Fooled Again.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/1c/e8/a4/1ce8a442-eef1-0af2-cf09-30ef0e734731/00602547269683.rgb.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Paid In Full","artist":"Eric B. & Rakim","year":"1987","description":"Eric B.’s sample-driven production and Rakim’s precise rhymes come together on “I Ain’t No Joke” and the title track.","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/13/11/10/13111001-0c28-9fd7-9d50-194e72e23f53/00602547742254.rgb.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Licensed to Ill","artist":"Beastie Boys","year":"1986","description":"The trio’s debut puts hard-rock riffs alongside hip-hop beats, with “No Sleep Till Brooklyn” and “Brass Monkey.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/e4/d7/81/e4d781e8-bd3f-486a-cd18-e9b3a7d12b34/00731452735126.rgb.jpg/1200x1200bb.jpg"},{"type":"albums","title":"In the Wee Small Hours","artist":"Frank Sinatra","year":"1955","description":"Nelson Riddle’s arrangements and Sinatra’s quiet delivery make this a late-night set of songs about heartbreak.","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/97/a7/42/97a7424f-8161-052f-ce3c-93730c2d30de/14UMGIM32540.rgb.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Are You Experienced","artist":"Jimi Hendrix","year":"1967","description":"The Jimi Hendrix Experience debut moves between psychedelic blues and explosive guitar on the U.S. edition’s “Purple Haze” and “Hey Joe.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/00/67/45/006745f5-95d5-5a06-35ed-d515e9cfd7d8/dj.tbwlxwoh.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Exodus","artist":"Bob Marley & The Wailers","year":"1977","description":"Roots reggae moves between urgency and warmth on “Exodus,” “Jamming,” and “Three Little Birds.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/23/fa/f8/23faf820-c4fa-2bf1-d672-846971f5cf5c/06UMGIM31355.rgb.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Led Zeppelin II","artist":"Led Zeppelin","year":"1969","description":"Blues riffs and studio experimentation drive “Whole Lotta Love” and “Ramble On.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music6/v4/3a/15/1c/3a151c92-6584-3533-a03f-a8fc38458270/603497926145.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Physical Graffiti","artist":"Led Zeppelin","year":"1975","description":"A double album with the scale of “Kashmir,” the groove of “Trampled Under Foot,” and the folk colors of “Bron-Yr-Aur.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/ed/ec/68/edec68eb-ff69-cc3b-ff37-c48457d70410/603497926114.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Achtung Baby","artist":"U2","year":"1991","description":"U2 folds distortion and dance rhythms into its sound, with “One” and “Mysterious Ways.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/fe/5e/4f/fe5e4f79-c74f-c39e-39dc-4c8a952b9665/17UMGIM98829.rgb.jpg/1200x1200bb.jpg"},{"type":"albums","title":"War","artist":"U2","year":"1983","description":"A sharp, urgent record built around “Sunday Bloody Sunday” and “New Year’s Day.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/6b/0a/0d/6b0a0d5b-2831-06e9-3471-3befad197c1d/17UMGIM87714.rgb.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Astral Weeks","artist":"Van Morrison","year":"1968","description":"Loose acoustic arrangements and jazz players give Morrison room to stretch out on “Madame George” and “Cyprus Avenue.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/88/91/1b/88911b7b-a63f-4624-3fb1-2976b628c59a/603497886340.jpg/1200x1200bb.jpg"},{"type":"albums","title":"The Southern Harmony and Musical Companion","artist":"The Black Crowes","year":"1992","description":"Gospel harmonies and loose Southern rock carry “Remedy” and “Thorn in My Pride.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/0f/a3/5e/0fa35e21-4117-c246-6b8b-fefda10f31d5/00602537350872.rgb.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Wish You Were Here","artist":"Pink Floyd","year":"1975","description":"A spacious record about absence and the music business, anchored by “Shine On You Crazy Diamond.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/aa/e0/ab/aae0ab6a-d906-a189-81bf-70b56aa43f7a/886445635843.jpg/1200x1200bb.jpg"},{"type":"albums","title":"The Wall","artist":"Pink Floyd","year":"1979","description":"A rock opera about isolation with “Comfortably Numb” and “Another Brick in the Wall, Pt. 2.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/3e/17/ec/3e17ec6d-f980-c64f-19e0-a6fd8bbf0c10/886445635850.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Van Halen","artist":"Van Halen","year":"1978","description":"The debut sets David Lee Roth’s showmanship against Eddie’s guitar on “Eruption” and “Runnin’ with the Devil.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/7a/ef/88/7aef88ad-25aa-be91-eb78-8917c3f114f7/603497894130.jpg/1200x1200bb.jpg"},{"type":"albums","title":"5150","artist":"Van Halen","year":"1986","description":"The first Van Halen album with Sammy Hagar balances big choruses and keyboards on “Dreams” and “Why Can’t This Be Love.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/a2/ff/14/a2ff145c-ff55-1bc0-50ed-d7817bbcde8f/mzi.hmtxyyhj.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Exile on Main St.","artist":"The Rolling Stones","year":"1972","description":"A loose double album steeped in blues, gospel, and country, with “Tumbling Dice” and “Happy.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/b6/7b/df/b67bdff8-4e30-d46d-e869-fc0f38462f4c/08UMGIM15728.rgb.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Beggars Banquet","artist":"The Rolling Stones","year":"1968","description":"Acoustic blues and percussion give “Sympathy for the Devil” and “Street Fighting Man” their edge.","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music123/v4/35/67/a1/3567a184-db7a-0520-e532-5f12132891c6/16ABKIM00066.rgb.jpg/1200x1200bb.jpg"},{"type":"albums","title":"The Who Sell Out","artist":"The Who","year":"1967","description":"A pirate-radio concept joins the songs with spoof ads and jingles, with “I Can See for Miles” at its center.","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/d7/51/97/d7519708-e021-8d90-5a67-87ed08c4bc91/20UM1IM17985.rgb.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Follow the Leader","artist":"Eric B. & Rakim","year":"1988","description":"Fast, precise verses and dramatic production push the title track and “Microphone Fiend.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/53/ca/ab/53caabae-f289-5265-c483-0e1ff454858f/00602547742131.rgb.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Paul’s Boutique","artist":"Beastie Boys","year":"1989","description":"Dense Dust Brothers samples and rapid-fire rhymes make “Hey Ladies” and “Shake Your Rump” collage-like.","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/63/8c/46/638c461c-7bdd-5181-13c5-619b9c178a9f/13UABIM29394.rgb.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Ill Communication","artist":"Beastie Boys","year":"1994","description":"Live funk, hardcore punk, and hip-hop share space on a record led by “Sabotage” and “Sure Shot.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/a0/10/8d/a0108d39-c544-218b-150e-ae556812d817/00724383073559.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Songs for Swingin’ Lovers!","artist":"Frank Sinatra","year":"1956","description":"Nelson Riddle’s brass and strings frame a buoyant Sinatra on “I’ve Got You Under My Skin.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/9d/ae/86/9dae867b-e8dc-5e83-9079-bacd32aa1da7/15UMGIM78881.rgb.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Electric Ladyland","artist":"Jimi Hendrix","year":"1968","description":"A wide-ranging studio album with “All Along the Watchtower” and “Voodoo Child (Slight Return).”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/a6/b8/45/a6b84589-6ff7-a462-9ff9-170b724980d5/dj.wjkdwlks.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Catch a Fire","artist":"Bob Marley & The Wailers","year":"1973","description":"Warm grooves and sharp social commentary sit together on “Stir It Up” and “Concrete Jungle.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music123/v4/5b/5b/d1/5b5bd1c1-272e-e098-ec91-d00ab2d3ee9e/06UMGIM65662.rgb.jpg/1200x1200bb.jpg"},{"type":"albums","title":"Natty Dread","artist":"Bob Marley & The Wailers","year":"1974","description":"Reggae and call-and-response vocals anchor “Them Belly Full” and the studio “No Woman, No Cry.”","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music123/v4/b9/ec/9f/b9ec9f4a-c4f1-5136-7587-86826e28d67b/06UMGIM34964.rgb.jpg/1200x1200bb.jpg"}];
 
-let photos=[];
+let photos=[],sharedPhotos=[];
+const groupInputs=[...document.querySelectorAll('input[name="group"]')];
+const selectedGroups=()=>groupInputs.filter(input=>input.checked).map(input=>input.value);
 let photoDatabase;
 function openPhotos(){
   if(!photoDatabase) photoDatabase=new Promise((resolve,reject)=>{
@@ -303,19 +322,29 @@ const photosReady=refreshPhotos().catch(()=>{
   $('photoStatus').textContent='Photo storage is unavailable in this browser.';
 });
 const key=()=> 'ison.screensaver.'+$('profile').value;
-function load(){let s;try{s=JSON.parse(localStorage.getItem(key())||'{}')}catch{s={}}s={...defaults,...s};$('collection').value=s.collection;$('interval').value=String(s.pictureIntervalSeconds);$('clockToggle').checked=s.showClock;$('shuffle').checked=s.shuffle;$('transition').value=s.transition;$('seasonTheme').value=s.seasonTheme;}
-function save(){const s={collection:$('collection').value,pictureIntervalSeconds:Number($('interval').value),showClock:$('clockToggle').checked,shuffle:$('shuffle').checked,transition:$('transition').value,seasonTheme:$('seasonTheme').value};try{localStorage.setItem(key(),JSON.stringify(s))}catch{}return s}
+function load(){
+ let s;try{s=JSON.parse(localStorage.getItem(key())||'{}')}catch{s={}}
+ if(!s||typeof s!=='object')s={};
+ const legacy=s; s={...defaults,...s};
+ const groups=StudioCollections.selection(legacy);
+ $('collection').value=groups.length===StudioCollections.groups.length?'mixed':groups.length===1?groups[0]:'custom';
+ groupInputs.forEach(input=>input.checked=groups.includes(input.value));
+ $('interval').value=String(s.pictureIntervalSeconds);$('clockToggle').checked=s.showClock;$('shuffle').checked=s.shuffle;$('transition').value=s.transition;$('seasonTheme').value=s.seasonTheme;
+}
+function save(){const s={collection:$('collection').value,selectedGroups:selectedGroups(),pictureIntervalSeconds:Number($('interval').value),showClock:$('clockToggle').checked,shuffle:$('shuffle').checked,transition:$('transition').value,seasonTheme:$('seasonTheme').value};try{localStorage.setItem(key(),JSON.stringify(s))}catch{}return s}
 function currentSeason(settings){
- return settings.collection==='seasonal'&&settings.seasonTheme!=='auto'&&seasonPhotos[settings.seasonTheme]
-  ?settings.seasonTheme:themeForDate(new Date());
+ return settings.seasonTheme!=='auto'&&seasonPhotos[settings.seasonTheme]?settings.seasonTheme:themeForDate(new Date());
 }
-function collectionItems(collection,theme){
+const signpostCards=[
+ {type:'signposts',title:'Sarasota · Follow the sunshine',src:'assets/signpost-sarasota.svg'},
+ {type:'signposts',title:'Yosemite · Take the scenic route',src:'assets/signpost-yosemite.svg'},
+ {type:'signposts',title:'Napa Valley · A little farther from ordinary',src:'assets/signpost-napa.svg'}
+];
+function collectionItems(settings,theme){
  const seasonal=(seasonPhotos[theme]||[]).map(photo=>({...photo,type:'seasonal',title:seasonNames[theme]}));
- return [...travelPhotos,...photos,...sportsPhotos,...albumCards,...seasonal].filter(item=>
-  collection==='mixed'||item.type===collection||
-  (collection==='sports'&&(item.type==='ohio-sports'||item.type==='albums')));
+ return [...travelPhotos,...signpostCards,...photos,...sharedPhotos,...sportsPhotos,...albumCards,...seasonal].filter(item=>StudioCollections.includes(item,settings));
 }
-function pool(s,theme){let p=collectionItems(s.collection,theme);if(s.shuffle){p=[...p];for(let i=p.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[p[i],p[j]]=[p[j],p[i]]}}return p.length?p:[{title:'Add photos to this collection in Screensaver Studio',bg:'linear-gradient(125deg,#14273e,#35405e)'}]}
+function pool(s,theme){let p=collectionItems(s,theme);if(s.shuffle){p=[...p];for(let i=p.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[p[i],p[j]]=[p[j],p[i]]}}return p.length?p:[{title:'Add photos to this collection in Screensaver Studio',bg:'linear-gradient(125deg,#14273e,#35405e)'}]}
 function show(){
 const season=currentSeason(activeSettings);
 if(activeSeason!==season){activeSeason=season;slides=pool(activeSettings,season);idx=0;}
@@ -329,6 +358,7 @@ if(item.file){
 }
 el.replaceChildren();
 el.classList.toggle('album-slide',!!item.cover);
+el.classList.toggle('signpost-slide',item.type==='signposts');
 if(item.cover){
   const album=document.createElement('article');
   album.className='album-card';
@@ -387,9 +417,11 @@ let previewIndex=0,previewUrl;
 function showPreview(){
   if(previewUrl)URL.revokeObjectURL(previewUrl);
   previewUrl=null;
-  const selection={collection:$('collection').value,seasonTheme:$('seasonTheme').value};
-  $('seasonField').hidden=selection.collection!=='seasonal';
-  const items=collectionItems(selection.collection,currentSeason(selection));
+  const selection={collection:$('collection').value,selectedGroups:selectedGroups(),seasonTheme:$('seasonTheme').value};
+  $('seasonField').hidden=!selection.selectedGroups.includes('seasonal');
+  const items=collectionItems(selection,currentSeason(selection));
+  $('mixSummary').textContent=!selection.selectedGroups.length?'Select at least one group to get started.':`${selection.selectedGroups.length===6?'Everything':selection.selectedGroups.length+(selection.selectedGroups.length===1?' group':' groups')} · ${items.length} slides available${selection.selectedGroups.includes('family')&&!photos.some(p=>p.type==='family')&&!sharedPhotos.length?' · Add or connect family photos below':''}`;
+  $('start').disabled=!selection.selectedGroups.length;
   const item=items[previewIndex%Math.max(items.length,1)];
   const image=$('previewImage'),artist=$('previewArtist');
   if(item?.file)previewUrl=URL.createObjectURL(item.file);
@@ -411,18 +443,37 @@ function showPreview(){
 }
 function resetPreview(){previewIndex=0;showPreview();}
 $('previewNext').onclick=()=>{previewIndex++;showPreview();};
-$('collection').addEventListener('change',resetPreview);
+$('collection').addEventListener('change',()=>{
+ const collection=$('collection').value;
+ if(collection!=='custom')groupInputs.forEach(input=>input.checked=collection==='mixed'||input.value===collection);
+ save();resetPreview();
+});
+groupInputs.forEach(input=>input.addEventListener('change',()=>{
+ $('collection').value=selectedGroups().length===6?'mixed':'custom';save();resetPreview();
+}));
 $('seasonTheme').addEventListener('change',resetPreview);
 $('photoDialog').addEventListener('close',resetPreview);
 $('start').onclick=start;
 $('exit').onclick=stop;
-$('managePhotos').onclick=()=>$('photoDialog').showModal();
+$('managePhotos').onclick=()=>{$('photoDialog').showModal();$('uploadLink').focus();};
+const uploadUrl='https://isonfamilyhome.com/?photos=1';
+function setUploadLink(url){
+ $('uploadLink').href=url;
+ try{const qr=qrcode(0,'M');qr.addData(url);qr.make();$('uploadQr').src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(qr.createSvgTag({cellSize:5,margin:20,scalable:true}));}catch{$('uploadQr').hidden=true;}
+}
+setUploadLink(uploadUrl);
+window.StudioFamily={
+ setLink:setUploadLink,
+ update(records){if(sharedPhotos.length&&!records.length&&viewer.classList.contains('active'))stop();sharedPhotos=records;resetPreview();if(viewer.classList.contains('active')){slides=pool(activeSettings,currentSeason(activeSettings));idx=0;show();}}
+};
+$('connectFamily').onclick=()=>{$('familySyncStatus').textContent='Family connection is still loading. Please try again in a moment.';};
+import('./screensaver-family.js?v=1.5').catch(()=>{$('familySyncStatus').textContent='Family connection could not load. Refresh to try again. You can still open photo uploads.';});
 $('reset').onclick=()=>{try{localStorage.removeItem(key())}catch{}load();resetPreview()};
 $('profile').onchange=()=>{
   try{localStorage.setItem('ison.screensaver.preset',$('profile').value)}catch{}
   load();resetPreview();
 };
-['collection','interval','clockToggle','shuffle','transition','seasonTheme'].forEach(id=>$(id).addEventListener('change',save));
+['interval','clockToggle','shuffle','transition','seasonTheme'].forEach(id=>$(id).addEventListener('change',save));
 document.addEventListener('keydown',e=>{
   if(!['Escape','Backspace','BrowserBack','GoBack'].includes(e.key))return;
   if(viewer.classList.contains('active')){e.preventDefault();stop();}
@@ -432,6 +483,23 @@ document.addEventListener('keydown',e=>{
     e.preventDefault();
     $('photoDialog').close();
   }
+});
+document.addEventListener('keydown',event=>{
+ if(!['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(event.key)||event.altKey||event.ctrlKey||event.metaKey)return;
+ const current=document.activeElement;
+ if(current?.matches('select,input:not([type=checkbox])'))return;
+ const scope=$('photoDialog').open?$('photoDialog'):viewer.classList.contains('active')?viewer:$('studio');
+ const focusable=[...scope.querySelectorAll('button,a[href],input,select,summary')].filter(el=>!el.disabled&&el.getClientRects().length);
+ if(!focusable.includes(current))return;
+ const rect=current.getBoundingClientRect(),cx=rect.x+rect.width/2,cy=rect.y+rect.height/2;
+ const horizontal=['ArrowLeft','ArrowRight'].includes(event.key),positive=['ArrowRight','ArrowDown'].includes(event.key);
+ let best,score=Infinity;
+ for(const el of focusable){
+  if(el===current)continue;const r=el.getBoundingClientRect(),dx=r.x+r.width/2-cx,dy=r.y+r.height/2-cy;
+  const forward=(horizontal?dx:dy)*(positive?1:-1),side=Math.abs(horizontal?dy:dx);
+  if(forward<=1)continue;const rank=forward+side*3;if(rank<score){score=rank;best=el;}
+ }
+ if(best){event.preventDefault();best.focus();}
 });
 document.addEventListener('fullscreenchange',()=>{
   if(viewer.classList.contains('active')&&!document.fullscreenElement)stop();

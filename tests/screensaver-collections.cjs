@@ -1,0 +1,12 @@
+const assert=require('node:assert/strict');
+const C=require('../screensaver-collections.js');
+assert.deepEqual(C.selection({}),C.groups);
+assert.deepEqual(C.selection({collection:'mixed',selectedGroups:['travel']}),C.groups);
+assert.deepEqual(C.selection({collection:'travel'}),['travel','signposts']);
+assert.deepEqual(C.selection({collection:'sports'}),['ohio-sports','albums']);
+assert.deepEqual(C.selection({collection:'travel',selectedGroups:['travel']}),['travel']);
+const mix={collection:'custom',selectedGroups:['travel','signposts','albums','unrecognized']};
+assert.deepEqual(C.groups.map(type=>({type})).filter(item=>C.includes(item,mix)).map(item=>item.type),['travel','signposts','albums']);
+assert.deepEqual(C.selection({collection:'custom',selectedGroups:[]}),[]);
+assert.deepEqual(C.selection(JSON.parse(JSON.stringify(mix))),['travel','signposts','albums']);
+console.log('PASS: mixed, custom combinations, saved choices, empty selection and legacy preset migration');
