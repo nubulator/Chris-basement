@@ -1,0 +1,92 @@
+[
+  {
+    "id": "chicago-dogs",
+    "file": "assets/snacks/chicago-dogs.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Chicago-style_hot_dog_2.jpg",
+    "imageSource": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/82/Chicago-style_hot_dog_2.jpg/960px-Chicago-style_hot_dog_2.jpg",
+    "author": "Arnold Gatilao",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "alt": "Chicago-style hot dogs with mustard, pickles and tomato"
+  },
+  {
+    "id": "wings",
+    "file": "assets/snacks/wings.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Buffalo_wings-01.jpg",
+    "imageSource": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/51/Buffalo_wings-01.jpg/960px-Buffalo_wings-01.jpg",
+    "author": "Clotee Pridgen Allochuku",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "alt": "Chicken wings with sauce, a serving idea"
+  },
+  {
+    "id": "nachos",
+    "file": "assets/snacks/nachos.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Nachos-cheese.jpg",
+    "imageSource": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/Nachos-cheese.jpg/960px-Nachos-cheese.jpg",
+    "author": "chee.hong",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "alt": "A platter of nachos with melted cheese and peppers"
+  },
+  {
+    "id": "pretzels",
+    "file": "assets/snacks/pretzels.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:BrezelnSalz02_%28cropped%29.JPG",
+    "imageSource": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/BrezelnSalz02_%28cropped%29.JPG/960px-BrezelnSalz02_%28cropped%29.JPG",
+    "author": "Sundar1",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "alt": "Salted soft pretzels"
+  },
+  {
+    "id": "pizza",
+    "file": "assets/snacks/pizza.png",
+    "source": "https://commons.wikimedia.org/wiki/File:Detroit_Style_Pizza_in_Lloyds_Detroit_Style_Pan.png",
+    "imageSource": "https://upload.wikimedia.org/wikipedia/commons/a/a1/Detroit_Style_Pizza_in_Lloyds_Detroit_Style_Pan.png",
+    "author": "CarbertWiki",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "alt": "Detroit-style rectangular pizza"
+  },
+  {
+    "id": "crab-dip",
+    "file": "assets/snacks/crab-dip.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:CrabDipAndFlatbread.jpg",
+    "imageSource": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a7/CrabDipAndFlatbread.jpg/960px-CrabDipAndFlatbread.jpg",
+    "author": "Imjustmatthew",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "alt": "Crab dip with flatbread"
+  },
+  {
+    "id": "cuban",
+    "file": "assets/snacks/cuban.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Tampa_Cuban_sandwich.jpg",
+    "imageSource": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Tampa_Cuban_sandwich.jpg",
+    "author": "Zeng8r",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "alt": "A pressed Cuban sandwich"
+  },
+  {
+    "id": "tots",
+    "file": "assets/snacks/tots.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Tater_Tots_Close_Up_%2824782852665%29.jpg",
+    "imageSource": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Tater_Tots_Close_Up_%2824782852665%29.jpg/960px-Tater_Tots_Close_Up_%2824782852665%29.jpg",
+    "author": "Willis Lam",
+    "license": "CC BY-SA 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+    "alt": "Golden potato tots before adding toppings"
+  },
+  {
+    "id": "chowder",
+    "file": "assets/snacks/chowder.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Quail_07_bg_041506.jpg",
+    "imageSource": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/69/Quail_07_bg_041506.jpg/960px-Quail_07_bg_041506.jpg",
+    "author": "Jon Sullivan",
+    "license": "Public domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "alt": "Creamy clam chowder"
+  }
+]

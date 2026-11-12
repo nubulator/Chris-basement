@@ -1,0 +1,28 @@
+/* A dedicated food feature keeps the photo and the recipe together on TV. */
+#snack-feature[hidden]{display:none!important}
+#snack-feature{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.55fr);gap:clamp(10px,1.2vw,24px);flex:1 1 0;min-height:0;min-width:0;margin:clamp(3px,.5vh,8px) 0;overflow:hidden}
+#snack-feature .snack-photo{position:relative;margin:0;min-width:0;min-height:0;overflow:hidden;border-radius:7px;border:1px solid #ffffff40;background:#142034}
+#snack-feature .snack-photo img{display:block;width:100%;height:100%;object-fit:cover}
+#snack-feature .snack-photo figcaption{position:absolute;bottom:0;left:0;right:0;background:#07101de6;padding:5px 7px;color:#dce5ef;font-size:clamp(8px,.62vw,12px);line-height:1.2}
+#snack-feature .snack-photo a{color:inherit;text-decoration:none}
+#snack-feature .snack-photo a:focus-visible{outline:2px solid #ffe7af}
+#snack-feature .snack-copy{display:flex;flex-direction:column;justify-content:center;min-width:0;min-height:0;gap:clamp(3px,.5vh,7px);overflow:hidden}
+#snack-feature h3,#snack-feature h4,#snack-feature p{margin:0;padding:0}
+#snack-feature .snack-name{color:#ffe1ab;font-size:clamp(18px,1.75vw,34px);line-height:1.06;font-weight:900}
+#snack-feature .snack-why{color:#cedbea;font-size:clamp(11px,.97vw,19px);line-height:1.2}
+#snack-feature .snack-meta{color:#ffdc93;letter-spacing:.05em;font-size:clamp(9px,.77vw,15px);font-weight:800;margin-bottom:2px}
+#snack-feature .snack-label{font-size:clamp(9px,.75vw,15px);letter-spacing:.09em;color:#b4c8df;margin-top:2px}
+#snack-feature .snack-ingredients,#snack-feature .snack-method{font-size:clamp(11px,1.05vw,21px);line-height:1.22;color:#fff;font-weight:600}
+#pregame[data-slide="4"] #insider-pregame>div:first-child:before{display:none!important}
+#pregame[data-slide="4"] #insider-cards,#pregame[data-slide="4"] #pregame-body{display:none!important}
+@media(max-width:800px),(max-aspect-ratio:4/3){
+ #snack-feature{flex:none;min-height:260px;overflow:visible;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr)}
+ #snack-feature .snack-photo{min-height:220px}
+ #snack-feature .snack-photo img{position:absolute;inset:0}
+ #snack-feature .snack-copy{overflow:visible;padding:8px 0}
+ #snack-feature .snack-ingredients,#snack-feature .snack-method{font-size:14px}
+}
+@media(max-width:480px){
+ #snack-feature{grid-template-columns:1fr}
+ #snack-feature .snack-photo{height:210px;min-height:0}
+}
