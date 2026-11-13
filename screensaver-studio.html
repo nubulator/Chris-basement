@@ -534,5 +534,19 @@ $('start').disabled=true;
 photosReady.finally(()=>{$('start').disabled=false;resetPreview();});
 load();
 showPreview();
+
+// Overnight mode: start automatically after photos load; return at 7 AM Eastern.
+if(new URLSearchParams(location.search).get('overnight')==='1'){
+  const easternMinutes=()=>{const p=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());return Number(p.find(x=>x.type==='hour').value)*60+Number(p.find(x=>x.type==='minute').value)};
+  const goHome=()=>location.replace('./index-v3822.html');
+  const checkOvernight=()=>{if(easternMinutes()>=420)goHome()};
+  if(easternMinutes()>=420)goHome();
+  else{
+    photosReady.finally(()=>{if(easternMinutes()<420)start();else goHome()});
+    setInterval(checkOvernight,15000);
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkOvernight()});
+  }
+}
+
 })();
 </script></body></html>
