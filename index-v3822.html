@@ -994,15 +994,36 @@ const favoriteTeams=[
  {league:'NBA',path:'basketball/nba',id:'5',name:'Cleveland Cavaliers',logo:'https://a.espncdn.com/i/teamlogos/nba/500/cle.png'}
 ];
 function teamPlaceholder(t,label){return {id:'',league:t.name,away:t.name,home:label,awayLogo:t.logo,homeLogo:'',as:'',hs:'',ar:0,hr:0,odds:'',status:label,live:false,final:false,date:0,fav:true}}
+
+// ESPN resilient transport: short retry, last-good local cache, and offline fallback.
+// Cache keys are scoped to the exact ESPN URL to avoid cross-league mixups.
+async function basementEspnJSON(url){
+ const key='basement.espn.v1.'+url;
+ let error;
+ for(let attempt=0;attempt<2;attempt++){
+  try{
+   const response=await fetch(url,{cache:'no-store'});
+   if(!response.ok)throw Error('ESPN HTTP '+response.status);
+   const data=await response.json();
+   if(!data||typeof data!=='object')throw Error('Invalid ESPN response');
+   try{localStorage.setItem(key,JSON.stringify({at:Date.now(),data}))}catch{}
+   return data;
+  }catch(e){error=e;if(attempt===0)await new Promise(resolve=>setTimeout(resolve,1200))}
+ }
+ try{
+  const cached=JSON.parse(localStorage.getItem(key)||'null');
+  if(cached&&Date.now()-cached.at<48*3600000)return cached.data;
+ }catch{}
+ throw error||Error('ESPN unavailable');
+}
+
 async function loadMyTeams(){
  const now=Date.now(),month=new Date().getMonth();
  let active=favoriteTeams.filter(t=>t.league!=='MLB'||(month>=2&&month<=9));
  if(active.some(t=>t.league==='MLB'))active=active.filter(t=>t.league!=='NHL');
  const results=await Promise.all(active.map(async t=>{
   try{
-   let r=await fetch('https://site.api.espn.com/apis/site/v2/sports/'+t.path+'/teams/'+t.id+'/schedule?limit=300',{cache:'no-store'});
-   if(!r.ok)throw Error('HTTP '+r.status);
-   let j=await r.json();
+   let j=await basementEspnJSON('https://site.api.espn.com/apis/site/v2/sports/'+t.path+'/teams/'+t.id+'/schedule?limit=300');
    let next=(j.events||[]).filter(e=>Date.parse(e.date)>now-1800000).sort((a,b)=>Date.parse(a.date)-Date.parse(b.date))[0];
    if(!next)return teamPlaceholder(t,'Next game not announced');
    let g=readGame(next,t.league,'');
@@ -1110,10 +1131,10 @@ async function sports(){
  const getPart=k=>easternParts.find(p=>p.type===k)?.value||'';
  const dateParam=getPart('year')+getPart('month')+getPart('day');
  let results=await Promise.allSettled(leagues.map(async([league,path,query])=>{
-  let r=await fetch(`https://site.api.espn.com/apis/site/v2/sports/${path}/scoreboard?limit=300&dates=${dateParam}${query}`,{cache:'no-store'});if(!r.ok)throw Error(r.status);
-  let j=await r.json();return (j.events||[]).map(e=>readGame(e,league,query)).filter(Boolean)
+  let j=await basementEspnJSON(`https://site.api.espn.com/apis/site/v2/sports/${path}/scoreboard?limit=300&dates=${dateParam}${query}`);return (j.events||[]).map(e=>readGame(e,league,query)).filter(Boolean)
  }));
  let fresh=results.filter(x=>x.status==='fulfilled').flatMap(x=>x.value);
+ if(results.every(x=>x.status==='rejected')){console.warn('All ESPN scoreboard feeds failed',results.map(x=>String(x.reason)));$('status').textContent='● SPORTS FEED RETRYING';$('status').style.color='#ffab87';return;}
  let byId=new Map();
  for(let g of fresh){let key=g.league+':'+g.id,old=byId.get(key);
   if(!old){byId.set(key,g);continue}
