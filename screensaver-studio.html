@@ -94,9 +94,38 @@ dialog p{color:#c1cdd1}dialog .actions{margin-top:10px}
   text-shadow:0 2px 4px #000a;
  }
 }
-</style><link rel="stylesheet" href="screensaver-studio.css?v=1.5"></head><body>
+</style><link rel="stylesheet" href="screensaver-studio.css?v=1.5"><style id="screensaver-tv-one-screen-v16">
+/* TV landscape: every primary control remains on the same viewport. */
+@media (min-width:700px) and (min-aspect-ratio:4/3){
+html,body{height:100%;overflow:hidden}
+.shell{width:100%!important;max-width:none!important;height:100dvh!important;min-height:0!important;grid-template-rows:minmax(0,auto) minmax(0,1fr) auto!important;gap:clamp(5px,.8vh,12px)!important;padding:clamp(8px,1.3vh,16px) clamp(12px,2vw,34px)!important;overflow:hidden!important}
+.head{min-height:0!important;gap:12px!important}
+.head h1{font-size:clamp(23px,2.5vw,43px)!important;margin:0!important}
+.head .studio-intro{margin:2px 0!important;font-size:clamp(10px,.85vw,14px)!important}
+.studio-top-actions{display:flex;align-items:center;gap:8px;flex:none}
+.studio-top-actions button{padding:clamp(6px,.8vh,12px) clamp(9px,1vw,18px)!important;font-size:clamp(11px,1vw,18px)!important;white-space:nowrap}
+.studio-grid{min-height:0!important;height:100%!important;grid-template-columns:minmax(0,.95fr) minmax(0,1.45fr)!important;gap:clamp(8px,1.1vw,20px)!important}
+.preview{height:100%!important;min-height:0!important}
+.studio-grid>.panel{height:100%!important;min-height:0!important;align-self:stretch!important;overflow:hidden!important;padding:clamp(7px,1vh,15px)!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;gap:clamp(2px,.45vh,7px)!important}
+.panel h2{font-size:clamp(17px,1.6vw,27px)!important;margin:0!important}
+.settings-heading{margin:0!important;min-height:0!important}
+.controls{gap:clamp(3px,.5vh,9px) clamp(7px,.8vw,13px)!important;min-height:0!important}
+.field{gap:2px!important}
+.field label{font-size:clamp(10px,.83vw,15px)!important}
+.field select{padding:clamp(3px,.45vh,7px) 7px!important;font-size:clamp(11px,.95vw,16px)!important;min-height:0!important}
+.collection-groups{margin:0!important;padding:clamp(3px,.5vh,8px)!important;gap:clamp(3px,.5vh,8px)!important}
+.collection-groups legend{font-size:clamp(9px,.7vw,12px)!important}
+.group-chip{min-height:0!important;padding:clamp(3px,.5vh,8px)!important;font-size:clamp(10px,.85vw,15px)!important}
+.mix-summary,.preset-help{font-size:clamp(9px,.73vw,13px)!important;line-height:1.15!important;margin:0!important}
+.toggles{margin:0!important;gap:7px 14px!important}
+.toggle{font-size:clamp(10px,.85vw,15px)!important}
+#managePhotos{padding:clamp(4px,.65vh,10px) 10px!important;font-size:clamp(10px,.85vw,15px)!important;min-height:0!important}
+.studio-footer{min-height:0!important;padding:0!important;margin:0!important;font-size:clamp(10px,.82vw,14px)!important}
+}
+@media(max-width:699px),(max-aspect-ratio:4/3){.studio-top-actions{display:flex;flex-wrap:wrap;gap:8px}}
+</style></head><body>
 <main class="shell" id="studio">
-<header class="head"><div><div class="eyebrow">Ison Home</div><h1>Screensaver Studio</h1><p class="studio-intro">Your memories. Your favorite places. Your kind of music.</p></div><button id="start" class="primary" type="button">▶ Start Screensaver</button></header>
+<header class="head"><div><div class="eyebrow">Ison Home</div><h1>Screensaver Studio</h1><p class="studio-intro">Your memories. Your favorite places. Your kind of music.</p></div><div class="studio-top-actions"><button id="start" class="primary" type="button">▶ Start Screensaver</button><button class="refresh-studio studio-refresh-top" type="button" onclick="location.reload()">↻ Refresh</button></div></header>
 <div class="studio-grid">
 <figure class="preview"><span class="preview-badge">YOUR SCREEN, YOUR MIX</span><img id="previewImage" alt=""><figcaption><div><strong id="previewTitle"></strong><small id="previewArtist" hidden></small></div><button id="previewNext" type="button" aria-label="Preview next slide">Next slide ›</button></figcaption></figure>
 <section class="panel" aria-labelledby="settingsTitle">
@@ -125,7 +154,7 @@ dialog p{color:#c1cdd1}dialog .actions{margin-top:10px}
 <button id="managePhotos" type="button">＋ Add &amp; manage family photos <span>Phone QR &amp; shared gallery ›</span></button>
 </section>
 </div>
-<footer class="studio-footer"><a href="./index-v3822.html?noScreensaver=1#fun-zone">‹ Back to Chris’s Basement</a><span>v1.5 · <button class="refresh-studio" onclick="location.reload()">↻ Refresh</button></span></footer>
+<footer class="studio-footer"><a href="./index-v3822.html?noScreensaver=1#fun-zone">‹ Back to Chris’s Basement</a><span>v1.6</span></footer>
 </main>
 <dialog class="panel" id="photoDialog" aria-labelledby="photoTitle">
 <div class="dialog-head"><h2 id="photoTitle">Manage photos</h2><form method="dialog"><button>Done</button></form></div>
