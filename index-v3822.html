@@ -914,7 +914,7 @@ function baseballLiveDiamond(g){
  const b=(v,cls)=>'<span class="baseball-base '+cls+(v===true?' occupied':'')+'"></span>';
  return '<div class="live-baseball" aria-label="Live baseball situation"><div class="baseball-count"><span>B '+num(d.balls)+'</span><span>S '+num(d.strikes)+'</span><span>O '+num(d.outs)+'</span></div><div class="baseball-diamond">'+b(d.second,'second')+b(d.third,'third')+b(d.first,'first')+'<span class="baseball-home"></span></div><div class="baseball-pitches">PITCHES '+num(d.pitchCount)+'</div></div>';
 }
-const nextGamesHtml=current.map(g=>`<div class="game ${g.fav?'favorite':''}" ${showingMyTeams?`style="--team-watermark:url('${safe(favoriteTeams.find(t=>t.name===g.league)?.logo||g.awayLogo)}')"`:``}><div class="meta"><span>${safe(g.league)} ${g.live?'● LIVE':''}</span><span>${safe(g.status)}</span></div><div class="teams"><span style="min-width:0"><span class="teamline"><img decoding="async" src="${safe(g.awayLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.ar?`<span class="rank">#${g.ar}</span>`:''}${safe(g.away)}${g.awayRecord?`<small class="team-record">(${safe(g.awayRecord)})</small>`:''}</span></span><span class="teamline"><img decoding="async" src="${safe(g.homeLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.hr?`<span class="rank">#${g.hr}</span>`:''}${safe(g.home)}${g.homeRecord?`<small class="team-record">(${safe(g.homeRecord)})</small>`:''}</span></span></span>${footballLiveDrive(g)}${basementFinalFootball(g)}${basketballLivePanel(g)}${hockeyLivePanel(g)}${baseballLiveDiamond(g)}<span class="score">${!g.live&&!g.final?'VS':safe(g.as)+'<br>'+safe(g.hs)}</span></div>${!g.live&&!g.final&&g.id?'<div class="sports-card-odds">'+safe(g.odds||'LINE: Pending  •  O/U: Pending')+'</div>':''}${showingMyTeams&&g.id?'<div class="basement-game-location"><span class="location-city">'+safe(g.venueCity||('Home: '+g.home))+'</span><span class="location-stadium">'+safe(g.venue||'Venue to be announced')+'</span></div>':''}</div>`).join('');
+const nextGamesHtml=current.map(g=>`<div class="game ${g.fav?'favorite':''}" ${showingMyTeams?`style="--team-watermark:url('${safe(favoriteTeams.find(t=>t.name===g.league)?.logo||g.awayLogo)}')"`:``}><div class="meta"><span>${safe(g.league)} ${g.live?'● LIVE':''}</span><span>${safe(g.status)}</span></div><div class="teams"><span style="min-width:0"><span class="teamline"><img decoding="async" src="${safe(g.awayLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.ar?`<span class="rank">#${g.ar}</span>`:''}<span class="team-label">${safe(g.away)}</span>${g.awayRecord?`<small class="team-record">(${safe(g.awayRecord)})</small>`:''}</span></span><span class="teamline"><img decoding="async" src="${safe(g.homeLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.hr?`<span class="rank">#${g.hr}</span>`:''}<span class="team-label">${safe(g.home)}</span>${g.homeRecord?`<small class="team-record">(${safe(g.homeRecord)})</small>`:''}</span></span></span>${footballLiveDrive(g)}${basementFinalFootball(g)}${basketballLivePanel(g)}${hockeyLivePanel(g)}${baseballLiveDiamond(g)}<span class="score">${!g.live&&!g.final?'VS':safe(g.as)+'<br>'+safe(g.hs)}</span></div>${!g.live&&!g.final&&g.id?'<div class="sports-card-odds">'+safe(g.odds||'LINE: Unavailable  •  O/U: Unavailable')+'</div>':''}${showingMyTeams&&g.id?'<div class="basement-game-location"><span class="location-city">'+safe(g.venueCity||('Home: '+g.home))+'</span><span class="location-stadium">'+safe(g.venue||'Venue to be announced')+'</span></div>':''}</div>`).join('');
  // V70: Keep existing game DOM and decoded team logos when visible content is unchanged.
  const gamesNode=$('games');
  // V74 rollback: restore the original Sports Center grid and card sizing.
@@ -993,6 +993,40 @@ const favoriteTeams=[
  {league:'NHL',path:'hockey/nhl',id:'29',name:'Columbus Blue Jackets',logo:'https://a.espncdn.com/i/teamlogos/nhl/500/cbj.png'},
  {league:'NBA',path:'basketball/nba',id:'5',name:'Cleveland Cavaliers',logo:'https://a.espncdn.com/i/teamlogos/nba/500/cle.png'}
 ];
+// Shared odds normalization for scoreboards and event summaries.
+function publishedOdds(data){
+ const asList=x=>Array.isArray(x)?x:x&&typeof x==='object'?[x]:[];
+ const candidates=[...asList(data?.pickcenter),...asList(data?.odds),...asList(data?.header?.competitions?.[0]?.odds),...asList(data?.competitions?.[0]?.odds)];
+ const value=x=>{if(x==null||x==='')return null;if(typeof x==='object')return value(x.displayValue??x.value);return typeof x==='number'||typeof x==='string'?String(x):null};
+ for(const o of candidates){
+  const line=value(o.details)??value(o.pointSpread?.home?.close?.line)??value(o.spread);
+  const total=value(o.overUnder)??value(o.over_under)??value(o.total?.over?.close?.line);
+  if(line!==null||total!==null)return 'LINE: '+(line??'Unavailable')+' • O/U: '+(total===null?'Unavailable':total.replace(/^[ou]\s*/i,''));
+ }
+ return '';
+}
+const favoriteOddsRequests=new Map();
+async function datedFavoriteOdds(g,path){
+ if(!g.id||!Number.isFinite(g.date))return '';
+ const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date(g.date));
+ const date=['year','month','day'].map(k=>parts.find(p=>p.type===k).value).join('');
+ const key=path+':'+date;let entry=favoriteOddsRequests.get(key);
+ if(!entry||Date.now()-entry.at>300000){
+  entry={at:Date.now(),promise:fetch('https://site.api.espn.com/apis/site/v2/sports/'+path+'/scoreboard?dates='+date+'&limit=500',{cache:'no-store',signal:AbortSignal.timeout(10000)}).then(r=>{if(!r.ok)throw Error(r.status);return r.json()})};
+  favoriteOddsRequests.set(key,entry);
+ }
+ try{const data=await entry.promise;return publishedOdds((data.events||[]).find(e=>String(e.id)===String(g.id)))}catch{favoriteOddsRequests.delete(key);return ''}
+}
+async function refreshFavoriteOdds(g,path){
+ const existing=games.find(x=>x.id&&String(x.id)===String(g.id)&&x.odds);
+ if(existing)g.odds=existing.odds;
+ try{
+  const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/'+path+'/summary?event='+encodeURIComponent(g.id),{cache:'no-store',signal:AbortSignal.timeout(10000)});
+  if(r.ok){const line=publishedOdds(await r.json());if(line)g.odds=line;}
+ }catch{}
+ if(!g.odds||/Pending|Unavailable|—/i.test(g.odds)){const line=await datedFavoriteOdds(g,path);if(line)g.odds=line;}
+}
+
 function teamPlaceholder(t,label){return {id:'',league:t.name,away:t.name,home:label,awayLogo:t.logo,homeLogo:'',as:'',hs:'',ar:0,hr:0,odds:'',status:label,live:false,final:false,date:0,fav:true}}
 
 // ESPN resilient transport: short retry, last-good local cache, and offline fallback.
@@ -1071,25 +1105,8 @@ async function loadMyTeams(){
  for(const g of results){const match=games.find(x=>x.id&&x.id===g.id&&x.odds);if(match)g.odds=match.odds;}
  myTeams=results;display();updateGameDay();
  await Promise.all(myTeams.filter(g=>g.id).map(async g=>{
-  try{
-   const path=favoriteTeams.find(t=>t.name===g.league)?.path;
-   if(!path)return;
-   const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/'+path+'/summary?event='+encodeURIComponent(g.id),{cache:'no-store'});
-   if(!r.ok)return;
-   const j=await r.json();
-   const od=j.pickcenter?.[0]||j.header?.competitions?.[0]?.odds?.[0];
-   const spread=od?.details||od?.spread,ou=od?.overUnder;
-   if(spread!=null||ou!=null)g.odds='LINE: '+(spread??'Pending')+' • O/U: '+(ou??'Pending');
-   // ESPN's event summary often omits odds even when the dated scoreboard has them.
-   if(!g.odds&&g.date){
-    const date=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(g.date)).replace(/\D/g,'');
-    const score=await basementEspnJSON('https://site.api.espn.com/apis/site/v2/sports/'+path+'/scoreboard?dates='+date+'&limit=300');
-    const event=(score.events||[]).find(e=>String(e.id)===String(g.id));
-    const entry=event?.competitions?.[0]?.odds?.[0];
-    const line=entry?.details??entry?.spread,total=entry?.overUnder;
-    if(line!=null||total!=null)g.odds='LINE: '+(line??'Pending')+' • O/U: '+(total??'Pending');
-   }
-  }catch(e){console.warn('Odds fallback',g.league,e)}
+  const path=favoriteTeams.find(t=>t.name===g.league)?.path;
+  if(path)await refreshFavoriteOdds(g,path);
  }));
  display();
 }
@@ -1361,11 +1378,8 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
      const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/'+paths[g.league]+'/summary?event='+encodeURIComponent(g.id),{cache:'no-store'});
      if(!r.ok)return;
      const j=await r.json();
-     const options=[...(Array.isArray(j.pickcenter)?j.pickcenter:[]),...(Array.isArray(j.odds)?j.odds:[]),...(j.header?.competitions?.[0]?.odds||[])];
-     const o=options.find(x=>x&&(x.details!=null||x.spread!=null||x.overUnder!=null||x.over_under!=null));
-     if(!o)return;
-     const spread=o.details??o.spread??'—',total=o.overUnder??o.over_under??'—';
-     g.odds='LINE: '+spread+' • O/U: '+total;
+     const line=publishedOdds(j);if(!line)return;
+     g.odds=line;
      for(const match of lineUpcoming){if(match.id===g.id&&match.league===g.league)match.odds=g.odds;}
      for(const match of myTeams){if(String(match.id)===String(g.id))match.odds=g.odds;}
     }));
@@ -3207,5 +3221,11 @@ header .header-right #overnightScreensaverToggle{
  text-overflow:clip!important;
 }
 header .header-right #overnightScreensaverToggle{font-size:clamp(9px,.72vw,13px)!important}
+</style><style id="sports-records-adjacent-20261114">
+/* Reserve room for the record; only the team label may truncate. */
+#games .game .teamline{min-width:0!important;width:100%!important}
+#games .game .teamname{display:flex!important;align-items:baseline!important;gap:.28em!important;min-width:0!important;max-width:100%!important;flex:1!important;white-space:nowrap!important}
+#games .game .teamname .team-label{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;flex:0 1 auto!important}
+#games .game .teamname .team-record,#games .game .teamname .garage-record{display:inline!important;position:static!important;float:none!important;flex:0 0 auto!important;margin:0!important;white-space:nowrap!important;font-size:.65em!important;line-height:1.1!important;color:#dcecff!important}
 </style></body></html>
 <!-- Redeploy V66: restart stalled GitHub Pages build. -->
