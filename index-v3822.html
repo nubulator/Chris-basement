@@ -1015,11 +1015,19 @@ async function datedFavoriteOdds(g,path){
   entry={at:Date.now(),promise:fetch('https://site.api.espn.com/apis/site/v2/sports/'+path+'/scoreboard?dates='+date+'&limit=500',{cache:'no-store',signal:AbortSignal.timeout(10000)}).then(r=>{if(!r.ok)throw Error(r.status);return r.json()})};
   favoriteOddsRequests.set(key,entry);
  }
- try{const data=await entry.promise;return publishedOdds((data.events||[]).find(e=>String(e.id)===String(g.id)))}catch{favoriteOddsRequests.delete(key);return ''}
+ try{const data=await entry.promise,event=(data.events||[]).find(e=>String(e.id)===String(g.id));
+  for(const side of ['away','home']){
+   const c=event?.competitions?.[0]?.competitors?.find(x=>x.homeAway===side);
+   const records=c?.records||c?.record||[];
+   const list=Array.isArray(records)?records:[records];
+   const record=(list.find(x=>x.type==='total'||x.name==='overall')||list[0])?.summary;
+   if(record)g[side+'Record']=record;
+  }
+  return publishedOdds(event)}catch{favoriteOddsRequests.delete(key);return ''}
 }
 async function refreshFavoriteOdds(g,path){
  const existing=games.find(x=>x.id&&String(x.id)===String(g.id)&&x.odds);
- if(existing)g.odds=existing.odds;
+ if(existing){g.odds=existing.odds;g.awayRecord=g.awayRecord||existing.awayRecord;g.homeRecord=g.homeRecord||existing.homeRecord;}
  try{
   const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/'+path+'/summary?event='+encodeURIComponent(g.id),{cache:'no-store',signal:AbortSignal.timeout(10000)});
   if(r.ok){
@@ -1035,7 +1043,7 @@ async function refreshFavoriteOdds(g,path){
    }
   }
  }catch{}
- if(!g.odds||/Pending|Unavailable|—/i.test(g.odds)){const line=await datedFavoriteOdds(g,path);if(line)g.odds=line;}
+ if(!g.awayRecord||!g.homeRecord||!g.odds||/Pending|Unavailable|—/i.test(g.odds)){const line=await datedFavoriteOdds(g,path);if(line)g.odds=line;}
 }
 
 function teamPlaceholder(t,label){return {id:'',league:t.name,away:t.name,home:label,awayLogo:t.logo,homeLogo:'',as:'',hs:'',ar:0,hr:0,odds:'',status:label,live:false,final:false,date:0,fav:true}}
