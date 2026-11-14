@@ -1067,6 +1067,8 @@ async function loadMyTeams(){
    return g;
   }catch(e){console.warn('Team schedule',t.name,e);return teamPlaceholder(t,'Schedule unavailable')}
  }));
+ // Reuse published scoreboard lines for matching favorite-team events.
+ for(const g of results){const match=games.find(x=>x.id&&x.id===g.id&&x.odds);if(match)g.odds=match.odds;}
  myTeams=results;display();updateGameDay();
  await Promise.all(myTeams.filter(g=>g.id).map(async g=>{
   try{
@@ -1077,7 +1079,16 @@ async function loadMyTeams(){
    const j=await r.json();
    const od=j.pickcenter?.[0]||j.header?.competitions?.[0]?.odds?.[0];
    const spread=od?.details||od?.spread,ou=od?.overUnder;
-   if(spread!=null||ou!=null)g.odds='LINE: '+(spread??'Unavailable')+' • O/U: '+(ou??'Unavailable');
+   if(spread!=null||ou!=null)g.odds='LINE: '+(spread??'Pending')+' • O/U: '+(ou??'Pending');
+   // ESPN's event summary often omits odds even when the dated scoreboard has them.
+   if(!g.odds&&g.date){
+    const date=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(g.date)).replace(/\D/g,'');
+    const score=await basementEspnJSON('https://site.api.espn.com/apis/site/v2/sports/'+path+'/scoreboard?dates='+date+'&limit=300');
+    const event=(score.events||[]).find(e=>String(e.id)===String(g.id));
+    const entry=event?.competitions?.[0]?.odds?.[0];
+    const line=entry?.details??entry?.spread,total=entry?.overUnder;
+    if(line!=null||total!=null)g.odds='LINE: '+(line??'Pending')+' • O/U: '+(total??'Pending');
+   }
   }catch(e){console.warn('Odds fallback',g.league,e)}
  }));
  display();
