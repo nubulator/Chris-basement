@@ -1,0 +1,74 @@
+/* Last Call V2.7: each landing gets the entire play stage. */
+.gr-last-call #wheelStage[hidden],.gr-last-call #wheelActions[hidden],.gr-last-call #revealIdentity[hidden],.gr-last-call #revealActions[hidden],.gr-last-call #revealFooter[hidden],.gr-last-call #anotherTruth[hidden],.gr-last-call #passTruth[hidden],.gr-last-call #nextChallenge[hidden]{display:none!important}
+.gr-last-call #rouletteLayout.is-revealing{grid-template-columns:minmax(0,1fr)}
+.gr-last-call #rouletteLayout.is-revealing>aside{display:none}
+.gr-last-call #rouletteStage.reveal-mode{display:block;padding:0;overflow:hidden;background:#101222;border:1px solid #ffffff45;min-height:0;box-shadow:0 16px 60px #0006}
+.gr-last-call .reveal-mode #resultCard{--scene-accent:#ffd78c;--scene-glow:#eaa83855;--scene-base:#24152b;position:relative;isolation:isolate;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;width:100%;height:100%;min-height:0;margin:0;padding:clamp(22px,4vh,48px) clamp(24px,5vw,100px);overflow-y:auto;border:0;border-radius:15px;color:#fff;background:radial-gradient(ellipse at 50% -20%,var(--scene-glow),transparent 65%),linear-gradient(150deg,var(--scene-base),#090d1e);animation:roulette-scene-in .45s ease-out}
+.gr-last-call .reveal-mode #resultCard:before,.gr-last-call .reveal-mode #resultCard:after{content:"";position:absolute;z-index:-1;inset:0;pointer-events:none}
+.gr-last-call .reveal-mode #resultCard:before{background:radial-gradient(circle at 10% 22%,var(--scene-accent) 1px,transparent 2px),radial-gradient(circle at 90% 75%,var(--scene-accent) 1px,transparent 2px);background-size:95px 120px,160px 130px;opacity:.25}
+.gr-last-call .reveal-mode #resultCard:after{inset:14px;border:1px solid var(--scene-accent);border-radius:9px;opacity:.22}
+.gr-last-call .reveal-mode #revealIdentity{display:flex;flex-direction:column;align-items:center;gap:10px}
+.gr-last-call .reveal-mode #revealKicker{font:800 clamp(11px,1.2vw,17px)/1.4 system-ui,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--scene-accent);margin:0}
+.gr-last-call .reveal-mode #revealIcon{font:900 clamp(48px,8vh,100px)/1 system-ui,sans-serif;text-shadow:0 0 30px var(--scene-glow);min-height:1em;filter:drop-shadow(0 8px 20px #0004)}
+.gr-last-call .reveal-mode #resultTitle{font:900 clamp(32px,4.8vw,76px)/1.04 system-ui,sans-serif;letter-spacing:-.035em;color:#fff;text-shadow:0 4px 25px #0006;margin:0;max-width:100%;overflow-wrap:anywhere}
+.gr-last-call .reveal-mode #resultText{display:inline-block;font:700 clamp(15px,1.6vw,24px)/1.35 system-ui,sans-serif;color:var(--scene-accent);margin:0;max-width:100%;overflow-wrap:anywhere}
+.gr-last-call .reveal-mode #challenge{font:700 clamp(22px,2.8vw,43px)/1.25 system-ui,sans-serif;max-width:1120px;white-space:pre-line;overflow-wrap:anywhere;color:#fffaf5;margin:10px 0 4px;text-wrap:pretty}
+.gr-last-call .reveal-mode #revealFooter{font:650 clamp(11px,1.2vw,16px)/1.4 system-ui,sans-serif;color:#ded8eb;letter-spacing:.035em;margin:8px 0 0}
+.gr-last-call .reveal-mode #revealActions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:6px 0 0}
+.gr-last-call .reveal-mode #revealActions button,.gr-last-call .reveal-mode #revealAnswer,.gr-last-call .reveal-mode #nextChallenge,.gr-last-call .reveal-mode .challenge-picker button{font:800 clamp(13px,1.2vw,18px)/1.2 system-ui,sans-serif;min-height:48px;padding:12px 22px;border-radius:10px;background:var(--scene-accent);color:#151626;border:1px solid var(--scene-accent);box-shadow:0 8px 24px #0003}
+.gr-last-call .reveal-mode #revealActions button.secondary{background:#070e2499;color:#fff;border-color:#ffffff55}
+.gr-last-call .reveal-mode #revealAnswer,.gr-last-call .reveal-mode #nextChallenge{margin:0}
+.gr-last-call .reveal-mode .challenge-picker{margin:0;gap:12px;width:min(100%,660px)}
+.gr-last-call .reveal-mode #challengeTimer{position:absolute;top:28px;right:28px;bottom:auto;left:auto;min-width:120px;padding:14px 18px;font:900 clamp(28px,3.2vw,50px)/1 system-ui,sans-serif;color:var(--scene-accent);background:#090b228c;border:1px solid var(--scene-accent);border-radius:14px;box-shadow:0 0 30px var(--scene-glow)}
+.gr-last-call .reveal-mode #challengeTimer.preparing{font-size:clamp(20px,2.5vw,36px)}
+.gr-last-call .reveal-mode #challengeTimer.expired{font-size:clamp(17px,2vw,30px);background:#74243e;color:#fff;border-color:#ffb1be}
+/* Villa: neon heart, sunset pink, pool blue and palm silhouettes. */
+.gr-last-call .reveal-mode #resultCard[data-theme=villa]{--scene-accent:#ffe361;--scene-glow:#ff3d9c80;--scene-base:#6a1c68;background:radial-gradient(ellipse at 12% 85%,#16d8db55,transparent 50%),radial-gradient(ellipse at 85% 0,#ff479a88,transparent 60%),linear-gradient(135deg,#431250,#102b4e)}
+.gr-last-call .reveal-mode #resultCard[data-theme=villa]:before{opacity:.36;background:linear-gradient(0deg,#36d9cf33,transparent 26%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'%3E%3Cg fill='%23091b36'%3E%3Cpath d='M80 800Q200 450 100 230L123 220Q250 480 150 800Z M114 240Q-80 190 0 140Q40 130 114 225Q-20 25 75 75Q118 100 119 219Q175 30 221 105Q215 152 126 226Q340 130 301 200Q220 224 125 239Q280 230 276 300Q201 279 122 247Q50 360 3 317Q25 275 114 240Z'/%3E%3Cg transform='translate(1200 0) scale(-1 1)'%3E%3Cpath d='M80 800Q200 450 100 230L123 220Q250 480 150 800Z M114 240Q-80 190 0 140Q40 130 114 225Q-20 25 75 75Q118 100 119 219Q175 30 221 105Q215 152 126 226Q340 130 301 200Q220 224 125 239Q280 230 276 300Q201 279 122 247Q50 360 3 317Q25 275 114 240Z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") center/cover no-repeat}
+.gr-last-call .reveal-mode [data-theme=villa] #revealIcon{color:#ffb6e5;text-shadow:0 0 3px #fff,0 0 14px #ff35c2,0 0 50px #ff35c2;font-size:clamp(70px,11vh,130px);font-weight:400;line-height:.8}
+.gr-last-call .reveal-mode [data-theme=villa] #resultTitle{font-family:Georgia,serif;font-style:italic;font-weight:700;text-shadow:0 0 28px #ff3d9c88}
+/* Concert stage: crossing light beams, electric purple and a gold headliner. */
+.gr-last-call .reveal-mode #resultCard[data-theme=rockstar]{--scene-accent:#f7db7c;--scene-glow:#9943ff99;--scene-base:#321664}
+.gr-last-call .reveal-mode #resultCard[data-theme=rockstar]:before{opacity:1;background:conic-gradient(from 155deg at 12% 0,transparent 0deg,#56e7ff2d 10deg,transparent 25deg),conic-gradient(from 180deg at 88% 0,transparent 0deg,#ff62d239 13deg,transparent 30deg),linear-gradient(0deg,#090d1e,transparent 40%)}
+.gr-last-call .reveal-mode [data-theme=rockstar] #resultTitle{letter-spacing:.06em;text-shadow:0 0 25px #aa56ff}
+.gr-last-call .reveal-mode #resultCard[data-theme=gameover]{--scene-accent:#ff8d99;--scene-glow:#ff174b88;--scene-base:#490c25}
+.gr-last-call .reveal-mode #resultCard[data-theme=gameover]:after{inset:0;border:0;border-radius:0;opacity:.55;background:repeating-linear-gradient(135deg,transparent 0 16px,#ff2f532e 16px 32px);mask-image:linear-gradient(90deg,#000,transparent 12%,transparent 88%,#000)}
+.gr-last-call .reveal-mode [data-theme=gameover] #resultTitle{color:#ffb9bc;letter-spacing:.08em;text-shadow:0 0 35px #ff275c77}
+.gr-last-call .reveal-mode [data-theme=gameover] #resultText{font-size:clamp(23px,3vw,46px);color:#fff}
+.gr-last-call .reveal-mode #resultCard[data-theme=twister]{--scene-accent:#ffc78d;--scene-glow:#ff6a5080;--scene-base:#502247}
+.gr-last-call .reveal-mode #resultCard[data-theme=give]{--scene-accent:#ffe497;--scene-glow:#f5a83a77;--scene-base:#44302b}
+.gr-last-call .reveal-mode #resultCard[data-theme=swap]{--scene-accent:#a2fff1;--scene-glow:#10ccca66;--scene-base:#133954}
+.gr-last-call .reveal-mode #resultCard[data-theme=cheers]{--scene-accent:#ffe59a;--scene-glow:#ddac4377;--scene-base:#3e2350}
+.gr-last-call .reveal-mode #resultCard[data-theme=trivia]{--scene-accent:#9fddff;--scene-glow:#1685f988;--scene-base:#112e65}
+.gr-last-call .reveal-mode [data-theme=trivia] #challenge{font-size:clamp(21px,2.3vw,35px)}
+.gr-last-call .reveal-mode #resultCard[data-theme=sip]{--scene-accent:#94eee6;--scene-glow:#11b9ce66;--scene-base:#154258}
+.gr-last-call .reveal-mode #resultCard[data-theme=choose]{--scene-accent:#ecc0ff;--scene-glow:#c151e877;--scene-base:#47245e}
+.gr-last-call .reveal-mode #resultCard[data-theme=categories]{--scene-accent:#a8f5c5;--scene-glow:#2bd39166;--scene-base:#124a40}
+.gr-last-call .reveal-mode #resultCard[data-theme=duel]{--scene-accent:#ffbb89;--scene-glow:#fa694d77;--scene-base:#4d233d}
+.gr-last-call .reveal-mode [data-theme=duel] #revealIcon{font-style:italic;letter-spacing:-.08em}
+.gr-last-call .reveal-mode #resultCard[data-theme=escape]{--scene-accent:#c7f29d;--scene-glow:#75bf4d66;--scene-base:#253f36}
+@keyframes roulette-scene-in{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+@media(min-width:900px) and (max-height:800px){
+ .gr-last-call .reveal-mode #resultCard{gap:8px;padding:22px 56px}
+ .gr-last-call .reveal-mode #revealIcon{font-size:50px}
+ .gr-last-call .reveal-mode [data-theme=villa] #revealIcon{font-size:65px}
+ .gr-last-call .reveal-mode #resultTitle{font-size:46px}
+ .gr-last-call .reveal-mode #challenge{font-size:30px;margin:6px 0}
+ .gr-last-call .reveal-mode [data-theme=trivia] #challenge{font-size:25px}
+ .gr-last-call .reveal-mode #challengeTimer{top:22px;right:24px;min-width:104px;font-size:36px}
+ .gr-last-call .reveal-mode #challengeTimer.preparing{font-size:25px}
+ .gr-last-call .reveal-mode #challengeTimer.expired{font-size:23px}
+}
+@media(max-width:899px){
+ .gr-last-call #rouletteStage.reveal-mode{min-height:65vh}
+ .gr-last-call .reveal-mode #resultCard{height:auto;min-height:65vh;padding:30px 24px;gap:14px;overflow:visible}
+ .gr-last-call .reveal-mode #resultTitle{font-size:clamp(30px,7vw,50px)}
+ .gr-last-call .reveal-mode #revealIcon{font-size:58px}
+ .gr-last-call .reveal-mode #challenge{font-size:25px}
+ .gr-last-call .reveal-mode #challengeTimer{position:static;min-width:116px;font-size:38px;order:1}
+ .gr-last-call .reveal-mode #revealFooter{order:2}
+ .gr-last-call .reveal-mode #revealActions{order:3;width:100%}
+ .gr-last-call .reveal-mode #revealActions button{flex:1 1 150px}
+ .gr-last-call .reveal-mode #resultCard:after{inset:8px}
+}
+@media(prefers-reduced-motion:reduce){.gr-last-call .reveal-mode #resultCard{animation:none}}
