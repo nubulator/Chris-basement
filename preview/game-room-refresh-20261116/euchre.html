@@ -1,0 +1,178 @@
+<!doctype html><html lang="en"><head><meta name="robots" content="noindex,nofollow"><meta http-equiv="Content-Security-Policy" content="connect-src 'none'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:"><script>(()=>{const prefix='game-room-qa-20261116:';for(const name of ['getItem','setItem','removeItem']){const fn=Storage.prototype[name];Storage.prototype[name]=function(key,...args){return fn.call(this,prefix+key,...args)}}})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Gehrig / Ison Euchre Night</title><style>
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#263349,#0c111d 75%);color:#f5f5ef;font:16px system-ui,Arial,sans-serif}main{max-width:1100px;margin:auto;padding:20px}a{color:#f9cc79}h1{text-align:center;color:#ffcf77;font-size:clamp(30px,5vw,56px);margin:15px 0 4px;text-shadow:0 0 17px #9c5d29}h2{color:#ffd48b;margin:0 0 16px;font-size:23px}.subtitle{text-align:center;color:#b5c8db;margin:0 0 22px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.panel{background:#182236;border:1px solid #405574;border-radius:16px;padding:20px;margin:16px 0;box-shadow:0 10px 30px #0003}.teams{display:grid;grid-template-columns:1fr 1fr;gap:16px}.team{padding:20px;text-align:center;border-radius:14px;background:#111a2a;border:2px solid #4f8bd1}.team:nth-child(2){border-color:#dd7285}.team .score{font-size:clamp(48px,8vw,90px);font-weight:900;color:#ffd17b}.team strong{font-size:clamp(17px,3vw,25px)}.muted{color:#afbed2;font-size:14px}.formgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}label{display:block;color:#c6d3e4;font-weight:700;font-size:14px}input,textarea,select{display:block;width:100%;margin-top:7px;background:#0e1727;color:white;border:1px solid #647994;border-radius:8px;padding:13px;font:inherit}textarea{resize:vertical;min-height:55px}.wide{grid-column:1/-1}button{cursor:pointer;border:1px solid #e3ad62;background:#f2b65e;color:#182034;border-radius:9px;padding:12px 16px;font-size:15px;font-weight:800}button.secondary{background:#26364e;color:white;border-color:#7089ab}button.danger{background:#582e3b;color:#fff;border-color:#a65a68}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}table{width:100%;border-collapse:collapse}th,td{padding:12px 9px;text-align:left;border-bottom:1px solid #3a4b64}th{color:#aebfdb;font-size:13px}td button{padding:7px 10px;margin:2px;font-size:12px}.tablewrap{overflow-x:auto}.winner{color:#ffd17b;font-weight:800}.notice{color:#cbd8e8;font-size:13px;line-height:1.5}.champ{padding:12px;border:1px solid #455d78;border-radius:10px;margin:8px 0}.empty{color:#b5c3d6;text-align:center;padding:18px}.pill{color:#e9bd78;font-weight:700}.bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}#status{min-height:22px;color:#bde5c7;font-size:14px}@media(max-width:650px){.formgrid{grid-template-columns:1fr 1fr}.teams{gap:8px}.team{padding:13px}.panel{padding:14px}th,td{padding:8px 5px;font-size:13px}}
+
+/* V1.1 Travel Championship theme */
+body{background:radial-gradient(ellipse at 75% 0%,#12495c 0%,transparent 48%),radial-gradient(ellipse at 8% 35%,#3a294a 0%,transparent 48%),#081523;background-attachment:fixed}
+main{max-width:1160px}
+.travel-hero{position:relative;overflow:hidden;border:2px solid #d7ae66;border-radius:22px;margin:14px 0 20px;padding:28px 20px 25px;text-align:center;background:linear-gradient(110deg,rgba(9,24,40,.92),rgba(17,55,70,.8)),repeating-linear-gradient(30deg,transparent 0 36px,#fff1 37px 38px,transparent 39px 74px);box-shadow:0 0 0 5px #d9a35c17,0 12px 36px #0008}
+.travel-hero:before{content:"✈";position:absolute;left:4%;top:7%;font-size:clamp(40px,7vw,88px);color:#b9e7e6;transform:rotate(-25deg);opacity:.55}
+.travel-hero:after{content:"♠ ♥ ♣ ♦";position:absolute;right:3%;bottom:6%;font-size:clamp(19px,3vw,36px);letter-spacing:6px;color:#ffcf7d;opacity:.7;transform:rotate(-10deg)}
+.hero-kicker{font-size:clamp(12px,1.6vw,18px);font-weight:900;letter-spacing:.24em;color:#9fe3e0}
+.travel-hero h1{margin:10px auto 4px;font-size:clamp(28px,4.8vw,56px);max-width:850px;line-height:1.13}
+.travel-hero .subtitle{margin:8px 0;color:#f2d29b;font-size:clamp(16px,2vw,23px);font-weight:800}
+.flightpath{margin:12px auto;max-width:550px;display:flex;align-items:center;gap:12px;color:#ffdf9f;font-weight:800;font-size:clamp(12px,1.6vw,17px)}
+.flightpath:before,.flightpath:after{content:"";height:2px;flex:1;border-top:2px dashed #9bd6d7}
+.travel-stamps{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:17px}
+.stamp{border:2px dashed #e9c688;border-radius:50%;width:105px;height:105px;display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-12deg);background:#122b3caa;color:#f8da9e;box-shadow:inset 0 0 0 4px #e9c68822}
+.stamp:nth-child(2){transform:rotate(10deg);border-color:#8dd7d7;color:#b1e9e8}.stamp:nth-child(3){transform:rotate(-7deg);border-color:#e5a2a4;color:#ffced1}
+.stamp b{font-size:27px}.stamp small{font-size:10px;letter-spacing:.07em;font-weight:900;text-align:center}
+.panel{background:linear-gradient(145deg,#1a3040,#141e32);border-color:#8b745b;box-shadow:0 9px 25px #0005}
+.panel h2:before{content:"✦ ";color:#6dd2cf}
+.team{position:relative;overflow:hidden;background:linear-gradient(145deg,#143b50,#101c30);box-shadow:inset 0 0 22px #77c2d20d}
+.team:nth-child(2){background:linear-gradient(145deg,#4b2940,#171e31)}
+.team:before{content:"♠";position:absolute;right:10px;top:-25px;font-size:130px;opacity:.06;pointer-events:none}
+.team:nth-child(2):before{content:"♥"}
+.team .score{text-shadow:0 0 25px #e6b66344}
+.travel-prize{margin-top:18px;padding:16px;border-radius:13px;border:1px dashed #e2bb7d;background:linear-gradient(90deg,#5c432a66,#18445466);display:flex;gap:15px;align-items:center;justify-content:center;text-align:left}
+.travel-prize .icon{font-size:43px}.travel-prize strong{color:#ffda91;font-size:clamp(17px,2vw,22px)}.travel-prize p{margin:4px 0;color:#c7d8e2}
+.champ{background:linear-gradient(90deg,#61472a66,#19435777);border-color:#b89a62}
+@media(max-width:650px){.travel-hero{padding:22px 12px}.travel-hero:before{opacity:.25}.travel-hero:after{opacity:.25}.stamp{width:78px;height:78px}.stamp b{font-size:21px}.stamp small{font-size:8px}.travel-prize{text-align:center;flex-direction:column;gap:5px}.travel-prize .icon{font-size:34px}}
+.version-tag{display:inline-flex;align-items:center;gap:8px;border:1px solid #d9b474;border-radius:999px;padding:7px 13px;background:#152d3d;color:#ffe0a5;font-size:13px;font-weight:900;letter-spacing:.06em;white-space:nowrap}.version-tag small{font-size:11px;color:#9fced1}.top{align-items:center}.top a{font-weight:800}@media(max-width:550px){.version-tag{order:3;margin:auto}}.game-refresh{border:2px solid #e6c27c;border-radius:10px;background:#614331;color:#fff2d4;padding:10px 14px;min-height:44px;font-weight:900;cursor:pointer}.game-refresh:focus-visible{outline:4px solid #ffe3a0;outline-offset:2px}.top{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap}/* V1.8 Fire TV single-screen tabbed scoreboard */.travel-hero:before,.travel-hero:after{display:none}.travel-hero{padding:clamp(9px,1.5vh,16px) 18px;margin:clamp(6px,1vh,12px) 0;border-radius:16px}.travel-hero h1{font-size:clamp(24px,3.2vw,43px);margin:3px auto;line-height:1.1}.travel-hero .subtitle{font-size:clamp(13px,1.5vw,18px);margin:3px}.hero-kicker{font-size:clamp(11px,1.2vw,15px)}.flightpath{margin:5px auto;font-size:clamp(11px,1.1vw,14px)}.travel-stamps{margin-top:6px;gap:16px}.stamp{width:60px;height:60px;transform:none!important}.stamp b{font-size:20px;line-height:1}.stamp small{font-size:8px;line-height:1.1}.top{display:grid;grid-template-columns:1fr auto 1fr auto;gap:10px;align-items:center}.top a:nth-of-type(2){justify-self:end}.top a{font-size:clamp(12px,1.1vw,16px)}.euchre-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin:9px 0}.euchre-tabs button{padding:10px 5px;font-size:clamp(11px,1.15vw,15px);border:2px solid #79b8d4;background:#18334c;color:#d5eafa;white-space:normal;min-height:44px}.euchre-tabs button.active{background:linear-gradient(#f6cf86,#bd8645);border-color:#ffe4a6;color:#182536;box-shadow:0 0 13px #ffc66a66}.tab-panel[hidden]{display:none!important}.panel.tab-panel{margin:9px 0;padding:clamp(12px,1.8vh,20px)}.team{padding:clamp(8px,1.5vh,17px)}.team .score{font-size:clamp(38px,6vh,64px)}.travel-prize{margin-top:9px;padding:10px}.travel-prize .icon{font-size:28px}.travel-prize strong{font-size:16px}.travel-prize p{font-size:13px}#lead{margin:8px 0}.panel h2{margin-bottom:10px}main{max-width:1400px;padding:clamp(7px,1vh,14px) clamp(10px,2vw,26px)}@media(min-width:800px) and (min-height:500px){main{height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direction:column}.top,.travel-hero,.euchre-tabs{flex:none}.tab-panel{flex:1;min-height:0;overflow:auto}.travel-hero{flex:none}}@media(max-width:760px){.top{grid-template-columns:1fr 1fr}.euchre-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}.travel-stamps{gap:9px}.travel-hero h1{font-size:27px}}.traffic-cone{display:inline-block;font-size:clamp(16px,1.8vw,24px);line-height:1;vertical-align:middle;margin-right:5px;filter:drop-shadow(0 0 5px #ff9d32)}.version-tag{white-space:nowrap}
+/* V1.9: keep cloud controls with backups; remove always-visible bottom panel */
+#backupPanel{display:flex;flex-direction:column;gap:12px}#backupPanel[hidden]{display:none!important}#cloudSyncPanel{width:100%;max-width:none!important;margin:2px 0 0!important;flex:none}#cloudSyncPanel .actions{margin-top:6px}#cloudSyncPanel small{display:block;margin-top:8px;line-height:1.45;color:#c8d7e8}#backupPanel>.actions{margin-top:0}#backupPanel>.notice{margin:0}@media(min-width:800px){#backupPanel{overflow-y:auto}}
+
+/* V2.0: compact backup layout and Euchre winner banter */
+.euchre-quip{margin:4px auto 10px;padding:10px 14px;max-width:760px;text-align:center;border:1px solid #f2c4788a;border-radius:10px;background:linear-gradient(90deg,#153f68,#214a72);color:#ffe2a1;font-weight:800;font-size:clamp(13px,1.45vw,19px)}
+#backupPanel{gap:8px!important;padding:clamp(12px,1.5vh,18px)!important;justify-content:flex-start}#backupPanel h2{margin:0 0 2px!important}#backupPanel .notice{font-size:clamp(12px,1.05vw,15px);line-height:1.3}#backupPanel>.actions{display:grid;grid-template-columns:minmax(150px,220px) minmax(220px,340px);gap:12px;align-items:end}#backupPanel>.actions button{height:47px}#backupPanel>.actions label{max-width:none!important}#backupPanel>.actions input{padding:8px;margin-top:5px;font-size:13px}#cloudSyncPanel{padding:12px 14px!important;border-radius:12px!important;display:grid;grid-template-columns:1fr auto;gap:7px 14px;align-items:center}#cloudSyncPanel>strong{font-size:17px}#cloudSyncStatus{font-size:13px}#cloudSyncPanel>div{grid-column:1/-1;margin-top:0!important;display:flex;gap:10px!important}#cloudSyncPanel button{font-size:13px;padding:10px 13px!important;min-height:42px}#cloudSyncPanel>small{grid-column:1/-1;margin-top:0!important;font-size:12px;line-height:1.3!important}@media(max-width:700px){#backupPanel>.actions{grid-template-columns:1fr}#cloudSyncPanel{grid-template-columns:1fr}#cloudSyncPanel>div{flex-direction:column}}
+
+/* V2.2: prevent stamp captions from colliding with circular borders */
+.travel-stamps{gap:clamp(12px,2vw,25px);align-items:center;margin-top:9px}
+.travel-stamps .stamp{box-sizing:border-box;flex:0 0 78px;width:78px;height:78px;min-width:78px;min-height:78px;padding:8px 7px 9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;overflow:hidden;transform:none!important}
+.travel-stamps .stamp b{display:block;flex:none;font-size:20px;line-height:1.05}
+.travel-stamps .stamp small{display:block;width:100%;font-size:9px;line-height:1.13;letter-spacing:0;font-weight:900;white-space:normal;overflow-wrap:normal;text-align:center}
+@media(max-width:760px){.travel-stamps .stamp{flex-basis:72px;width:72px;height:72px;min-width:72px;min-height:72px;padding:7px 5px}.travel-stamps .stamp small{font-size:8px}}
+
+/* V2.3 Fire TV fit: reclaim height for standings without clipping content */
+@media(min-width:800px) and (min-height:500px){
+ main{height:100vh;height:100dvh;overflow:hidden;gap:0;padding-top:6px;padding-bottom:6px}
+ .top{min-height:37px;gap:7px}.version-tag{padding:4px 10px;font-size:12px}.game-refresh{min-height:36px;padding:6px 12px}
+ .travel-hero{padding:6px 14px 7px;margin:5px 0 6px;border-radius:14px;min-height:0}
+ .hero-kicker{font-size:11px;line-height:1.1;letter-spacing:.16em}
+ .travel-hero h1{font-size:clamp(24px,2.8vw,37px);line-height:1.06;margin:2px auto}
+ .travel-hero .subtitle{font-size:13px;line-height:1.1;margin:2px}
+ .flightpath{margin:3px auto;font-size:11px;line-height:1.1}
+ .travel-stamps{margin-top:4px;gap:15px}
+ .travel-stamps .stamp{flex-basis:55px;width:55px;height:55px;min-width:55px;min-height:55px;padding:5px 4px;gap:1px}
+ .travel-stamps .stamp b{font-size:15px;line-height:1}
+ .travel-stamps .stamp small{font-size:7px;line-height:1.05}
+ .euchre-tabs{margin:5px 0;gap:7px}.euchre-tabs button{min-height:38px;padding:6px 4px}
+ .panel.tab-panel{margin:5px 0;padding:10px 13px;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+ #standingsPanel .bar{margin-bottom:6px}#standingsPanel .bar h2{font-size:20px}
+ #standingsPanel .bar label{font-size:12px}#standingsPanel .bar select{padding:6px 10px;margin-top:3px}
+ #standingsPanel .teams{gap:10px}#standingsPanel .team{padding:7px 12px}
+ #standingsPanel .team strong{font-size:clamp(17px,1.8vw,24px)}#standingsPanel .team .score{font-size:clamp(32px,4.5vh,48px);line-height:1.1}
+ #standingsPanel .team .muted,#standingsPanel .team .pill{font-size:12px}
+ #standingsPanel #lead{margin:5px 0;font-size:13px}
+ #standingsPanel .euchre-quip{margin:5px auto;padding:6px 10px;font-size:13px}
+ #standingsPanel .travel-prize{margin-top:5px;padding:6px 10px;gap:8px}
+ #standingsPanel .travel-prize .icon{font-size:22px}#standingsPanel .travel-prize strong{font-size:13px}#standingsPanel .travel-prize p{font-size:12px;margin:1px 0}
+}
+</style><style>
+/* V2.5.0: keep Record Night action buttons visible in TV landscape */
+@media (min-width:800px) and (min-height:500px){
+ #recordPanel{display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain;padding-bottom:clamp(18px,3vh,32px)}
+ #recordPanel #nightForm{flex:0 0 auto}
+ #recordPanel .formgrid{gap:clamp(6px,1vh,12px)}
+ #recordPanel input,#recordPanel textarea{padding:clamp(7px,1vh,12px);margin-top:4px}
+ #recordPanel textarea{min-height:clamp(38px,6vh,65px);height:clamp(38px,6vh,65px)}
+ #recordPanel .actions{margin-top:clamp(4px,.7vh,9px);padding-bottom:8px}
+ #recordPanel .actions button{padding:clamp(7px,1vh,11px) 16px;min-height:38px}
+ #recordPanel h2{margin-bottom:clamp(4px,.7vh,9px)}
+}
+</style><link rel="stylesheet" href="./game-room-refresh.css?v=20261116a"><script defer src="./game-room-refresh.js?v=20261116a"></script></head><body class="gr-refresh gr-euchre" data-game="euchre"><main><div class="top"><a href="./games.html">← GAME ROOM</a><span class="version-tag" aria-label="Euchre scoreboard version"><svg class="traffic-cone" viewBox="0 0 32 36" width="23" height="26" role="img" aria-label="Orange traffic cone" xmlns="http://www.w3.org/2000/svg"><path d="M12 3h8l8 27H4z" fill="#ff821b" stroke="#ffce75" stroke-width="1.5"/><path d="M9 15h14l2.6 7H6.4z" fill="#fff7e8"/><path d="M3 29h26v5H3z" fill="#ef8b24" stroke="#ffe2a0" stroke-width="1.2"/></svg> EUCHRE V2.5.0 <small>BUILD 2026.11.16</small></span><a href="../../">CHRIS'S BASEMENT</a><button id="pageRefresh" class="game-refresh" type="button">↻ REFRESH</button></div><section class="travel-hero"><div class="hero-kicker">THE ANNUAL TRAVEL CHAMPIONSHIP</div><h1>♠ GEHRIG / ISON EUCHRE NIGHT ♥</h1><p class="subtitle">PLAY THE CARDS. WIN THE TRIP.</p><div class="flightpath">THE ROAD TO THE NEXT ADVENTURE ✈</div><div class="travel-stamps"><div class="stamp"><b>♠</b><small>DEAL<br>THE CARDS</small></div><div class="stamp"><b>🏆</b><small>WIN<br>THE SEASON</small></div><div class="stamp"><b>✈</b><small>CHOOSE<br>THE TRIP</small></div></div></section>
+<nav class="euchre-tabs" aria-label="Euchre sections"><button type="button" class="tab active" data-panel="standingsPanel">STANDINGS</button><button type="button" class="tab secondary" data-panel="recordPanel">RECORD NIGHT</button><button type="button" class="tab secondary" data-panel="historyPanel">RESULTS</button><button type="button" class="tab secondary" data-panel="championsPanel">CHAMPIONS</button><button type="button" class="tab secondary" data-panel="backupPanel">BACKUPS</button></nav><section class="panel tab-panel" id="standingsPanel"><div class="bar"><h2 style="margin:0">Season Standings</h2><label style="margin-left:auto">Season <select id="season"></select></label></div><div class="teams"><div class="team"><strong>♠ Jim &amp; Chris</strong><div class="score" id="winsA">0</div><div class="muted">Nights won</div><div id="gamesA" class="pill">0 individual games</div></div><div class="team"><strong>♥ Beth &amp; Amy</strong><div class="score" id="winsB">0</div><div class="muted">Nights won</div><div id="gamesB" class="pill">0 individual games</div></div></div><p id="lead" style="text-align:center"></p><div id="euchreQuip" class="euchre-quip" aria-live="polite">♠ Stick the dealer. Take the points. Claim the trip.</div><div class="travel-prize"><span class="icon">🏝️</span><div><strong>THE ULTIMATE PRIZE: DESTINATION RIGHTS</strong><p>The season champions choose the next adventure for all four travelers. No recounts without the scorebook!</p></div></div></section>
+<section class="panel tab-panel" id="recordPanel" hidden><h2 id="formtitle">Record Euchre Night</h2><form id="nightForm" class="formgrid"><label>Date<input id="date" type="date" required></label><label>Jim &amp; Chris — games won<input id="a" type="number" min="0" max="999" required></label><label>Beth &amp; Amy — games won<input id="b" type="number" min="0" max="999" required></label><label class="wide">Notes (optional)<textarea id="notes" maxlength="400" placeholder="Big comeback, disputed reneges, memorable trash talk…"></textarea></label><div class="wide actions"><button id="save" type="submit">Save Night</button><button class="secondary" id="cancel" type="button" hidden>Cancel Edit</button></div></form><p class="notice">The team with more individual game wins earns one season night win. Tied nights are recorded but do not award a win. Total games are tracked separately.</p><div id="status" role="status"></div></section>
+<section class="panel tab-panel" id="historyPanel" hidden><h2>Night-by-Night Results</h2><div class="tablewrap"><table><thead><tr><th>Date</th><th>Jim &amp; Chris</th><th>Beth &amp; Amy</th><th>Night Winner</th><th>Correction</th></tr></thead><tbody id="history"></tbody></table></div></section>
+<section class="panel tab-panel" id="championsPanel" hidden><h2>🏆 Hall of Champions</h2><div id="champions"></div><div class="formgrid"><label>Champion<select id="champ"><option value="A">Jim &amp; Chris</option><option value="B">Beth &amp; Amy</option></select></label><label class="wide">Travel adventure selected<input id="trip" maxlength="160" placeholder="Where are the winners taking us?"></label></div><div class="actions"><button id="crown" type="button">Declare Season Champion</button><button id="newSeason" class="secondary" type="button">Start New Season</button></div><p class="notice">Declaring a champion saves the season winner and travel choice. Starting a new season keeps prior season results available.</p></section>
+<section class="panel tab-panel" id="backupPanel" hidden><h2>Backups &amp; Data</h2><p class="notice">Shared scores are stored in Firebase and can be reloaded on your devices.</p><section id="cloudSyncPanel" style="margin:10px auto 16px;max-width:1100px;padding:12px 16px;border:1px solid #f9cc7980;border-radius:12px;background:#091c35;color:#fff;font:15px system-ui,Arial,sans-serif"><strong>☁ Shared Euchre Scores</strong> <span id="cloudSyncStatus" role="status">Connecting…</span><div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px"><button id="cloudUpload" type="button" style="background:#f9cc79;color:#1b2032;border-radius:8px;padding:9px 12px;font-weight:700">Use this device’s scores as shared scores</button><button id="cloudReload" type="button" style="background:#205e9b;color:white;border-radius:8px;padding:9px 12px">Reload shared scores</button></div><small>Existing device data is preserved. Upload only if this device has the correct scores. Anyone with the link can edit shared scores.</small></section></section></main>
+<script>
+const KEY='gehrig-ison-euchre-v1';let db,editing=null;const $=id=>document.getElementById(id);const today=()=>new Date().toLocaleDateString('en-CA');const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));function load(){try{db=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!db||!Array.isArray(db.seasons))db={seasons:[{id:1,label:'Season 1',nights:[],champion:null,trip:''}],current:1};var first=db.seasons.find(s=>s.id===1);if(first){if(!first.champion)first.champion='A';if(!first.trip)first.trip='Smash house — Akron, Ohio';}if(!db.seasons.some(s=>s.id===2)){db.seasons.push({id:2,label:'Season 2',nights:[],champion:null,trip:''});db.current=2;}else if(db.current===1&&!db.seasons.some(s=>s.id>2)){db.current=2;}save();}function save(){localStorage.setItem(KEY,JSON.stringify(db));if(window.euchreCloudSave)window.euchreCloudSave(db)}function current(){return db.seasons.find(s=>s.id===Number($('season').value))||db.seasons[db.seasons.length-1]}function render(){const selected=Number($('season').value)||db.current;$('season').innerHTML=db.seasons.map(s=>'<option value="'+s.id+'">'+esc(s.label)+'</option>').join('');$('season').value=String(db.seasons.some(s=>s.id===selected)?selected:db.current);const s=current();let wa=0,wb=0,ga=0,gb=0;for(const n of s.nights){ga+=n.a;gb+=n.b;if(n.a>n.b)wa++;if(n.b>n.a)wb++}$('winsA').textContent=wa;$('winsB').textContent=wb;$('gamesA').textContent=ga+' individual games';$('gamesB').textContent=gb+' individual games';const quips=['Stick the dealer? More like stick it to the competition!','Passing dirty is a strategy. Losing dirty is a tradition.','Never order up trouble unless you can take the trick.','When in doubt, go alone. When you lose, blame your partner.','Trump cards and trash talk: a winning combination.','Somebody got euchred. Somebody gets to hear about it all year.','The dealer was stuck. The winners were not.'];const latest=[...s.nights].sort((a,b)=>b.date.localeCompare(a.date))[0];const quipIndex=latest?([...s.nights].reduce((sum,n)=>sum+n.a+n.b,0)+s.id)%quips.length:s.id%quips.length;$('euchreQuip').textContent=(latest&&latest.a!==latest.b?'🏆 '+(latest.a>latest.b?'Jim & Chris':'Beth & Amy')+' took the latest night! ':'♠ ')+quips[quipIndex];$('lead').textContent=wa===wb?'The season is tied!':(wa>wb?'Jim & Chris':'Beth & Amy')+' lead by '+Math.abs(wa-wb)+' night'+(Math.abs(wa-wb)===1?'':'s')+'.';$('history').innerHTML=s.nights.length?[...s.nights].sort((a,b)=>b.date.localeCompare(a.date)).map(n=>'<tr><td>'+esc(n.date)+(n.notes?'<div class="muted">'+esc(n.notes)+'</div>':'')+'</td><td>'+n.a+'</td><td>'+n.b+'</td><td class="winner">'+(n.a===n.b?'Tie':n.a>n.b?'Jim & Chris':'Beth & Amy')+'</td><td><button class="secondary" data-edit="'+n.id+'">Edit</button><button class="danger" data-delete="'+n.id+'">Delete</button></td></tr>').join(''):'<tr><td colspan="5" class="empty">No euchre nights recorded yet.</td></tr>';$('champions').innerHTML=db.seasons.filter(x=>x.champion).map(x=>'<div class="champ"><strong>'+esc(x.label)+' — '+(x.champion==='A'?'Jim & Chris':'Beth & Amy')+'</strong><div class="muted">Next adventure: '+esc(x.trip||'To be decided')+'</div></div>').join('')||'<p class="empty">The first champions are yet to be crowned.</p>';$('champ').value=s.champion||'A';$('trip').value=s.trip||'';}$('date').value=today();load();render();
+$('season').onchange=()=>{editing=null;resetForm();render()};function resetForm(){$('nightForm').reset();$('date').value=today();editing=null;$('formtitle').textContent='Record Euchre Night';$('save').textContent='Save Night';$('cancel').hidden=true}
+$('nightForm').onsubmit=e=>{e.preventDefault();const a=Number($('a').value),b=Number($('b').value);if(!Number.isInteger(a)||!Number.isInteger(b)||a<0||b<0){alert('Enter valid nonnegative whole-number game scores.');return}const s=current(),n={id:editing||String(Date.now())+'-'+Math.random().toString(36).slice(2),date:$('date').value,a,b,notes:$('notes').value.trim()};if(editing){const i=s.nights.findIndex(x=>x.id===editing);if(i<0)return;s.nights[i]=n}else s.nights.push(n);save();resetForm();render();$('status').textContent='Euchre night saved on this device.'};
+$('cancel').onclick=resetForm;$('history').onclick=e=>{const el=e.target.closest('button');if(!el)return;const s=current();if(el.dataset.edit){const n=s.nights.find(x=>x.id===el.dataset.edit);if(!n)return;editing=n.id;$('date').value=n.date;$('a').value=n.a;$('b').value=n.b;$('notes').value=n.notes||'';$('formtitle').textContent='Correct Euchre Night';$('save').textContent='Save Correction';$('cancel').hidden=false;showPanel('recordPanel')}if(el.dataset.delete){const n=s.nights.find(x=>x.id===el.dataset.delete);if(n&&confirm('Delete the result from '+n.date+'?')){s.nights=s.nights.filter(x=>x.id!==n.id);save();resetForm();render()}}};
+$('crown').onclick=()=>{const s=current();if(!s.nights.length){alert('Record at least one euchre night first.');return}if(!confirm('Declare the selected team champion for '+s.label+'?'))return;s.champion=$('champ').value;s.trip=$('trip').value.trim();save();render()};
+$('newSeason').onclick=()=>{if(!confirm('Start a new season? The current season and its results will remain saved.'))return;const id=Math.max(...db.seasons.map(s=>s.id))+1;db.seasons.push({id,label:'Season '+id,nights:[],champion:null,trip:''});db.current=id;save();resetForm();render()};
+if($('export'))$('export').onclick=()=>{const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='gehrig-ison-euchre-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+if($('import'))$('import').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!d||!Array.isArray(d.seasons)||!d.seasons.every(s=>Array.isArray(s.nights)))throw Error('Invalid backup');if(!confirm('Replace all scores on this device with the imported backup?'))return;db=d;save();resetForm();render();$('status').textContent='Backup imported.'}catch(err){alert('Could not import backup: '+err.message)}finally{e.target.value=''}};
+</script><script>document.getElementById('pageRefresh').onclick=function(){var u=new URL(location.href);u.searchParams.set('refresh',Date.now().toString());location.replace(u.toString())};</script><script>(function(){var buttons=Array.from(document.querySelectorAll('.euchre-tabs .tab'));window.showPanel=function(id){document.querySelectorAll('.tab-panel').forEach(function(p){p.hidden=p.id!==id});buttons.forEach(function(b){var on=b.dataset.panel===id;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))});};buttons.forEach(function(b){b.addEventListener('click',function(){showPanel(b.dataset.panel)})});showPanel('standingsPanel')})();</script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script>
+(function(){
+const status=document.getElementById('cloudSyncStatus'),upload=document.getElementById('cloudUpload'),reload=document.getElementById('cloudReload');
+if(!status)return;
+const config={apiKey:"AIzaSyBbN4Qm-sTtoUE9HNEhjeNlibBKo5dPSs8",authDomain:"chris-game-room.firebaseapp.com",projectId:"chris-game-room",appId:"1:705590637292:web:89af6df7c34eb4371c2bc9"};
+let ref=null,ready=false,writing=Promise.resolve(),loading=false;
+const note=s=>status.textContent=s;
+function valid(x){return x&&Array.isArray(x.seasons)&&x.seasons.every(s=>Array.isArray(s.nights))}
+async function fetchShared(){
+ const snap=await ref.get({source:'server'});if(!snap.exists)return null;
+ const data=snap.data();return valid(data&&data.state)?data.state:null;
+}
+function adopt(shared){
+ if(!valid(shared))return;
+ const existing=localStorage.getItem(KEY);
+ if(existing&&!sessionStorage.getItem('euchre-cloud-backup')){sessionStorage.setItem('euchre-cloud-backup',existing);localStorage.setItem(KEY+'-before-cloud',existing)}
+ db=shared;localStorage.setItem(KEY,JSON.stringify(db));resetForm();render();
+}
+async function reloadCloud(){
+ if(!ref)return;note('Loading shared scores…');
+ try{const shared=await fetchShared();if(shared){adopt(shared);ready=true;note('✓ Shared scores loaded. Changes now sync automatically.');upload.hidden=true}
+ else{ready=false;note('No shared scores yet. Upload from the device with the correct history.');upload.hidden=false}}
+ catch(e){ready=false;note('Cloud unavailable: '+e.message)}
+}
+window.euchreCloudSave=function(next){
+ if(!ready||loading||!ref)return;
+ const snapshot=JSON.parse(JSON.stringify(next));writing=writing.then(()=>ref.set({state:snapshot,updatedAt:firebase.firestore.FieldValue.serverTimestamp()})).then(()=>note('✓ Saved to shared cloud')).catch(e=>note('Cloud save failed: '+e.message));
+};
+upload.onclick=async()=>{
+ if(!ref)return;
+ if(!confirm('Make THIS device’s Euchre history the shared history for everyone? This replaces existing shared scores.'))return;
+ try{loading=true;note('Uploading shared history…');await ref.set({state:JSON.parse(JSON.stringify(db)),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});ready=true;upload.hidden=true;note('✓ Shared history created. Changes now sync.')}catch(e){note('Upload failed: '+e.message)}finally{loading=false}
+};
+reload.onclick=reloadCloud;
+try{if(!window.firebase||!firebase.firestore)throw Error('Firebase library unavailable on this browser');firebase.initializeApp(config,'euchre-shared');ref=firebase.app('euchre-shared').firestore().collection('gameRoom').doc('euchre');reloadCloud()}catch(e){note('Cloud unavailable: '+e.message)}
+})();
+</script><style>
+/* V2.4 Fire TV remote keyboard focus */
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,
+.tv-focused{outline:4px solid #ffe68b!important;outline-offset:3px!important;box-shadow:0 0 0 7px #10243a,0 0 22px #ffc963!important}
+</style><script>
+/* D-pad spatial navigation for Fire TV Silk, without changing forms or cloud data. */
+(function(){
+ const selector='button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled])';
+ const visible=el=>{const r=el.getBoundingClientRect(),s=getComputedStyle(el);return r.width>0&&r.height>0&&s.visibility!=='hidden'&&s.display!=='none'&&!el.closest('[hidden]')};
+ const choices=()=>Array.from(document.querySelectorAll(selector)).filter(visible);
+ const center=el=>{const r=el.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2}};
+ document.addEventListener('focusin',e=>{document.querySelectorAll('.tv-focused').forEach(x=>x.classList.remove('tv-focused'));if(e.target.matches(selector))e.target.classList.add('tv-focused')});
+ document.addEventListener('keydown',e=>{
+  const k=e.key,dir={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0]}[k];
+  if(!dir)return;
+  const active=document.activeElement;
+  // Preserve editing and native date, select, and numeric input behavior.
+  if(active&&active.matches('input,textarea,select'))return;
+  const all=choices();if(!all.length)return;
+  if(!all.includes(active)){e.preventDefault();(document.querySelector('.euchre-tabs .tab.active')||all[0]).focus();return}
+  // A down press on the selected tab should enter its panel rather than another tab.
+  if(k==='ArrowDown'&&active.closest('.euchre-tabs')){
+    const panel=document.querySelector('.tab-panel:not([hidden])');
+    const first=panel&&Array.from(panel.querySelectorAll(selector)).find(visible);
+    if(first){e.preventDefault();first.focus();return}
+  }
+  const a=center(active),axis=dir[0]?'x':'y',other=dir[0]?'y':'x',sign=dir[0]||dir[1];
+  let best=null,score=Infinity;
+  for(const el of all){if(el===active)continue;const b=center(el),forward=(b[axis]-a[axis])*sign;if(forward<5)continue;const sideways=Math.abs(b[other]-a[other]);const cost=forward+sideways*2.2;if(cost<score){score=cost;best=el}}
+  if(best){e.preventDefault();best.focus();best.scrollIntoView({block:'nearest',inline:'nearest'})}
+ });
+ window.addEventListener('load',()=>{if(document.activeElement===document.body){const active=document.querySelector('.euchre-tabs .tab.active');if(active)active.focus({preventScroll:true})}});
+})();
+</script><script>
+/* Fire TV: one browser Back press returns directly to the Game Room. */
+(function(){
+  if(window.__gameRoomBackInstalled)return;
+  window.__gameRoomBackInstalled=true;
+  try{
+    history.pushState({gameRoomBackGuard:true},'',location.href);
+    window.addEventListener('popstate',function(){
+      location.replace(new URL('./games.html',location.href).href);
+    });
+  }catch(e){}
+})();
+</script></body></html>
