@@ -203,3 +203,30 @@ assert.equal(villa.run('turn'),1);
 console.log('PASS: 12 themed scenes; early escape and true finale; next-spin turn continuity; timer cleanup; 70 nonrepeating truths; saved truth-deck migration; reroll and pass.');
 console.log('PASS: 29 unique Categories prompts; existing-deck migration and reload; 3-second preparation plus full 15-second timer; timer cancellation; one Game Over; both twister paths; '+total+' unique trivia questions; reload/reset persistence; cycle boundary; shared extras and choices; storage fallback; all page scripts parse.');
 
+for(const roll of [.05,.15,.5]){
+ const animated=game(new Map()); let frames=[],clock=0;
+ animated.context.requestAnimationFrame=fn=>frames.push(fn);
+ animated.run("names=['Chris','Beth']; angle=0;");
+ animated.run(`Math.random=()=>${roll}; $('spin').onclick()`);
+ assert.equal(animated.run('spinning'),true);
+ assert.equal(animated.run('turn'),0);
+ let count=0;
+ while(frames.length){const batch=frames;frames=[];clock+=16;batch.forEach(fn=>fn(clock));assert.ok(++count<1000);}
+ assert.equal(animated.run('spinning'),false);
+ assert.equal(animated.run('turn'),1);
+ assert.equal(animated.run("$('rouletteLayout').classList.contains('is-revealing')"),true);
+ const index=Math.floor(roll*12);
+ assert.ok(Math.abs(animated.run('angle%360')-(360-(index+.5)*30)%360)<.0001);
+}
+const plans=game(new Map());
+for(let i=0;i<12;i++)for(const start of [0,135,4999])for(const roll of [.05,.15,.5]){
+ const p=plans.run(`spinPlan(${start},${i},12,${roll},false)`);
+ assert.ok(p.end>start);
+ assert.equal(p.mode,roll<.1?'creep':roll<.2?'fakeout':'normal');
+ if(p.mode==='creep')assert.equal(p.phases[0][0],p.end-30);
+ if(p.mode==='fakeout')assert.ok(p.phases[2][0]-p.end<15);
+}
+assert.equal(plans.run("spinPlan(0,3,12,.05,true).phases.length"),1);
+plans.run("$('wheelSound').onclick()");
+assert.equal(plans.run('wheelSound'),false);
+console.log('PASS: animated suspense completion, wedge alignment, turn continuity, fake-out boundary, reduced motion, sound toggle.');
