@@ -45,6 +45,7 @@ body.gr-refresh:before{opacity:.04}
 .gr-refresh .players label,.gr-refresh #setup .players label{font-size:13px;letter-spacing:.03em}
 .gr-refresh .players input,.gr-refresh #setup .players input{height:auto;min-height:46px;padding:10px;font-size:16px}
 .gr-refresh .name-pick,.gr-refresh .name-arrow{min-width:38px;padding:6px;min-height:38px}
+.gr-refresh .name-pick,.gr-refresh .tavern-name-pick{background:var(--gr-accent);color:#172023;border-color:var(--gr-accent)}
 .gr-refresh #setup .players{align-content:start;align-items:start;row-gap:16px;flex:0 0 auto}
 .gr-refresh #setup .name-tools{margin:12px 0}
 .gr-refresh #setup{justify-content:flex-start;gap:12px}
@@ -115,6 +116,7 @@ body.gr-refresh:before{opacity:.04}
 .gr-games .tagline{font-size:14px;font-weight:500;color:#e0d6cb;margin:6px 0 12px;text-transform:none}
 .gr-games .nav a,.gr-games .nav button{background:#151b22c9;border:1px solid #ffffff38;box-shadow:none;color:#eee6d9;font-size:12px;border-radius:8px;min-height:40px}
 .gr-games .grid{gap:18px;padding:10px 0}
+.gr-games .tile.bernie{--surface:#254a39;--shade:#152b22}
 .gr-games .tile{border:1px solid #ffffff45;border-top:3px solid var(--accent);border-radius:16px;box-shadow:0 10px 24px #0004;background:linear-gradient(135deg,var(--surface),var(--shade));align-items:flex-start;text-align:left;padding:clamp(16px,2vw,26px);justify-content:center}
 .gr-games .tile:before,.gr-games .tile:after{display:none}
 .gr-games .tile:hover,.gr-games .tile:focus-visible{transform:translateY(-3px);box-shadow:0 16px 28px #0006;outline-color:#fff2a9}
@@ -134,8 +136,10 @@ body.gr-refresh:before{opacity:.04}
  .gr-refresh .layout>div,.gr-refresh .layout>aside,.gr-survey .grid>div,.gr-survey .grid>aside{overflow-y:auto;min-height:0;padding:3px 5px 8px 3px;scrollbar-width:thin}
  .gr-refresh #setup .players{grid-template-columns:repeat(4,minmax(0,1fr))}
  .gr-casino #setup .players,.gr-last-call .players{grid-template-columns:repeat(2,minmax(0,1fr))}
- .gr-trivia #setup .players{margin:10px 0 16px;flex:0 0 auto;align-content:start}
+ .gr-trivia #setup{flex:0 0 auto}
+ .gr-trivia #setup #playerInputs{margin:10px 0 16px;flex:0 0 auto;align-content:start;row-gap:18px}
  .gr-refresh .controls button{min-height:42px;padding:9px 12px;font-size:14px}
+ .gr-refresh #game .controls button{min-height:42px;padding:9px 12px;font-size:14px}
  .gr-refresh #game .question{font-size:clamp(26px,2.5vw,42px)}
  .gr-refresh #game .award button{min-height:42px;font-size:14px}
  .gr-survey:not(.show-in-progress) .grid{align-items:start}
