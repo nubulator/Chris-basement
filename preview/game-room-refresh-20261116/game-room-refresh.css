@@ -68,6 +68,7 @@ body.gr-refresh:before{opacity:.04}
 .gr-casino .sidebar-switcher button{min-height:44px;font-size:13px}
 .gr-casino .card{box-shadow:0 8px 24px #0004;border-radius:13px}
 .gr-casino .gr-card-tip{font-size:14px;color:var(--gr-muted);text-align:center;line-height:1.4;margin:8px 0}
+.gr-euchre .top{display:flex;flex-wrap:wrap}.gr-euchre .top .version-tag{margin-right:auto}
 .gr-euchre .travel-stamps,.gr-euchre .flightpath{display:none}
 .gr-euchre .euchre-tabs{gap:8px;margin:0 0 14px}
 .gr-euchre .euchre-tabs button{border:1px solid #ffffff30;background:#ffffff08;min-height:46px}
@@ -85,6 +86,7 @@ body.gr-refresh:before{opacity:.04}
 .gr-kings #setup .names{gap:14px;max-width:none;margin:20px 0}
 .gr-kings #setup .count{background:#ffffff08;border:1px solid var(--gr-line);box-shadow:none}
 .gr-kings .history-panel,.gr-kings .play-panel,.gr-kings .right-panel{background:#14201eee;border:1px solid var(--gr-line);border-radius:16px;box-shadow:none}
+.gr-kings #restart{background:transparent;color:var(--gr-text);border:1px solid #ffffff40}
 .gr-kings .player.active{background:var(--gr-accent);color:#172023}
 .gr-last-call .layout{gap:18px}
 .gr-last-call .wheel-area{padding:14px}
