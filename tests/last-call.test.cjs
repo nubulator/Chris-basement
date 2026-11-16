@@ -16,8 +16,10 @@ function game(data = storage) {
     return {add:value=>values.add(value),remove:value=>values.delete(value),contains:value=>values.has(value)};
   }
   function element() {
+    const attributes = new Map();
     return {hidden:false, textContent:'', innerHTML:'', style:{}, classList:classes(),
-      parentElement:{classList:classes()}, setAttribute(){}, addEventListener(){},
+      parentElement:{classList:classes()}, setAttribute:(key,value)=>attributes.set(key,value),
+      getAttribute:key=>attributes.get(key), removeAttribute:key=>attributes.delete(key), addEventListener(){},
       appendChild(){}, append(){}, replaceChildren(){}, querySelectorAll(){return []}, focus(){}};
   }
   const context = vm.createContext({
@@ -150,4 +152,54 @@ for(let i=0;i<30;i++){
 // Loading either game still provides its original question IDs for saved decks.
 assert.equal(g.run('GameRoomQuestionBanks.tavern.length'),100);
 assert.equal(g.run('GameRoomQuestionBanks.music.length'),150);
+// Every landing opens its own scene, hides the wheel, and can return to the next turn.
+for(let idx=0;idx<12;idx++){
+  const scene=game(new Map());
+  scene.run(`names=['Chris','Beth']; Math.random=()=>${idx+.5}/12; $('spin').onclick()`);
+  assert.equal(scene.run("$('wheelStage').hidden"),true);
+  assert.equal(scene.run("$('wheelActions').hidden"),true);
+  assert.equal(scene.run("$('rouletteLayout').classList.contains('is-revealing')"),true);
+  assert.equal(scene.run("$('resultCard').getAttribute('data-theme')"),idx===2?'escape':scene.run(`revealThemes[${idx}][0]`));
+  assert.equal(scene.run('turn'),1,'Advance the turn exactly once after landing');
+  scene.run("$('nextSpin').onclick()");
+  assert.equal(scene.run('turn'),1,'Closing a reveal must not skip the next player');
+  assert.equal(scene.run("$('wheelStage').hidden"),false);
+  assert.equal(scene.run("$('rouletteLayout').classList.contains('is-revealing')"),false);
+  assert.equal(scene.timers.size,0,'Returning to the wheel cancels timed challenges');
+}
+const finale=game(new Map());
+finale.run("names=['Chris']; Math.random=()=>2.5/12; $('spin').onclick()");
+assert.equal(finale.run('gameOver'),true);
+assert.match(finale.run("$('resultText').textContent"),/Chris, you're tonight's loser/);
+assert.equal(finale.run("$('nextSpin').textContent"),'PLAY AGAIN ↻');
+finale.run("$('nextSpin').onclick()");
+assert.equal(finale.run('gameOver'),false);
+assert.equal(finale.run("$('wheelStage').hidden"),false);
+assert.equal(finale.run('played.size'),0);
+// All 70 truths are unique through reload; existing decks receive the 40 new villa cards.
+const truthSave=new Map(); let truthsGame=game(truthSave); const truthSeen=new Set(); let lastTruth;
+assert.equal(truthsGame.run('truths.length'),70);
+for(let i=0;i<70;i++){
+  if(i===20)truthsGame=game(truthSave);
+  lastTruth=truthsGame.run('pick(truths)');assert.ok(!truthSeen.has(lastTruth));truthSeen.add(lastTruth);
+}
+assert.notEqual(truthsGame.run('pick(truths)'),lastTruth);
+const oldTruthDeck=new Map([['last-call-question-rotation-v1',JSON.stringify({truths:[1,3]})]]);
+const truthMigration=game(oldTruthDeck); const newTruthSeen=new Set();
+for(let i=0;i<42;i++){
+  const prompt=truthMigration.run('pick(truths)');assert.ok(!newTruthSeen.has(prompt));newTruthSeen.add(prompt);
+  assert.notEqual(prompt,truthMigration.run('truths[0]'));assert.notEqual(prompt,truthMigration.run('truths[2]'));
+}
+const villa=game(new Map());
+villa.run("names=['Chris','Beth']; Math.random=()=>6.5/12; $('spin').onclick()");
+assert.equal(villa.run("$('anotherTruth').hidden"),false);
+const firstTruth=villa.run("$('challenge').textContent");
+villa.run("$('anotherTruth').onclick()");
+assert.notEqual(villa.run("$('challenge').textContent"),firstTruth);
+assert.equal(villa.run('turn'),1);
+villa.run("$('passTruth').onclick()");
+assert.equal(villa.run("$('wheelStage').hidden"),false);
+assert.equal(villa.run('turn'),1);
+console.log('PASS: 12 themed scenes; early escape and true finale; next-spin turn continuity; timer cleanup; 70 nonrepeating truths; saved truth-deck migration; reroll and pass.');
 console.log('PASS: 29 unique Categories prompts; existing-deck migration and reload; 3-second preparation plus full 15-second timer; timer cancellation; one Game Over; both twister paths; '+total+' unique trivia questions; reload/reset persistence; cycle boundary; shared extras and choices; storage fallback; all page scripts parse.');
+
