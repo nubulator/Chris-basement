@@ -1,0 +1,24 @@
+/* Shared picture clues, scoped to the active question. */
+.picture-setting {display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
+.picture-setting p {margin:0;font-size:13px;line-height:1.35;flex:1;min-width:180px}
+#pictureToggle[aria-pressed="true"] {background:#e4bd79;color:#21180e}
+.picture-clue {margin:8px 0;min-width:0;text-align:center}
+.picture-clue[hidden],.picture-clue [hidden] {display:none!important}
+.picture-clue img {display:block;width:100%;height:clamp(140px,30vh,330px);object-fit:contain;background:#100e0c;border-radius:12px}
+.picture-clue figcaption {font-size:11px;line-height:1.3;margin-top:5px;color:#ddcdb6}
+.picture-clue a {color:inherit}
+.picture-clue button {margin-top:6px;font-size:13px;min-height:36px;padding:7px 12px}
+.picture-status {font-size:14px;margin:4px 0}
+.gr-trivia.has-picture #question,.gr-music.has-picture #question {font-size:clamp(23px,2.2vw,34px)!important;margin:4px 0!important;line-height:1.12!important}
+.gr-trivia.has-picture #game .board {padding:12px 18px;gap:4px}
+.gr-trivia.has-picture #game .board::before,.gr-trivia.has-picture #game .board::after {display:none!important}
+.gr-trivia.has-picture #answer,.gr-music.has-picture #answer {font-size:clamp(20px,2vw,29px);margin:6px 0}
+.gr-music.has-picture .record-art {display:none!important}
+.gr-music.has-picture #game .stage {padding:12px;display:flex;flex-direction:column;justify-content:center;min-height:0}
+.gr-music.has-picture .picture-clue img {height:clamp(170px,43vh,440px)}
+@media(max-height:760px) and (min-width:850px) {
+ .gr-trivia.has-picture .picture-clue img {height:24vh}
+ .gr-trivia.has-picture #game .controls button {min-height:38px;padding:7px 12px}
+ .gr-trivia .tavern-welcome,.gr-music .session-art {min-height:70px!important}
+}
+@media(max-width:650px) {.picture-setting{align-items:stretch}.picture-clue img{height:28vh}.gr-music.has-picture .picture-clue img{height:34vh}}
