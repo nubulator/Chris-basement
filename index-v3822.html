@@ -883,6 +883,7 @@ function syncMyTeamsOdds(){
 }
 function display(){
  syncMyTeamsOdds();
+ window.applyCachedLineOdds?.();
  if(!games.length&&!myTeams.length){$('games').innerHTML='<div class="game">No qualifying games available right now. Retrying automatically.</div>';if($('ticker'))$('ticker').textContent='Chris’ Basement • NCAA Football: Top 25 + Big Ten • Men’s Hoops: Top 25 + Ohio State • NFL • NBA • MLB • NHL';return}
  let n=4,filtered=leagueFilter==='ALL'?games:games.filter(g=>g.league===leagueFilter);
  const myTeamPages=Math.max(1,Math.ceil(myTeams.length/n));
@@ -1351,43 +1352,56 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
   document.getElementById('sports-prev').onclick=()=>{page--;display()};document.getElementById('sports-next').onclick=()=>{page++;display()};
   document.getElementById('daily-line-button').onclick=openDailyLine;
  };
- let lineUpcoming=[],lineLastRefresh=0,lineRankingMaps=new Map();
+ let lineUpcoming=[],lineLastRefresh=0,lineRankingMaps=new Map(),lineFeedAt=0,lineFeedGames=[],lineRefreshBusy=false;
+ const freshLineFeed=()=>lineFeedAt>0&&Date.now()-lineFeedAt<=3*3600000;
+ const cachedOdds=g=>{const spread=g.odds?.spread,total=g.odds?.total;return spread!=null||total!=null?'LINE: '+(spread??'Unavailable')+' • O/U: '+(total??'Unavailable'):''};
+ window.applyCachedLineOdds=function(){
+  const cached=new Map((freshLineFeed()?lineFeedGames:[]).map(g=>[g.league+':'+g.id,g]));
+  for(const g of [...games,...myTeams]){
+   const league=favoriteTeams.find(t=>t.name===g.league)?.league||g.league;
+   const match=cached.get(league+':'+g.id);
+   if(match&&!g.live&&!g.final){g.odds=cachedOdds(match);g.dailyLineCachedOdds=g.odds;}
+   else if(g.dailyLineCachedOdds!==undefined){if(g.odds===g.dailyLineCachedOdds)g.odds='';delete g.dailyLineCachedOdds;}
+  }
+ };
  async function refreshLineUpcoming(){
-  // Prefer the same-origin published cache; avoid browser-to-ESPN CORS failures.
-  // Fall back to the legacy ESPN fetch path only if the cache is unavailable or stale.
+  if(lineRefreshBusy)return;
+  const now=Date.now();
+  if(now-lineLastRefresh<10*60000&&lineUpcoming.length)return;
+  lineRefreshBusy=true;
+  try{await loadLineUpcoming(now)}finally{lineRefreshBusy=false;}
+ }
+ async function loadLineUpcoming(now){
+  // Same-origin snapshots keep the Daily Line working when ESPN blocks browser CORS.
   try {
-    const response=await fetch('./data/daily-line-feed.json?ts='+Math.floor(Date.now()/300000),{cache:'no-store'});
+    const response=await fetch('./data/daily-line-feed.json?ts='+Math.floor(Date.now()/300000),{cache:'no-store',signal:AbortSignal.timeout(10000)});
     if(!response.ok)throw Error('Cached feed HTTP '+response.status);
-    const feed=await response.json();
-    const age=Date.now()-Date.parse(feed.generatedAt);
-    if(feed.schema!==1||!Array.isArray(feed.games)||!Number.isFinite(age)||age< -300000||age>3*3600000)throw Error('Cached feed stale or invalid');
-    const now=Date.now();
+    const feed=await response.json(),generated=Date.parse(feed.generatedAt),age=Date.now()-generated;
+    if(feed.schema!==1||!Array.isArray(feed.games)||!Number.isFinite(age)||age< -300000||age>3*3600000||feed.failedRequests!==0)throw Error('Cached feed stale or invalid');
+    if(Object.keys(names).some(league=>feed.coverage?.[league]!==9))throw Error('Cached feed coverage incomplete');
     const cached=feed.games.map(g=>{
       const date=Date.parse(g.date);
-      if(!g.id||!Number.isFinite(date)||!g.away||!g.home)return null;
-      const spread=g.odds?.spread,total=g.odds?.total;
-      const hasSpread=spread!==null&&spread!==undefined&&spread!=='';
-      const hasTotal=total!==null&&total!==undefined&&total!=='';
-      return {id:String(g.id),league:g.league,date,away:g.away,home:g.home,
-        awayLogo:g.awayLogo||'',homeLogo:g.homeLogo||'',
-        odds:hasSpread||hasTotal?'LINE: '+(hasSpread?spread:'—')+' • O/U: '+(hasTotal?total:'—'):'',
-        status:'Scheduled',final:g.state==='post',fav:/Ohio State|Buckeyes|Cleveland|Columbus|Reds|Cincinnati/i.test(g.away+' '+g.home),
-        top25:false,bigTen:false,ar:0,hr:0};
-    }).filter(g=>g&&g.date>now-3*3600000&&!g.final&&(
-      g.league==='NFL'||g.league==='NCAA FOOTBALL'||g.league==='NCAA MEN'||
-      g.league==='NBA'&&/Cavaliers|Cleveland/i.test(g.away+' '+g.home)||
-      g.league==='NHL'&&/Blue Jackets|Columbus/i.test(g.away+' '+g.home)||
-      g.league==='MLB'&&/Reds|Cincinnati/i.test(g.away+' '+g.home)
+      if(!g.id||!Number.isFinite(date)||!g.away||!g.home||!names[g.league])throw Error('Invalid cached game');
+      return {...g,id:String(g.id),date,odds:cachedOdds(g),cachedAt:generated,
+        live:g.state==='in',final:g.state==='post'};
+    }).filter(g=>g.date>now-3*3600000&&!g.final&&(
+      g.league==='NFL'||g.league==='NCAA FOOTBALL'&&(g.top25||g.bigTen||g.fav)||
+      g.league==='NCAA MEN'&&(g.top25||g.fav)||
+      ['NBA','NHL','MLB'].includes(g.league)&&g.fav
     )).sort((a,b)=>a.date-b.date);
-    if(!cached.length)throw Error('Cached feed contains no eligible upcoming games');
-    lineUpcoming=cached;lineLastRefresh=Date.now();
+    lineFeedGames=feed.games;lineFeedAt=generated;lineUpcoming=cached;lineLastRefresh=now;
+    document.getElementById('daily-line-view').dataset.feedGeneratedAt=feed.generatedAt;
+    display();
     if(dailyLineOpen)renderDailyLine();
     return;
   } catch(error) {
     console.warn('Daily Line cached feed unavailable; attempting ESPN fallback:',error.message);
+    if(!freshLineFeed()){
+      lineUpcoming=lineUpcoming.filter(g=>!g.cachedAt);lineFeedGames=[];lineFeedAt=0;
+      delete document.getElementById('daily-line-view').dataset.feedGeneratedAt;
+      display();if(dailyLineOpen)renderDailyLine();
+    }
   }
-  const now=Date.now();
-  if(now-lineLastRefresh<10*60000&&lineUpcoming.length)return;
   const fmt=d=>{const p=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);const v=k=>p.find(x=>x.type===k)?.value;return v('year')+v('month')+v('day')};
   const days=Array.from({length:9},(_,i)=>fmt(new Date(now+i*86400000)));
   const sources=[['NFL','football/nfl',''],['NCAA FOOTBALL','football/college-football','&groups=80'],['NCAA FOOTBALL','football/college-football','&groups=5'],['NCAA MEN','basketball/mens-college-basketball','&groups=50'],['NBA','basketball/nba',''],['NHL','hockey/nhl',''],['MLB','baseball/mlb','']];
@@ -1458,14 +1472,14 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
   }finally{lineOddsBusy=false;}
  }
  function lineData(){
-  const fav=myTeams.filter(g=>g&&g.id&&!g.final);
+  const fav=myTeams.filter(g=>g&&g.id&&!g.final&&g.date>Date.now()-3*3600000);
   const all=new Map();
   [...lineUpcoming,...fav].forEach(g=>{
    const league=favoriteTeams.find(t=>t.name===g.league)?.league||g.league;
    const normalized={...g,league};
    const key=league+':'+g.id,old=all.get(key);
    if(!old)all.set(key,normalized);
-   else all.set(key,{...old,...normalized,ar:normalized.ar||old.ar,hr:normalized.hr||old.hr,odds:normalized.odds||old.odds});
+   else all.set(key,{...old,...normalized,awayRecord:normalized.awayRecord||old.awayRecord,homeRecord:normalized.homeRecord||old.homeRecord,ar:normalized.ar||old.ar,hr:normalized.hr||old.hr,odds:old.cachedAt&&freshLineFeed()?old.odds:mergePublishedOdds(old.odds,normalized.odds)});
   });
   const list=[...all.values()].sort((a,b)=>a.date-b.date);
   for(const g of list){
@@ -1478,8 +1492,14 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
    }
   }
   if(lineFilter==='MY'){
-   const ids=new Set(fav.map(g=>g.id));
-   return list.filter(g=>ids.has(g.id));
+   const ids=new Set(fav.map(g=>(favoriteTeams.find(t=>t.name===g.league)?.league||g.league)+':'+g.id));
+   // The cached team IDs also work when browser schedule requests are blocked.
+   for(const team of favoriteTeams){
+    if(fav.some(g=>g.league===team.name))continue;
+    const next=list.find(g=>g.league===team.league&&[g.awayId,g.homeId].includes(team.id));
+    if(next)ids.add(next.league+':'+next.id);
+   }
+   return list.filter(g=>ids.has(g.league+':'+g.id));
   }
   if(lineFilter==='ALL')return list;
   return list.filter(g=>g.league===lineFilter);
@@ -1487,10 +1507,11 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
  function gameCard(g){
   const when=g.date?new Date(g.date).toLocaleString('en-US',{timeZone:'America/New_York',weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'}):g.status;
   const raw=String(g.odds||'');
-  const spread=raw.match(/LINE:\s*(.*?)\s*(?:•|$)/i)?.[1]?.trim()||'—';
-  const total=raw.match(/O\/U:\s*([^•]+)/i)?.[1]?.trim()||'—';
+  const shown=value=>!value||/^(?:Unavailable|Pending|Not published|—|--)$/i.test(value)?'—':value;
+  const spread=shown(raw.match(/LINE:\s*(.*?)\s*(?:•|$)/i)?.[1]?.trim());
+  const total=shown(raw.match(/O\/U:\s*([^•]+)/i)?.[1]?.trim());
   const logo=(src,name)=>src?'<img class="line-team-logo" loading="lazy" src="'+safe(src)+'" alt="'+safe(name)+' logo">':'';
-  return '<article class="line-card"><div class="line-league">'+safe(g.league)+' <span class="line-date">• '+safe(when)+'</span></div><div class="line-teams"><div class="line-team">'+logo(g.awayLogo,g.away)+'<span>'+(g.ar?'#'+g.ar+' ':'')+safe(g.away)+(g.awayRecord?'<small class="team-record"> ('+safe(g.awayRecord)+')</small>':'')+'</span></div><span class="line-versus">VS</span><div class="line-team">'+logo(g.homeLogo,g.home)+'<span>'+(g.hr?'#'+g.hr+' ':'')+safe(g.home)+(g.homeRecord?'<small class="team-record"> ('+safe(g.homeRecord)+')</small>':'')+'</span></div></div><div class="line-metrics"><div><small>SPREAD</small><strong>'+safe(spread)+'</strong></div><div><small>OVER / UNDER</small><strong>'+safe(total)+'</strong></div></div><div class="line-source">'+(raw?'ESPN pregame odds':'Awaiting published ESPN odds')+'</div></article>';
+  return '<article class="line-card" data-event-id="'+safe(g.id)+'" data-sport="'+safe(g.league)+'"><div class="line-league">'+safe(g.league)+' <span class="line-date">• '+safe(when)+'</span></div><div class="line-teams"><div class="line-team">'+logo(g.awayLogo,g.away)+'<span>'+(g.ar?'#'+g.ar+' ':'')+safe(g.away)+(g.awayRecord?'<small class="team-record"> ('+safe(g.awayRecord)+')</small>':'')+'</span></div><span class="line-versus">VS</span><div class="line-team">'+logo(g.homeLogo,g.home)+'<span>'+(g.hr?'#'+g.hr+' ':'')+safe(g.home)+(g.homeRecord?'<small class="team-record"> ('+safe(g.homeRecord)+')</small>':'')+'</span></div></div><div class="line-metrics"><div><small>SPREAD</small><strong>'+safe(spread)+'</strong></div><div><small>OVER / UNDER</small><strong>'+safe(total)+'</strong></div></div><div class="line-source">'+(raw?'ESPN pregame odds'+(g.cachedAt?' • updated '+new Date(g.cachedAt).toLocaleTimeString('en-US',{timeZone:'America/New_York',hour:'numeric',minute:'2-digit'})+' ET':''):'Awaiting published ESPN odds')+'</div></article>';
  }
  window.renderDailyLine=function(){
   if(!dailyLineOpen)return;
@@ -1517,7 +1538,8 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
  document.getElementById('line-next').onclick=()=>turn(1);
  document.getElementById('line-auto').onclick=()=>{lineAuto=!lineAuto;renderDailyLine()};
  document.addEventListener('keydown',e=>{if(dailyLineOpen&&(e.key==='Escape'||e.key==='Backspace')){e.preventDefault();closeDailyLine()}});
- lineTimer=setInterval(()=>{if(dailyLineOpen&&lineAuto)turn(1)},15000);setInterval(()=>{if(dailyLineOpen)refreshLineUpcoming()},600000);
+ lineTimer=setInterval(()=>{if(dailyLineOpen&&lineAuto)turn(1)},15000);setInterval(refreshLineUpcoming,600000);
+ refreshLineUpcoming();
  updateLeagueButtons();
  // Direct entry for the shared Garage Daily Line; never show the Basement home screen.
  if(new URLSearchParams(window.location.search).get('view')==='daily-line')openDailyLine();
