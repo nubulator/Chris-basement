@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Chris's High Stakes Casino V3.0</title>
+<title>Chris's High Stakes Casino V3.1</title>
 <link rel="stylesheet" href="./game-room-refresh.css?v=20261116a">
-<script defer src="./game-room-refresh.js?v=20261116a">
+<script defer src="./game-room-refresh.js?v=20261117pictures">
 </script>
 <link rel="stylesheet" href="./game-room-layout.css?v=20261116b">
 <link rel="stylesheet" href="./game-room-premium.css?v=4.0">
@@ -17,7 +17,7 @@
 <main>
 <nav class="top">
 <a href="./games.html">← GAME ROOM</a>
-<span class="version">HIGH STAKES V3.0</span>
+<span class="version">HIGH STAKES V3.1</span>
 <a href="./">CHRIS'S BASEMENT</a>
 <button id="pageRefresh" class="game-refresh" type="button">↻ REFRESH</button>
 </nav>
@@ -48,10 +48,10 @@
 </div>
 <div class="casino-start-row">
 <div class="controls">
-<label>ROUNDS PER PLAYER<select id="roundCount">
-<option value="3">3 Turns Each — Quick Game</option>
-<option value="5" selected>5 Turns Each — Casino Night</option>
-<option value="10">10 Turns Each — Marathon</option>
+<label>TURNS PER PLAYER<select id="roundCount">
+<option value="5" selected>5 Turns Each — Quick Game</option>
+<option value="10">10 Turns Each — Casino Night</option>
+<option value="15">15 Turns Each — Marathon</option>
 </select>
 </label>
 </div>
@@ -59,6 +59,7 @@
 <button id="start">🎰 OPEN THE TABLE</button>
 </div>
 </div>
+<p id="roundSummary" class="hint" aria-live="polite"></p>
 <p id="setupNotice" class="notice">
 </p>
 </section>
@@ -141,6 +142,7 @@
 <span class="casino-kicker">THE WINNERS' CIRCLE</span>
 <h2>Casino<br>Hall of Fame</h2>
 </div>
+<p class="hint">Longest correct-guess streak from completed games. Ties share a rank. Chips decide tonight’s winner.</p>
 <div id="alltime" role="region" aria-label="Hall of Fame standings" tabindex="0">
 </div>
 <details class="records-drawer">
@@ -163,7 +165,7 @@
 <h2>How to Play</h2>
 <p>
 <strong>Goal:</strong> Finish with the most banked chips.</p>
-<p>Each player gets <strong>3, 5, or 10 turns</strong>, selected before the game. Every turn starts with <strong>100 chips</strong>.</p>
+<p>Each player gets <strong>5, 10, or 15 turns</strong>, selected before the game. Every turn starts with <strong>100 chips</strong>.</p>
 <p>Guess whether the next card will be <strong>higher or lower</strong> (2 low, Ace high). Each correct guess doubles your unbanked pot. Matching ranks are a push; a wrong guess loses the unbanked pot.</p>
 <p>
 <strong>Bank Chips</strong> to secure your winnings, or press your luck. <strong>Double or Nothing</strong> risks the pot on one more guess: win to double and bank automatically, or lose it all.</p>
@@ -172,7 +174,7 @@
 </section>
 </aside>
 </div>
-<footer class="foot">CHRIS'S HIGH STAKES CASINO · V3.0 · JUST FOR FUN · NO REAL-MONEY WAGERING</footer>
+<footer class="foot">CHRIS'S HIGH STAKES CASINO · V3.1 · JUST FOR FUN · NO REAL-MONEY WAGERING</footer>
 </main><script>
 const KEY='chris-high-stakes-v1';const NAME_KEY='chris-casino-saved-names';let savedNames=[];try{savedNames=JSON.parse(localStorage.getItem(NAME_KEY)||'[]');if(!Array.isArray(savedNames))savedNames=[]}catch(e){savedNames=[]}function saveNames(){try{localStorage.setItem(NAME_KEY,JSON.stringify(savedNames))}catch(e){}}function rememberNames(a){a.forEach(n=>{if(n&&!savedNames.some(v=>v.toLowerCase()===n.toLowerCase()))savedNames.push(n)});savedNames.sort((a,b)=>a.localeCompare(b));saveNames()}const $=id=>document.getElementById(id);const ranks=['2','3','4','5','6','7','8','9','10','J','Q','K','A'],suits=['♠','♥','♣','♦'];let state=null,started=false,records={players:{},games:0};const clone=o=>JSON.parse(JSON.stringify(o));const safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
@@ -180,6 +182,19 @@ function newDeck(){return shuffle(suits.flatMap(s=>ranks.map((r,i)=>({rank:i+2,l
 function draw(){if(!state.deck.length)state.deck=newDeck();return state.deck.pop()}
 function save(){try{localStorage.setItem(KEY,JSON.stringify({state,started,records}))}catch(e){alert('Storage full. Export records to back up your game.')}}
 function load(){try{const v=JSON.parse(localStorage.getItem(KEY));if(v&&v.records){state=v.state;started=!!v.started;records=v.records}}catch(e){}}
+function casinoHallRows(players){
+ const rows=Object.entries(players||{}).map(([name,v])=>({name,best:Math.max(0,Number(v.best)||0)})).sort((a,b)=>b.best-a.best||a.name.localeCompare(b.name));
+ let rank=0,last=null;
+ return rows.map((p,i)=>{if(p.best!==last){rank=i+1;last=p.best}return '<div class="score"><span>'+(rank===1?'🏆 ':'')+'#'+rank+' '+safe(p.name)+'<div class="record">Best streak · completed games</div></span><b>'+p.best+' <small>in a row</small></b></div>'}).join('')||'<p class="hint">Finish a game to record your best streak.</p>';
+}
+function updateRoundSummary(){
+ const n=Array.from({length:8},(_,i)=>$('p'+i)?.value.trim()).filter(Boolean).length;
+ const turns=Number($('roundCount').value)||5;
+ $('roundSummary').textContent=n?n+' player'+(n===1?'':'s')+' × '+turns+' turns each = '+n*turns+' total table turns.':'Each player gets '+turns+' turns. Add names to see the table total.';
+}
+$('roundCount').addEventListener('change',updateRoundSummary);
+$('playerInputs').addEventListener('input',updateRoundSummary);
+$('playerInputs').addEventListener('change',updateRoundSummary);
 function scores(){return state?.players.map((p,i)=>({name:p,score:state.scores[i],streak:state.best[i]}))||[]}
 function card(el,c,back=false){
  back=back||!c;
@@ -204,7 +219,7 @@ function selectCasinoPane(pane){
 }
 for(const button of casinoPaneButtons)button.addEventListener('click',()=>selectCasinoPane(button.dataset.casinoPane));
 
-function render(){
+function render(){updateRoundSummary();
  const finished=started&&state?.phase==='done';
  const playing=started&&state&&!finished;
  const view=playing?'game':finished?'results':'setup';
@@ -214,15 +229,15 @@ function render(){
  }
  document.body.classList.toggle('casino-playing',!!playing);
  document.body.classList.toggle('casino-finished',!!finished);
- $('setup').classList.toggle('hidden',started);$('game').classList.toggle('hidden',!playing);$('finished').classList.toggle('hidden',!started||!state||state.phase!=='done');$('liveScores').innerHTML=state?scores().sort((a,b)=>b.score-a.score).map((p,i)=>'<div class="score '+(i===0?'leader':'')+'"><span>'+(i===0?'👑 ':'')+safe(p.name)+'<div class="record">Best streak: '+p.streak+'</div></span><b>'+p.score+'</b></div>').join(''):'Players will appear here.';$('alltime').innerHTML=Object.entries(records.players||{}).sort((a,b)=>b[1].wins-a[1].wins||b[1].chips-a[1].chips).map(([p,v],i)=>'<div class="score"><span>'+(i===0?'🏆 ':'')+safe(p)+'<div class="record">'+v.wins+' wins · Best streak '+v.best+'</div></span><b>'+v.chips+'</b></div>').join('')||'<p class="hint">The casino trophy case awaits its first winner.</p>';if(!started||!state)return;if(state.phase==='done'){const max=Math.max(...state.scores),winners=state.players.filter((_,i)=>state.scores[i]===max);$('winner').textContent='🏆 '+winners.join(' & ')+' '+(winners.length===1?'WINS!':'TIE!');$('finalScores').innerHTML=scores().sort((a,b)=>b.score-a.score).map(p=>'<div class="score"><span>'+safe(p.name)+'</span><b>'+p.score+' CHIPS</b></div>').join('');return}$('turnNumber').textContent='TURN '+(state.turn+1)+' OF '+(state.players.length*state.rounds);$('deckInfo').textContent=state.deck.length+' CARDS IN SHOE';$('turn').textContent=state.players[state.player]+' IS AT THE TABLE';card($('currentCard'),state.current);card($('nextCard'),state.last,state.phase==='guess'||state.phase==='bonusPick');$('result').textContent=state.message;$('pot').textContent='POT: '+state.pot+' CHIPS';$('streak').textContent='STREAK: '+state.streak;$('guessControls').classList.toggle('hidden',state.phase!=='guess'&&state.phase!=='bonusPick'&&state.phase!=='result');$('bankControls').classList.toggle('hidden',state.phase!=='guess'&&state.phase!=='result');$('continueControls').classList.toggle('hidden',state.phase==='guess'||state.phase==='bonusPick'||state.phase==='result');$('higher').disabled=state.phase!=='guess'&&state.phase!=='bonusPick'&&state.phase!=='result';$('lower').disabled=state.phase!=='guess'&&state.phase!=='bonusPick'&&state.phase!=='result';$('bank').disabled=state.phase!=='guess'&&state.phase!=='result';$('double').disabled=state.phase!=='result'||state.pot===0;$('continue').textContent=state.phase==='result'?'RISK ANOTHER CARD →':'NEXT PLAYER →'}
+ $('setup').classList.toggle('hidden',started);$('game').classList.toggle('hidden',!playing);$('finished').classList.toggle('hidden',!started||!state||state.phase!=='done');$('liveScores').innerHTML=state?scores().sort((a,b)=>b.score-a.score).map((p,i)=>'<div class="score '+(i===0?'leader':'')+'"><span>'+(i===0?'👑 ':'')+safe(p.name)+'<div class="record">Best streak: '+p.streak+'</div></span><b>'+p.score+'</b></div>').join(''):'Players will appear here.';$('alltime').innerHTML=casinoHallRows(records.players);if(!started||!state)return;if(state.phase==='done'){const max=Math.max(...state.scores),winners=state.players.filter((_,i)=>state.scores[i]===max);$('winner').textContent='🏆 '+winners.join(' & ')+' '+(winners.length===1?'WINS!':'TIE!');$('finalScores').innerHTML=scores().sort((a,b)=>b.score-a.score).map(p=>'<div class="score"><span>'+safe(p.name)+'</span><b>'+p.score+' CHIPS</b></div>').join('');return}$('turnNumber').textContent='TABLE TURN '+(state.turn+1)+' OF '+(state.players.length*state.rounds)+' · ROUND '+(Math.floor(state.turn/state.players.length)+1)+' OF '+state.rounds;$('deckInfo').textContent=state.deck.length+' CARDS IN SHOE';$('turn').textContent=state.players[state.player]+' IS AT THE TABLE';card($('currentCard'),state.current);card($('nextCard'),state.last,state.phase==='guess'||state.phase==='bonusPick');$('result').textContent=state.message;$('pot').textContent='POT: '+state.pot+' CHIPS';$('streak').textContent='STREAK: '+state.streak;$('guessControls').classList.toggle('hidden',state.phase!=='guess'&&state.phase!=='bonusPick'&&state.phase!=='result');$('bankControls').classList.toggle('hidden',state.phase!=='guess'&&state.phase!=='result');$('continueControls').classList.toggle('hidden',state.phase==='guess'||state.phase==='bonusPick'||state.phase==='result');$('higher').disabled=state.phase!=='guess'&&state.phase!=='bonusPick'&&state.phase!=='result';$('lower').disabled=state.phase!=='guess'&&state.phase!=='bonusPick'&&state.phase!=='result';$('bank').disabled=state.phase!=='guess'&&state.phase!=='result';$('double').disabled=state.phase!=='result'||state.pot===0;$('continue').textContent=state.phase==='result'?'RISK ANOTHER CARD →':'NEXT PLAYER →'}
 function focusGameAction(){const id=state?.phase==='done'?'again':state&&(['guess','result','bonusPick'].includes(state.phase))?'higher':state&&(['bust','banked'].includes(state.phase))?'continue':null;if(id){const el=$(id);if(el&&!el.disabled&&!el.closest('.hidden')){try{el.focus({preventScroll:true})}catch(e){el.focus()}}}}
 function advance(){if(state.phase==='result'){state.last=null;state.phase='guess';state.message='Bank your chips or keep going!';save();render();focusGameAction()}else if(state.phase==='banked'||state.phase==='bust'){newTurn();focusGameAction()}}
 function init(existing=Array.from({length:8},(_,i)=>document.getElementById('p'+i)?.value||'')){$('playerInputs').innerHTML=Array.from({length:8},(_,i)=>'<label>PLAYER '+(i+1)+'<span class="name-row"><input id="p'+i+'" maxlength="24" value="'+safe(existing[i]||'')+'" placeholder="Player '+(i+1)+'" autocomplete="off"><select id="saved'+i+'" aria-label="Saved player name '+(i+1)+'"><option value=""></option>'+savedNames.map(n=>'<option value="'+safe(n)+'">'+safe(n)+'</option>').join('')+'</select></span></label>').join('');for(let i=0;i<8;i++)$('saved'+i).addEventListener('change',e=>{if(e.target.value)$('p'+i).value=e.target.value;e.target.selectedIndex=0})}
-$('start').onclick=()=>{const players=Array.from({length:8},(_,i)=>$('p'+i).value.trim()).filter(Boolean);if(!players.length){$('setupNotice').textContent='Enter at least one player.';return}if(new Set(players.map(x=>x.toLowerCase())).size!==players.length){$('setupNotice').textContent='Player names must be unique.';return}state={players,scores:players.map(()=>0),best:players.map(()=>0),rounds:Number($('roundCount').value),turn:-1,deck:[],phase:'',player:0,pot:0,streak:0,current:null,last:null};started=true;rememberNames(players);newTurn();focusGameAction()};
+$('start').onclick=()=>{const players=Array.from({length:8},(_,i)=>$('p'+i).value.trim()).filter(Boolean);if(!players.length){$('setupNotice').textContent='Enter at least one player.';return}if(new Set(players.map(x=>x.toLowerCase())).size!==players.length){$('setupNotice').textContent='Player names must be unique.';return}state={players,scores:players.map(()=>0),best:players.map(()=>0),rounds:[5,10,15].includes(Number($('roundCount').value))?Number($('roundCount').value):5,turn:-1,deck:[],phase:'',player:0,pot:0,streak:0,current:null,last:null};started=true;rememberNames(players);newTurn();focusGameAction()};
 $('again').onclick=()=>{
  if(!started||state?.phase!=='done')return;
  const players=state.players;
- $('roundCount').value=String(state.rounds);
+ $('roundCount').value=String([5,10,15].includes(state.rounds)?state.rounds:5);
  state=null;
  started=false;
  save();
@@ -231,7 +246,7 @@ $('again').onclick=()=>{
  render();
  $('start').focus();
 };
-$('clearNames').onclick=()=>{for(let i=0;i<8;i++)$('p'+i).value='';$('setupNotice').textContent='Table names cleared. Saved names are still available.'};$('manageNames').onclick=()=>{if(!savedNames.length){$('setupNotice').textContent='No saved names yet. Start a game to save player names.';return}const selected=prompt('Saved names (comma-separated). Edit this list to rename or remove names:',savedNames.join(', '));if(selected===null)return;savedNames=[...new Set(selected.split(',').map(x=>x.trim()).filter(Boolean))].slice(0,100);saveNames();init();$('setupNotice').textContent='Saved names updated.'};$('restart').onclick=()=>{if(confirm('End this casino game and return to the player setup? Unfinished chips will not count toward the Hall of Fame.')){state=null;started=false;save();init();render()}};$('higher').onclick=()=>guess('higher');$('lower').onclick=()=>guess('lower');$('bank').onclick=bank;$('double').onclick=()=>{if(state.phase!=='result'||!state.pot)return;state.phase='bonusPick';state.message='DOUBLE OR NOTHING! PICK HIGHER OR LOWER';save();render()};$('continue').onclick=advance;
+$('clearNames').onclick=()=>{for(let i=0;i<8;i++)$('p'+i).value='';$('setupNotice').textContent='Table names cleared. Saved names are still available.';updateRoundSummary()};$('manageNames').onclick=()=>{if(!savedNames.length){$('setupNotice').textContent='No saved names yet. Start a game to save player names.';return}const selected=prompt('Saved names (comma-separated). Edit this list to rename or remove names:',savedNames.join(', '));if(selected===null)return;savedNames=[...new Set(selected.split(',').map(x=>x.trim()).filter(Boolean))].slice(0,100);saveNames();init();$('setupNotice').textContent='Saved names updated.'};$('restart').onclick=()=>{if(confirm('End this casino game and return to the player setup? Unfinished chips will not count toward the Hall of Fame.')){state=null;started=false;save();init();render()}};$('higher').onclick=()=>guess('higher');$('lower').onclick=()=>guess('lower');$('bank').onclick=bank;$('double').onclick=()=>{if(state.phase!=='result'||!state.pot)return;state.phase='bonusPick';state.message='DOUBLE OR NOTHING! PICK HIGHER OR LOWER';save();render()};$('continue').onclick=advance;
 $('export').onclick=()=>{const b=new Blob([JSON.stringify({state,started,records},null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='high-stakes-casino-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
 $('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const x=JSON.parse(await f.text());if(!x.records||typeof x.records.players!=='object'||!x.records.players||!Number.isFinite(x.records.games)||(x.state===null?!!x.started:!x.state||!Array.isArray(x.state.players)))throw Error('Invalid backup');if(confirm('Replace this device’s casino records?')){state=x.state;records=x.records;started=!!x.started;save();render()}}catch(err){alert('Import failed: '+err.message)}e.target.value=''};init();load();render();
 </script><script>(function(){var b=document.getElementById('pageRefresh');if(b)b.addEventListener('click',function(){var u=new URL(location.href);u.searchParams.set('refresh',Date.now().toString());location.replace(u.toString())})})();</script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script>
