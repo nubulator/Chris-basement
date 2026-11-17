@@ -3,21 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Chris's Music Challenge V4.0</title>
+<title>Chris's Music Challenge V4.1</title>
 <link rel="stylesheet" href="./game-room-refresh.css?v=20261116a">
-<script defer src="./game-room-refresh.js?v=20261116a">
+<script defer src="./game-room-refresh.js?v=20261117pictures">
 </script>
 <link rel="stylesheet" href="./game-room-layout.css?v=20261116b">
 <link rel="stylesheet" href="./game-room-premium.css?v=4.0">
 <link rel="stylesheet" href="./music-premium.css?v=4.0">
 <script defer src="./music-premium.js?v=4.0">
 </script>
+<link rel="stylesheet" href="./picture-clues.css?v=2">
+<script src="./picture-bank.js?v=2"></script>
+<script src="./picture-clues.js?v=1"></script>
 </head>
 <body class="gr-refresh gr-music" data-game="music">
 <main>
 <nav class="top">
 <a href="./games.html">← GAME ROOM</a>
-<span class="version">MUSIC CHALLENGE V4.0</span>
+<span class="version">MUSIC CHALLENGE V4.1</span>
 <a href="./">CHRIS'S BASEMENT</a>
 <button id="pageRefresh" class="game-refresh" type="button">↻ REFRESH</button>
 </nav>
@@ -82,11 +85,11 @@
  <button type="button" class="secondary" data-category="pop" aria-pressed="false">Pop</button>
  </div>
 </fieldset>
-<div class="controls setup-actions">
+<div class="picture-setting"><button type="button" id="pictureToggle" class="secondary" aria-pressed="false">Picture questions: Off</button><p class="hint">Mix album covers and artist photos into your set. Up to 3 in 25 questions; 5 in 50, matching your selections. Internet needed for pictures.</p></div><div class="controls setup-actions">
 <button id="clearNames" class="secondary" type="button">✕ CLEAR ALL NAMES</button>
 <button id="start">🎸 START THE SHOW</button>
 </div>
-<p id="setupNotice" class="notice">
+<p class="hint" id="pictureStock"></p><p id="setupNotice" class="notice">
 </p>
 </section>
 <section class="panel hidden" id="game">
@@ -198,7 +201,7 @@
 </details>
 </aside>
 </div>
-<footer class="bottom">CHRIS'S MUSIC CHALLENGE · V4.0 · THE SHOW MUST GO ON</footer>
+<footer class="bottom">CHRIS'S MUSIC CHALLENGE · V4.1 · THE SHOW MUST GO ON</footer>
 </main><script src="./shared-question-banks.js?v=1"></script><script>
 const QUESTIONS=[...GameRoomQuestionBanks.music];
 
@@ -223,6 +226,7 @@ function selectedMusicCategories(){
 /* Music question history: use content identity, never silently recycle a pool. */
 const MUSIC_QUESTION_KEYS=new Map();
 function musicQuestionKey(question){
+ if(question?.image)return 'picture:'+question.id;
  const text=typeof question==='string'?question:String(question?.q||'');
  if(!MUSIC_QUESTION_KEYS.has(text))MUSIC_QUESTION_KEYS.set(text,decodeMusicHtml(text).normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/&/g,' and ').replace(/[\u2018\u2019'"\u201c\u201d]/g,'').replace(/[^a-z0-9]+/g,' ').trim());
  return MUSIC_QUESTION_KEYS.get(text);
@@ -247,6 +251,13 @@ function rememberMusicQuestions(questions){
  for(const question of questions){keys.add(musicQuestionKey(question));ids.add(question.id)}
  records.seenKeys=[...keys];records.seen=[...ids];
 }
+let pictureEnabled=false;
+$('pictureToggle').onclick=()=>{pictureEnabled=!pictureEnabled;$('pictureToggle').setAttribute('aria-pressed',String(pictureEnabled));$('pictureToggle').textContent='Picture questions: '+(pictureEnabled?'On':'Off')};
+const PICTURE_QUESTIONS=window.GameRoomPictures?.music||[];
+function selectedMusicPictures(selection){
+ return PICTURE_QUESTIONS.filter(q=>(selection.difficulty==='Mixed'||q.level===selection.difficulty)&&
+ (!selection.categories.length||selection.categories.some(tag=>q.tags.includes(tag))));
+}
 function makeDeck(n,eligible){
  const unused=unusedMusicQuestions(eligible);
  if(unused.length<n)return [];
@@ -262,7 +273,7 @@ function allowMusicReplays(eligible){
  records.cycles=(records.cycles||0)+1;
 }
 function musicQuestionForTrack(){
- const find=id=>QUESTIONS.find(question=>String(question.id)===String(id));
+ const find=id=>[...QUESTIONS,...PICTURE_QUESTIONS].find(question=>String(question.id)===String(id));
  const previous=new Set(state.deck.slice(0,state.index).map(find).filter(Boolean).map(musicQuestionKey));
  while(state.index<state.deck.length){
   const question=find(state.deck[state.index]);
@@ -285,6 +296,8 @@ function eligibleMusic(difficulty,categories){
   (!categories.length||categories.some(category=>(MUSIC_TAGS[q.id]||q.tags||[]).includes(category)))));
 }
 function updateMusicVault(){
+ const freshPictures=unusedMusicQuestions(selectedMusicPictures({difficulty:$('difficulty').value,categories:selectedMusicCategories()})).length;
+ $('pictureStock').textContent=freshPictures+' new picture clues match · exhausted pictures are replaced with regular questions.';
  const eligible=eligibleMusic($('difficulty').value,selectedMusicCategories()),unused=unusedMusicQuestions(eligible).length;
  $('vaultCount').textContent=unused+' unused questions match your selections · '+eligible.length+' total';
  $('replayMusic').classList.toggle('hidden',started||unused>=Number($('length').value)||eligible.length<Number($('length').value));
@@ -378,10 +391,16 @@ function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random
 function save(){try{records.seenKeys=[...musicHistoryKeys()];localStorage.setItem(KEY,JSON.stringify({state,records,started}))}catch(e){alert('Storage is full. Please export a backup.')}}
 function load(){try{const v=JSON.parse(localStorage.getItem(KEY));if(v&&v.state&&v.records){state=v.state;records=v.records;started=!!v.started;save()}}catch(e){}}
 function tally(){let t={};for(const p of state.players)t[p]=0;for(const a of state.awards)if(a.player&&Object.hasOwn(t,a.player))t[a.player]++;return t}
-function render(){const t=tally();$('gameNotice').textContent='';updateMusicVault();$('setup').classList.toggle('hidden',started);$('game').classList.toggle('hidden',!started||state.completed);$('showControls').classList.toggle('hidden',!started||state.completed);$('finished').classList.toggle('hidden',!started||!state.completed);$('liveScores').innerHTML=state.players.length?Object.entries(t).sort((a,b)=>b[1]-a[1]).map(([p,n],i)=>'<div class="score '+(i===0?'first':'')+'"><span>'+(i===0?'👑 ':'')+safe(p)+'</span><b>'+n+'</b></div>').join(''):'Add your performers to begin.';let leaders=Object.entries(records.players||{}).sort((a,b)=>b[1].points-a[1].points||b[1].wins-a[1].wins);$('alltime').innerHTML=leaders.length?leaders.map(([p,r],i)=>'<div class="score"><span>'+(i===0?'🥇 ':i===1?'🥈 ':i===2?'🥉 ':'')+safe(p)+'<div class="record">'+r.wins+' show wins</div></span><b>'+r.points+'</b></div>').join(''):'The Hall of Fame awaits its first legend.';$('stats').innerHTML='<div class="stat">'+(records.rounds||0)+' shows completed</div><div class="stat">'+uniqueMusicQuestions(QUESTIONS).length+' questions · '+musicHistoryKeys().size+' in history</div>';if(!started)return;if(state.completed){const ranked=Object.entries(t).sort((a,b)=>b[1]-a[1]),max=ranked[0]?.[1]||0;const winners=ranked.filter(x=>x[1]===max).map(x=>x[0]);$('results').innerHTML='<h2 class="trophy">'+(max?'HEADLINER: '+winners.map(safe).join(' & '):'NO WINNER TONIGHT')+'</h2>'+ranked.map(([p,n])=>'<div class="score"><span>'+safe(p)+'</span><b>'+n+'</b></div>').join('');$('commit').disabled=!!state.committed;$('commit').textContent=state.committed?'✓ RESULTS COMMITTED':'🏆 COMMIT FINAL RESULTS';return}const q=musicQuestionForTrack();if(!q){finish();return}$('progress').textContent='TRACK '+(state.index+1)+' / '+state.deck.length;$('level').textContent=q.level.toUpperCase()+' MODE';$('genre').textContent=q.genre.toUpperCase();const prompt=$('question');
+function render(){if(!started||state.completed)renderPicture(null);const t=tally();$('gameNotice').textContent='';updateMusicVault();$('setup').classList.toggle('hidden',started);$('game').classList.toggle('hidden',!started||state.completed);$('showControls').classList.toggle('hidden',!started||state.completed);$('finished').classList.toggle('hidden',!started||!state.completed);$('liveScores').innerHTML=state.players.length?Object.entries(t).sort((a,b)=>b[1]-a[1]).map(([p,n],i)=>'<div class="score '+(i===0?'first':'')+'"><span>'+(i===0?'👑 ':'')+safe(p)+'</span><b>'+n+'</b></div>').join(''):'Add your performers to begin.';let leaders=Object.entries(records.players||{}).sort((a,b)=>b[1].points-a[1].points||b[1].wins-a[1].wins);$('alltime').innerHTML=leaders.length?leaders.map(([p,r],i)=>'<div class="score"><span>'+(i===0?'🥇 ':i===1?'🥈 ':i===2?'🥉 ':'')+safe(p)+'<div class="record">'+r.wins+' show wins</div></span><b>'+r.points+'</b></div>').join(''):'The Hall of Fame awaits its first legend.';$('stats').innerHTML='<div class="stat">'+(records.rounds||0)+' shows completed</div><div class="stat">'+uniqueMusicQuestions(QUESTIONS).length+' questions · '+musicHistoryKeys().size+' in history</div>';if(!started)return;if(state.completed){const ranked=Object.entries(t).sort((a,b)=>b[1]-a[1]),max=ranked[0]?.[1]||0;const winners=ranked.filter(x=>x[1]===max).map(x=>x[0]);$('results').innerHTML='<h2 class="trophy">'+(max?'HEADLINER: '+winners.map(safe).join(' & '):'NO WINNER TONIGHT')+'</h2>'+ranked.map(([p,n])=>'<div class="score"><span>'+safe(p)+'</span><b>'+n+'</b></div>').join('');$('commit').disabled=!!state.committed;$('commit').textContent=state.committed?'✓ RESULTS COMMITTED':'🏆 COMMIT FINAL RESULTS';return}const q=musicQuestionForTrack();if(!q){finish();return}$('progress').textContent='TRACK '+(state.index+1)+' / '+state.deck.length;$('level').textContent=q.level.toUpperCase()+' MODE';$('genre').textContent=q.genre.toUpperCase();const prompt=$('question');
 prompt.textContent=q.q;
 prompt.dataset.length=q.q.length>120?'long':q.q.length>70?'medium':'short';
-const mc=$('musicChoices');mc.innerHTML='';if(Array.isArray(q.choices)&&q.choices.length>1){mc.classList.remove('hidden');q.choices.forEach((choice,i)=>{const div=document.createElement('div');div.className='music-choice';div.textContent=String.fromCharCode(65+i)+'. '+choice;if(state.revealed&&choice===q.a)div.classList.add('correct');mc.appendChild(div)})}else mc.classList.add('hidden');$('answer').textContent=q.a;$('answer').classList.toggle('hidden',!state.revealed);$('awardArea').classList.toggle('hidden',!state.revealed||!!state.pending);$('nextGate').classList.toggle('hidden',!state.pending);$('reveal').disabled=state.revealed;$('undo').disabled=!state.awards.length;$('awardButtons').innerHTML=state.players.map((p,i)=>'<button data-player="'+i+'">'+safe(p)+' +1</button>').join('')}
+const mc=$('musicChoices');mc.innerHTML='';if(Array.isArray(q.choices)&&q.choices.length>1){mc.classList.remove('hidden');q.choices.forEach((choice,i)=>{const div=document.createElement('div');div.className='music-choice';div.textContent=String.fromCharCode(65+i)+'. '+choice;if(state.revealed&&choice===q.a)div.classList.add('correct');mc.appendChild(div)})}else mc.classList.add('hidden');$('answer').textContent=q.a;$('answer').classList.toggle('hidden',!state.revealed);$('awardArea').classList.toggle('hidden',!state.revealed||!!state.pending);$('nextGate').classList.toggle('hidden',!state.pending);$('reveal').disabled=state.revealed;$('undo').disabled=!state.awards.length;$('awardButtons').innerHTML=state.players.map((p,i)=>'<button data-player="'+i+'">'+safe(p)+' +1</button>').join('');renderPicture(q)}
+const renderPicture=window.createPictureClue({anchor:$('question'),getState:()=>state,replace:()=>{
+ const selection=state.selection||{difficulty:'Mixed',categories:[]};
+ const replacement=shuffle(unusedMusicQuestions(eligibleMusic(selection.difficulty,selection.categories)).filter(q=>!state.deck.includes(q.id)))[0];
+ if(!replacement){$('gameNotice').textContent='No unused replacement matches. Try refreshing to reload the picture.';return}
+ state.deck[state.index]=replacement.id;rememberMusicQuestions([replacement]);save();render();focusControl('reveal');
+}});
 function finish(){state.completed=true;state.pending=false;save();render()}
 function award(p){if(!state.revealed||state.pending)return;state.awards.push({index:state.index,player:p});state.pending=true;if(state.index===state.deck.length-1)finish();else{save();render();focusControl('nextTrack')}}
 function commit(){if(!state.completed||state.committed)return;records.rounds++;const t=tally(),top=Math.max(...Object.values(t));for(const p of state.players){if(!records.players[p])records.players[p]={points:0,wins:0};records.players[p].points+=t[p];if(top>0&&t[p]===top)records.players[p].wins++}state.committed=true;save();render();if(window.musicCloudSave)window.musicCloudSave(records)}
@@ -403,7 +422,10 @@ $('start').onclick=()=>{const names=Array.from({length:8},(_,i)=>$('p'+i).value.
   $('setupNotice').textContent='Only '+unused+' unused questions match. '+(n===50&&unused>=25?'Choose 25 questions or add categories.':'Add categories or choose Mixed difficulty.')+(eligible.length>=n?' Repeats are off; the vault has an optional replay button.':'');
   updateMusicVault();void restockMusicVaultIfLow();return;
  }
- const deck=makeDeck(n,eligible);localStorage.setItem('chris-music-names',JSON.stringify(Array.from({length:8},(_,i)=>$('p'+i).value.trim())));rememberPerformers(names);state={players:names,deck,selection,index:0,revealed:false,awards:[],completed:false,pending:false,committed:false};started=true;$('vaultPanel').open=false;save();render();if(matchMedia('(min-width:850px) and (orientation:landscape)').matches)window.scrollTo({top:0,left:0,behavior:'instant'});focusControl('reveal');void restockMusicVaultIfLow()};
+ const picturePool=pictureEnabled?unusedMusicQuestions(selectedMusicPictures(selection)):[];
+ const pictures=shuffle(picturePool).slice(0,n===50?5:3);
+ const deck=shuffle([...makeDeck(n-pictures.length,eligible),...pictures.map(q=>q.id)]);
+ rememberMusicQuestions(pictures);selection.pictures=pictureEnabled;localStorage.setItem('chris-music-names',JSON.stringify(Array.from({length:8},(_,i)=>$('p'+i).value.trim())));rememberPerformers(names);state={players:names,deck,selection,index:0,revealed:false,awards:[],completed:false,pending:false,committed:false};started=true;$('vaultPanel').open=false;save();render();if(matchMedia('(min-width:850px) and (orientation:landscape)').matches)window.scrollTo({top:0,left:0,behavior:'instant'});focusControl('reveal');void restockMusicVaultIfLow()};
 $('clearNames').onclick=()=>{for(let i=0;i<8;i++)$('p'+i).value='';localStorage.removeItem('chris-music-names')};
 $('abandon').onclick=()=>{if(confirm('Abandon this show? No scores will be added to the Hall of Fame.')){started=false;state=fresh();save();render();focusControl('namePick0')}};
 $('nextTrack').onclick=()=>{if(!state.pending)return;state.index++;state.pending=false;state.revealed=false;save();render();focusControl('reveal')};
