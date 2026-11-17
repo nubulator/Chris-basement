@@ -24,3 +24,7 @@
  .stat-player{font-size:9px;line-height:1.2}
  .game-live .game-info .value{font-size:15px}
 }
+/* A persistent pregame line beneath the kickoff countdown. */
+#pregame-daily-line{width:100%;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.daily-line-heading{font-size:11px;letter-spacing:.13em;font-weight:800;color:var(--accent);margin-bottom:12px}.daily-line-values{display:grid;grid-template-columns:1fr 1fr;gap:8px}.daily-line-values span{display:block;font-size:9px;letter-spacing:.06em;color:#aeb9c9}.daily-line-values strong{display:block;font-size:clamp(15px,1.3vw,25px);margin-top:6px;overflow-wrap:anywhere}#gdl-source{font-size:9px;color:#aeb9c9;line-height:1.4;margin-top:12px}
+@media(min-width:900px) and (min-aspect-ratio:4/3) and (max-height:800px){#pregame-daily-line{margin-top:12px;padding-top:10px}.daily-line-heading{margin-bottom:8px}#gdl-source{margin-top:8px}#game-day-countdown-panel #countdown{margin:8px 0}#game-day-countdown-panel #countdown-message{font-size:11px}}
