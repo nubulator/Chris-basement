@@ -58,6 +58,45 @@ def normalize(event, league):
     }
 
 
+
+def enrich_missing_odds(games, now):
+    """Look up published event-summary odds for near-term games only."""
+    paths = {league: path for league, (path, _) in SPORTS.items()}
+    near = []
+    for game in games.values():
+        try:
+            when = dt.datetime.fromisoformat(game["date"].replace("Z", "+00:00"))
+        except (ValueError, AttributeError):
+            continue
+        if now - dt.timedelta(hours=3) <= when <= now + dt.timedelta(days=4):
+            if game["odds"]["spread"] is None or game["odds"]["total"] is None:
+                near.append(game)
+    near.sort(key=lambda g: (
+        0 if any(word in (g["away"] or "") + " " + (g["home"] or "") for word in
+                 ("Ohio State", "Cleveland", "Columbus", "Browns", "Cavaliers", "Blue Jackets", "Reds")) else 1,
+        g["date"],
+    ))
+    completed = 0
+    for game in near[:35]:
+        try:
+            payload = fetch(paths[game["league"]], "/summary?event=" + urllib.parse.quote(game["id"]))
+            options = (payload.get("pickcenter") or []) + (payload.get("odds") or [])
+            options += ((payload.get("header") or {}).get("competitions") or [{}])[0].get("odds") or []
+            for option in options:
+                spread = option.get("details") or option.get("spread")
+                total = option.get("overUnder", option.get("over_under"))
+                if game["odds"]["spread"] is None and spread is not None:
+                    game["odds"]["spread"] = spread
+                if game["odds"]["total"] is None and total is not None:
+                    game["odds"]["total"] = total
+                if game["odds"]["spread"] is not None and game["odds"]["total"] is not None:
+                    break
+            completed += 1
+        except (urllib.error.URLError, TimeoutError, ValueError, KeyError, TypeError):
+            pass
+        time.sleep(0.05)
+    return completed
+
 def main():
     now = dt.datetime.now(dt.timezone.utc)
     games = {}
@@ -82,14 +121,15 @@ def main():
             time.sleep(0.05)
     if successes < 6:
         raise RuntimeError(f"Only {successes} ESPN scoreboard requests succeeded; refusing to replace feed")
+    enriched = enrich_missing_odds(games, now)
     result = {
         "schema": 1, "generatedAt": now.isoformat(), "source": "ESPN scoreboard",
-        "successfulRequests": successes, "failedRequests": len(errors),
+        "successfulRequests": successes, "failedRequests": len(errors), "summaryRequests": enriched,
         "games": sorted(games.values(), key=lambda x: x["date"] or ""),
     }
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(json.dumps(result, ensure_ascii=False, separators=(",", ":")) + "\n")
-    print(f"Cached {len(games)} games from {successes} requests; {len(errors)} failed")
+    print(f"Cached {len(games)} games from {successes} scoreboard and {enriched} summary requests; {len(errors)} failed")
 
 
 if __name__ == "__main__":
