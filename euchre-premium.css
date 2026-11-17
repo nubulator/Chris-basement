@@ -6,7 +6,7 @@ body.gr-euchre{--gr-accent:#e5c58b;--gr-surface:#14251e;--gr-line:#ba96564d;colo
 .gr-euchre .hero-kicker{color:#dfc38e;font-size:11px;letter-spacing:.23em}
 .gr-euchre .travel-hero .subtitle{color:#d7d8c7;margin:0;font-size:12px;letter-spacing:.15em}
 .gr-euchre .version-tag{background:#15251d;border-color:#a98b5555;color:#e5c58b}.gr-euchre .version-tag small{color:#bbc5b6}
-.gr-euchre .euchre-tabs{margin:4px 0 10px;gap:8px}.gr-euchre .euchre-tabs button{background:#112119;border-color:#a98b5544;letter-spacing:.08em;font-size:12px;min-height:42px;border-radius:8px}.gr-euchre .euchre-tabs button.active{background:linear-gradient(#f1dab0,#c6a268);color:#17241c;border-color:#f1dab0}
+.gr-euchre .euchre-tabs{margin:4px 0 10px;gap:8px}.gr-euchre .euchre-tabs button{color:#f3e7cf;background:#112119;border-color:#a98b5544;letter-spacing:.08em;font-size:12px;min-height:42px;border-radius:8px}.gr-euchre .euchre-tabs button.active{background:linear-gradient(#f1dab0,#c6a268);color:#17241c;border-color:#f1dab0}
 .gr-euchre .panel.tab-panel{background:linear-gradient(120deg,#20392be8,#0d1c16f5),url('./assets/game-room-premium/euchre-v1.webp') center/cover;border-color:#b79c5d66;border-radius:16px;padding:18px 22px;margin:0 0 5px}
 .gr-euchre .panel h2{font:500 clamp(20px,2vw,29px) Georgia,serif}.gr-euchre .panel h2:before{content:none}
 .gr-euchre #standingsPanel .teams{gap:20px;margin:14px 0}
