@@ -63,18 +63,18 @@
           store.put({ value, revision: revision + 1 }, key);
         };
       }
-      try { await done; } catch (e) { if (conflict) throw new Error('Another tab changed this game. Export this tab's backup before reloading.'); throw e; }
+      try { await done; } catch (e) { if (conflict) throw new Error('Another tab changed this game. Export this tab\u2019s backup before reloading.'); throw e; }
       for (const [key] of batch) versions.set(key, versions.get(key) + 1);
     }
     function drain() {
       if (saving) return saving;
       saving = (async () => {
         while (pending.size) {
-          const batch = new Map(pending); pending.clear(); notify('Saving.', false);
+          const batch = new Map(pending); pending.clear(); notify('Saving\u2026', false);
           try { await commitBatch(batch); }
           catch (e) {
             for (const [k, v] of batch) if (!pending.has(k)) pending.set(k, v);
-            failure = e; notify('Not saved: ' + e.message + ' - export a backup or retry.', true); throw e;
+            failure = e; notify('Not saved: ' + e.message + ' \u2014 export a backup or retry.', true); throw e;
           }
         }
         failure = null; notify(legacyConflict ? 'Saved. Older-tab records preserved in backup archive.' : 'Saved on this device', false);
@@ -110,10 +110,10 @@
   async function boot(keys, options = {}) {
     const panel = document.createElement('details');
     panel.style.cssText = 'position:fixed;bottom:4px;right:8px;z-index:99999;max-width:min(580px,90vw);max-height:75vh;overflow:auto;background:#18251f;color:#fff;padding:7px 12px;border:1px solid #baa370;border-radius:8px;font:13px system-ui';
-    panel.innerHTML = '<summary style="cursor:pointer">Opening saved game.</summary><p>Expanded device storage � IndexedDB</p><p data-capacity></p><button type="button" data-export>Export storage backup</button> <button type="button" data-retry>Retry save</button> <button type="button" data-persist>Protect offline saves</button><p data-note>Keep a backup of important scores. Clearing browser site data removes device saves.</p>';
+    panel.innerHTML = '<summary style="cursor:pointer">Opening saved game\u2026</summary><p>Expanded device storage \u00b7 IndexedDB</p><p data-capacity></p><button type="button" data-export>Export storage backup</button> <button type="button" data-retry>Retry save</button> <button type="button" data-persist>Protect offline saves</button><p data-note>Keep a backup of important scores. Clearing browser site data removes device saves.</p>';
     document.body.append(panel);
     const summary = panel.querySelector('summary');
-    const overlay = document.createElement('div'); overlay.style.cssText = 'position:fixed;inset:0;z-index:99998;background:#111d;color:#fff;display:grid;place-items:center;font:20px system-ui'; overlay.textContent = 'Opening your saved game.'; document.body.append(overlay);
+    const overlay = document.createElement('div'); overlay.style.cssText = 'position:fixed;inset:0;z-index:99998;background:#111d;color:#fff;display:grid;place-items:center;font:20px system-ui'; overlay.textContent = 'Opening your saved game\u2026'; document.body.append(overlay);
     const note = panel.querySelector('[data-note]');
     try {
       const storage = await open(keys, { ...options, notify(message, error) { summary.textContent = message; if (error) panel.open = true; } });
@@ -129,7 +129,7 @@
           if (data.format !== 'chris-game-room-storage-backup-v1' || !data.values || typeof data.values !== 'object') throw new Error('Choose an exported storage backup.');
           const entries = Object.entries(data.values).filter(([k]) => keys.includes(k));
           if (!entries.length || entries.some(([,v]) => v !== null && typeof v !== 'string')) throw new Error('This backup does not match this game.');
-          if (!confirm('Replace this game's device saves with this backup? Export the current backup first if you want to keep both.')) return;
+          if (!confirm('Replace this game\u2019s device saves with this backup? Export the current backup first if you want to keep both.')) return;
           for (const [k,v] of entries) v === null ? storage.removeItem(k) : storage.setItem(k,v);
           await storage.flush(); location.reload();
         } catch(e) { note.textContent = 'Restore failed: ' + e.message; }
