@@ -30,6 +30,11 @@ let browser;
       await new Promise(resolve => setTimeout(resolve, 5000));
     }
   } else {
+    await context.route('**/Chris-basement/sports-feed.js*', route => route.fulfill({ contentType: 'text/javascript', body: fs.readFileSync(path.join(root, 'sports-feed.js'), 'utf8') }));
+    if (process.env.GARAGE_ROOT) {
+      await context.route('**/Jim-Amys-Garage/?*', route => route.fulfill({ contentType: 'text/html', body: fs.readFileSync(path.join(process.env.GARAGE_ROOT, 'index.html'), 'utf8') }));
+      await context.route('**/Jim-Amys-Garage/sports-feed.js*', route => route.fulfill({ contentType: 'text/javascript', body: fs.readFileSync(path.join(process.env.GARAGE_ROOT, 'sports-feed.js'), 'utf8') }));
+    }
     await context.route('**/Chris-basement/index-v3822.html*', route => route.fulfill({ status: 200, contentType: 'text/html', body: fs.readFileSync(path.join(root, 'index-v3822.html'), 'utf8') }));
     await context.route('**/Chris-basement/data/daily-line-feed.json*', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(feed) }));
   }
@@ -110,7 +115,9 @@ let browser;
     // Prove that MY TEAMS and odds need no browser-to-ESPN requests.
     const offline = await browser.newContext({ viewport: { width: 1920, height: 1080 }, timezoneId: 'America/New_York' });
     await offline.route('**/Chris-basement/index-v3822.html*', route => route.fulfill({ contentType: 'text/html', body: fs.readFileSync(path.join(root, 'index-v3822.html'), 'utf8') }));
+    await offline.route('**/Chris-basement/sports-feed.js*', route => route.fulfill({ contentType: 'text/javascript', body: fs.readFileSync(path.join(root, 'sports-feed.js'), 'utf8') }));
     await offline.route('**/site.api.espn.com/**', route => route.abort());
+    await offline.route('**/api/sports?*', route => route.abort());
     await offline.route('**/Chris-basement/data/daily-line-feed.json*', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify(feed) }));
     const op = await offline.newPage();
     await op.goto(chris + 'index-v3822.html?view=daily-line', { waitUntil: 'domcontentloaded' });
