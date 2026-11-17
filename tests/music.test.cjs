@@ -31,3 +31,12 @@ run("$('replayMusic').onclick();$('start').onclick()");assert.equal(run('state.d
 run("QUESTIONS.push({id:'qa-choice',q:'Which group?',a:'Band B',level:'Easy',genre:'Rock',choices:['Band A','Band B','Band C','Band D']});state.deck=['qa-choice'];state.index=0;state.completed=false;state.pending=false;state.revealed=true;render()");
 assert.ok(run("$('musicChoices').children.some(c=>c.textContent==='B. Band B'&&c.classList.contains('correct'))"));
 console.log('Music passed: unique 25/50 decks, saved history/no automatic repeats, category/difficulty, validation, reveal, scoring gates, ready, undo, Nobody, finish, tie winners, commit once, replay opt-in and presentation transitions.');
+
+
+for(const raw of ['null','{}','[null,7,"Chris"]']) {
+ stored.set('chris-music-performers',raw);
+ assert.equal(run('Array.isArray(savedPerformers())&&savedPerformers().every(n=>typeof n==="string")'),true);
+}
+stored.set('chris-music-names','null');
+assert.doesNotThrow(()=>run('init()'));
+console.log('PASS: invalid saved performer data does not break setup.');

@@ -230,3 +230,13 @@ assert.equal(plans.run("spinPlan(0,3,12,.05,true).phases.length"),1);
 plans.run("$('wheelSound').onclick()");
 assert.equal(plans.run('wheelSound'),false);
 console.log('PASS: animated suspense completion, wedge alignment, turn continuity, fake-out boundary, reduced motion, sound toggle.');
+
+
+// Malformed suggestions must not prevent the wheel from initializing.
+for(const raw of ['{broken','null','{}','[null,7,"Chris"]']) {
+ const data=new Map([['last-call-name-history',raw]]);
+ const instance=game(data);
+ assert.equal(instance.run('Array.isArray(savedNames)&&savedNames.every(n=>typeof n==="string")'),true);
+ assert.equal(data.get('last-call-name-history'),raw,'Loading must not overwrite stored data');
+}
+console.log('PASS: malformed saved crew does not block startup or overwrite storage.');

@@ -386,7 +386,7 @@ function finish(){state.completed=true;state.pending=false;save();render()}
 function award(p){if(!state.revealed||state.pending)return;state.awards.push({index:state.index,player:p});state.pending=true;if(state.index===state.deck.length-1)finish();else{save();render();focusControl('nextTrack')}}
 function commit(){if(!state.completed||state.committed)return;records.rounds++;const t=tally(),top=Math.max(...Object.values(t));for(const p of state.players){if(!records.players[p])records.players[p]={points:0,wins:0};records.players[p].points+=t[p];if(top>0&&t[p]===top)records.players[p].wins++}state.committed=true;save();render();if(window.musicCloudSave)window.musicCloudSave(records)}
 function undo(){if(!state.awards.length)return;const last=state.awards.pop();state.index=last.index;state.revealed=true;state.pending=false;state.completed=false;save();render();$('gameNotice').textContent='Previous award reversed. Choose again.';requestAnimationFrame(()=>{const first=$('awardButtons').querySelector('button');if(first)first.focus({preventScroll:true})})}
-function savedPerformers(){try{return JSON.parse(localStorage.getItem('chris-music-performers')||'[]')}catch(e){return []}}
+function savedPerformers(){try{const names=JSON.parse(localStorage.getItem('chris-music-performers')||'[]');return Array.isArray(names)?names.filter(n=>typeof n==='string'&&n.trim()):[]}catch(e){return []}}
 function focusControl(id){requestAnimationFrame(()=>{const el=$(id);if(el&&!el.closest('.hidden')){el.focus({preventScroll:true});const rect=el.getBoundingClientRect();if(rect.top<0||rect.bottom>window.innerHeight||rect.left<0||rect.right>window.innerWidth)el.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'})}})}
 function rememberPerformers(names){const all=[...savedPerformers(),...names].map(x=>String(x).trim()).filter(Boolean);const unique=[...new Map(all.map(x=>[x.toLowerCase(),x])).values()].slice(-80);localStorage.setItem('chris-music-performers',JSON.stringify(unique));refreshSuggestions()}
 function refreshSuggestions(){const names=savedPerformers();}
@@ -397,7 +397,7 @@ function openNamePicker(i){pickerSlot=i;manageSavedNames=false;$('savedNamePicke
 $('closeNamePicker').onclick=closeSavedPicker;
 $('manageSavedNames').onclick=()=>{manageSavedNames=!manageSavedNames;renderSavedPicker();$('manageSavedNames').focus({preventScroll:true})};
 $('clearSavedNames').onclick=()=>{if(!confirm('Clear ALL saved performer suggestions? This will NOT delete scores or game history.'))return;localStorage.removeItem('chris-music-performers');refreshSuggestions();renderSavedPicker();$('manageSavedNames').focus({preventScroll:true})};
-function init(){let names=[];try{names=JSON.parse(localStorage.getItem('chris-music-names')||'[]')}catch(e){}$('playerInputs').innerHTML=''+Array.from({length:8},(_,i)=>'<label>PERFORMER '+(i+1)+'<span class="performer-entry"><input maxlength="24" autocomplete="off" id="p'+i+'" placeholder="Name" value="'+safe(names[i]||'')+'"><button class="name-pick" id="namePick'+i+'" type="button" title="Choose saved performer" aria-label="Choose saved performer for slot '+(i+1)+'" onclick="openNamePicker('+i+')">▾</button></span></label>').join('');refreshSuggestions()}
+function init(){let names=[];try{names=JSON.parse(localStorage.getItem('chris-music-names')||'[]');if(!Array.isArray(names))names=[]}catch(e){}$('playerInputs').innerHTML=''+Array.from({length:8},(_,i)=>'<label>PERFORMER '+(i+1)+'<span class="performer-entry"><input maxlength="24" autocomplete="off" id="p'+i+'" placeholder="Name" value="'+safe(names[i]||'')+'"><button class="name-pick" id="namePick'+i+'" type="button" title="Choose saved performer" aria-label="Choose saved performer for slot '+(i+1)+'" onclick="openNamePicker('+i+')">▾</button></span></label>').join('');refreshSuggestions()}
 $('start').onclick=()=>{const names=Array.from({length:8},(_,i)=>$('p'+i).value.trim()).filter(Boolean);if(!names.length){$('setupNotice').textContent='Enter at least one player.';return}if(new Set(names.map(x=>x.toLowerCase())).size!==names.length){$('setupNotice').textContent='Use different names for each player.';return}const n=Number($('length').value),selection={difficulty:$('difficulty').value,categories:selectedMusicCategories()},eligible=eligibleMusic(selection.difficulty,selection.categories),unused=unusedMusicQuestions(eligible).length;
  if(unused<n){
   $('setupNotice').textContent='Only '+unused+' unused questions match. '+(n===50&&unused>=25?'Choose 25 questions or add categories.':'Add categories or choose Mixed difficulty.')+(eligible.length>=n?' Repeats are off; the vault has an optional replay button.':'');
@@ -450,6 +450,7 @@ try{if(!window.firebase||!firebase.firestore)throw Error('Firebase library unava
   }catch(e){}
 })();
 </script></body></html>
+
 
 
 

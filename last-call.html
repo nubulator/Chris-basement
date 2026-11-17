@@ -215,7 +215,7 @@ function triviaChallenge(){
  if(!q)return 'The shared questions could not load. Refresh to try again, or choose a tongue twister.';
  return q.q+(q.choices.length?'\n'+q.choices.map((choice,i)=>String.fromCharCode(65+i)+'. '+choice).join('  •  '):'');
 }
-let names=["","","","","","","",""];let savedNames=JSON.parse(localStorage.getItem('last-call-name-history')||'[]');let turn=0,angle=0,spinning=false,gameOver=false,history=[],played=new Set(),pendingTriviaAnswer='';
+let names=["","","","","","","",""];let savedNames=[];try{const saved=JSON.parse(localStorage.getItem('last-call-name-history')||'[]');if(Array.isArray(saved))savedNames=saved.filter(n=>typeof n==='string'&&n.trim())}catch(e){}let turn=0,angle=0,spinning=false,gameOver=false,history=[],played=new Set(),pendingTriviaAnswer='';
 const $=id=>document.getElementById(id);
 function draw(){
  const svg=$('face');
@@ -442,4 +442,5 @@ $('revealAnswer').onclick=()=>{if(!pendingTriviaAnswer)return;$('challenge').tex
  }catch(e){}
 })();
 </script></body></html>
+
 

@@ -54,3 +54,33 @@ function updateRoomTheme(){
  drawHolidayLights(key);
 }
 updateRoomTheme();setInterval(updateRoomTheme,60000);
+
+
+// Directional navigation for remotes, based on the current responsive layout.
+function roomNavigationTarget(current, controls, key) {
+ const horizontal=key==='ArrowLeft'||key==='ArrowRight';
+ const forward=key==='ArrowRight'||key==='ArrowDown';
+ const origin=current.getBoundingClientRect();
+ const ox=(origin.left+origin.right)/2,oy=(origin.top+origin.bottom)/2;
+ let best=null,bestScore=Infinity;
+ for(const control of controls){
+  if(control===current)continue;
+  const box=control.getBoundingClientRect();
+  if(!box.width||!box.height)continue;
+  const dx=(box.left+box.right)/2-ox,dy=(box.top+box.bottom)/2-oy;
+  const along=horizontal?dx:dy,across=horizontal?dy:dx;
+  if(forward?along<=1:along>=-1)continue;
+  const score=Math.abs(along)+Math.abs(across)*3;
+  if(score<bestScore){best=control;bestScore=score;}
+ }
+ return best;
+}
+document.addEventListener('keydown',event=>{
+ if(event.defaultPrevented||event.altKey||event.ctrlKey||event.metaKey||event.shiftKey)return;
+ if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key))return;
+ if(event.target&&event.target.matches('input,textarea,select,[contenteditable="true"]'))return;
+ const controls=[...document.querySelectorAll('.lounge-nav a,.lounge-nav button,.lounge-tile')];
+ const current=document.activeElement;
+ const next=controls.includes(current)?roomNavigationTarget(current,controls,event.key):document.querySelector('.lounge-tile');
+ if(next){event.preventDefault();next.focus();next.scrollIntoView({block:'nearest',inline:'nearest'});}
+});

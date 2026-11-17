@@ -33,3 +33,13 @@ run('render();advance();bank()');assert.equal(run('records.games'),1);assert.equ
 run("$('again').onclick()");assert.equal(run('started'),false);assert.equal(run('state'),null);assert.equal(run("$('roundCount').value"),'3');
 run("selectCasinoPane('rules')");assert.equal(sidebar.dataset.pane,'rules');assert.equal(panes[2].getAttribute('aria-pressed'),'true');
 console.log('Casino passed: 52 exact card faces, pip counts/court artwork, hidden next card, name validation, saved names, Ace high, push, win/bust, double-and-bank, repeated bank guard, turn advance, tied results, one finish/cloud write, reset and sidebar tabs.');
+
+
+(async()=>{
+ const backup=run('JSON.stringify({state,started,records})');
+ let alerts=[];context.alert=message=>alerts.push(message);
+ await elements.get('importFile').onchange({target:{files:[{text:async()=>backup}],value:'backup.json'}});
+ assert.deepEqual(alerts,[],'An exported between-games backup must import');
+ assert.equal(run('records.games'),1);assert.equal(run('state'),null);assert.equal(run('started'),false);
+ console.log('PASS: between-games backup round trip preserves standings.');
+})().catch(error=>{console.error(error);process.exitCode=1});
