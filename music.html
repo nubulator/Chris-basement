@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Chris's Music Challenge V4.1</title>
+<title>Chris's Music Challenge V4.2</title>
 <link rel="stylesheet" href="./game-room-refresh.css?v=20261116a">
 <script defer src="./game-room-refresh.js?v=20261117pictures">
 </script>
@@ -20,7 +20,7 @@
 <main>
 <nav class="top">
 <a href="./games.html">← GAME ROOM</a>
-<span class="version">MUSIC CHALLENGE V4.1</span>
+<span class="version">MUSIC CHALLENGE V4.2</span>
 <a href="./">CHRIS'S BASEMENT</a>
 <button id="pageRefresh" class="game-refresh" type="button">↻ REFRESH</button>
 </nav>
@@ -201,15 +201,15 @@
 </details>
 </aside>
 </div>
-<footer class="bottom">CHRIS'S MUSIC CHALLENGE · V4.1 · THE SHOW MUST GO ON</footer>
-</main><script src="./shared-question-banks.js?v=1"></script><script>
+<footer class="bottom">CHRIS'S MUSIC CHALLENGE · V4.2 · THE SHOW MUST GO ON</footer>
+</main><script src="./shared-question-banks.js?v=1"></script><script type="application/x-game-storage">
 const QUESTIONS=[...GameRoomQuestionBanks.music];
 
 const $=id=>document.getElementById(id);
 const MUSIC_TAGS={"1":["rock","classic"],"2":["rock","classic"],"3":["rock","classic"],"4":["rock","80s","classic"],"5":["rock","90s"],"6":["rock","classic"],"7":["rock","80s","classic"],"8":["rock","classic"],"9":["rock","80s","classic"],"10":["rock","2000s"],"11":["pop","80s"],"12":["pop","80s"],"13":["pop","90s"],"14":["pop","2010s"],"15":["pop","2010s"],"16":["pop","90s"],"17":["pop","2010s"],"18":["pop","2010s"],"19":["pop","2010s"],"20":["pop","2010s"],"21":["hiphop","2000s"],"22":["hiphop"],"23":["hiphop","2000s"],"24":["hiphop","90s"],"25":["hiphop","2000s"],"26":["hiphop","2010s"],"27":["hiphop","2010s"],"28":["hiphop"],"29":["hiphop","90s"],"30":["hiphop","80s"],"31":["rock","classic"],"32":["rock","90s"],"33":["rock","classic"],"34":["rock","90s"],"35":["rock","classic"],"36":["rock","classic"],"37":["rock","90s"],"38":["rock","90s"],"39":["rock","2000s"],"40":["rock","80s","classic"],"41":["pop","90s"],"42":["pop","90s"],"43":["pop","2010s"],"44":["pop","80s"],"45":["pop","80s"],"46":["pop","2010s"],"47":["pop","2010s"],"48":["pop","2000s"],"49":["pop"],"50":["pop","90s"],"51":["hiphop","90s"],"52":["hiphop","2000s"],"53":["hiphop","2000s"],"54":["hiphop","90s"],"55":["hiphop","2000s"],"56":["hiphop","2000s"],"57":["hiphop","2000s"],"58":["hiphop","90s"],"59":["hiphop","2010s"],"60":["hiphop","2010s"],"61":["rock","classic"],"62":["rock","classic"],"63":["rock","classic"],"64":["rock","90s"],"65":["rock","classic"],"66":["rock","80s","classic"],"67":["rock","classic"],"68":["rock","80s","classic"],"69":["rock","80s","classic"],"70":["rock","90s"],"71":["pop","80s"],"72":["pop"],"73":["pop","90s"],"74":["pop","2010s"],"75":["pop","2000s"],"76":["pop","80s"],"77":["pop","90s"],"78":["pop","80s"],"79":["pop","2010s"],"80":["pop","80s"],"81":["hiphop"],"82":["hiphop","90s"],"83":["hiphop","90s"],"84":["hiphop","2000s"],"85":["hiphop","90s"],"86":["hiphop","80s"],"87":["hiphop","90s"],"88":["hiphop","2010s"],"89":["hiphop","90s"],"90":["hiphop","2000s"],"91":["rock","classic"],"92":["rock","classic"],"93":["rock","90s"],"94":["rock","classic"],"95":["rock","80s","classic"],"96":["rock","80s","classic"],"97":["rock","90s"],"98":["pop","80s"],"99":["pop","80s"],"100":["pop","2000s"],"101":["pop","2010s"],"102":["pop","2010s"],"103":["pop","2010s"],"104":["pop","2010s"],"105":["hiphop","90s"],"106":["hiphop","2010s"],"107":["hiphop","2010s"],"108":["hiphop","2000s"],"109":["hiphop","90s"],"110":["hiphop","2010s"],"111":["rock","90s"],"112":["rock","80s","classic"],"113":["rock","90s"],"114":["rock","classic"],"115":["rock","80s","classic"],"116":["rock","2000s"],"117":["rock","classic"],"118":["pop","90s"],"119":["pop","2000s"],"120":["pop","2010s"],"121":["pop","2000s"],"122":["pop","90s"],"123":["pop","2010s"],"124":["pop","2000s"],"125":["hiphop","2010s"],"126":["hiphop","2000s"],"127":["hiphop","90s"],"128":["hiphop","2010s"],"129":["hiphop","90s"],"130":["hiphop"],"131":["rock","90s"],"132":["rock","classic"],"133":["rock","classic"],"134":["rock","90s"],"135":["rock","80s","classic"],"136":["rock","90s"],"137":["rock","classic"],"138":["pop","80s"],"139":["pop","90s"],"140":["pop","2000s"],"141":["pop","80s"],"142":["pop","2000s"],"143":["pop","80s"],"144":["pop","2000s"],"145":["hiphop"],"146":["hiphop","90s"],"147":["hiphop","90s"],"148":["hiphop","2000s"],"149":["hiphop","2010s"],"150":["hiphop","2000s"]};
 const MUSIC_EXTRA_KEY='chris-music-vault-extra-v1';
 let musicExtras=[];
-try{const x=JSON.parse(localStorage.getItem(MUSIC_EXTRA_KEY)||'[]');if(Array.isArray(x))musicExtras=x.filter(q=>q&&q.id&&q.q&&q.a)}catch(e){}
+try{const x=JSON.parse(GameRoomStorage.store.getItem(MUSIC_EXTRA_KEY)||'[]');if(Array.isArray(x))musicExtras=x.filter(q=>q&&q.id&&q.q&&q.a)}catch(e){}
 QUESTIONS.push(...musicExtras);
 function needsMissingChoices(q){
  const text=String(q.q||'');
@@ -311,10 +311,10 @@ let lastMusicRestock=0;
 async function restockMusicVaultIfLow(){
  const freshCount=unusedMusicQuestions(eligibleMusic('Mixed',[])).length;
  const now=Date.now();
- try{lastMusicRestock=Math.max(lastMusicRestock,Number(localStorage.getItem(MUSIC_RESTOCK_KEY))||0)}catch(e){}
+ try{lastMusicRestock=Math.max(lastMusicRestock,Number(GameRoomStorage.store.getItem(MUSIC_RESTOCK_KEY))||0)}catch(e){}
  if(freshCount>=MUSIC_RESTOCK_THRESHOLD||now-lastMusicRestock<MUSIC_RESTOCK_COOLDOWN)return;
  lastMusicRestock=now;
- try{localStorage.setItem(MUSIC_RESTOCK_KEY,String(now))}catch(e){}
+ try{GameRoomStorage.store.setItem(MUSIC_RESTOCK_KEY,String(now))}catch(e){}
 
  const status=$('vaultStatus');
  status.textContent='Looking for new music questions…';
@@ -329,7 +329,7 @@ async function restockMusicVaultIfLow(){
   if(payload.response_code!==0||!Array.isArray(payload.results))throw Error('No fresh questions returned');
 
   // Include extras saved by another tab while this request was pending.
-  const saved=JSON.parse(localStorage.getItem(MUSIC_EXTRA_KEY)||'[]');
+  const saved=JSON.parse(GameRoomStorage.store.getItem(MUSIC_EXTRA_KEY)||'[]');
   const extrasById=new Map(musicExtras.map(q=>[q.id,q]));
   if(Array.isArray(saved))for(const q of saved){
    if(q&&q.id&&typeof q.q==='string'&&q.a)extrasById.set(q.id,q);
@@ -347,7 +347,7 @@ async function restockMusicVaultIfLow(){
    added++;
   }
   const updatedExtras=[...extrasById.values()];
-  if(added)localStorage.setItem(MUSIC_EXTRA_KEY,JSON.stringify(updatedExtras));
+  if(added)GameRoomStorage.store.setItem(MUSIC_EXTRA_KEY,JSON.stringify(updatedExtras));
   const knownIds=new Set(QUESTIONS.map(q=>q.id));
   QUESTIONS.push(...updatedExtras.filter(q=>!knownIds.has(q.id)));
   musicExtras=updatedExtras;
@@ -388,8 +388,8 @@ $('replayMusic').onclick=()=>{if(started)return;if(!confirm('Allow previously us
 const KEY='chris-music-challenge-v1';const fresh=()=>({players:[],deck:[],index:0,revealed:false,awards:[],completed:false,pending:false,committed:false});let state=fresh(),records={players:{},rounds:0,seen:[],seenKeys:[],cycles:0},started=false;
 const safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function save(){try{records.seenKeys=[...musicHistoryKeys()];localStorage.setItem(KEY,JSON.stringify({state,records,started}))}catch(e){alert('Storage is full. Please export a backup.')}}
-function load(){try{const v=JSON.parse(localStorage.getItem(KEY));if(v&&v.state&&v.records){state=v.state;records=v.records;started=!!v.started;save()}}catch(e){}}
+function save(){try{records.seenKeys=[...musicHistoryKeys()];GameRoomStorage.store.setItem(KEY,JSON.stringify({state,records,started}))}catch(e){alert('Storage is full. Please export a backup.')}}
+function load(){try{const v=JSON.parse(GameRoomStorage.store.getItem(KEY));if(v&&v.state&&v.records){state=v.state;records=v.records;started=!!v.started;save()}}catch(e){}}
 function tally(){let t={};for(const p of state.players)t[p]=0;for(const a of state.awards)if(a.player&&Object.hasOwn(t,a.player))t[a.player]++;return t}
 function render(){if(!started||state.completed)renderPicture(null);const t=tally();$('gameNotice').textContent='';updateMusicVault();$('setup').classList.toggle('hidden',started);$('game').classList.toggle('hidden',!started||state.completed);$('showControls').classList.toggle('hidden',!started||state.completed);$('finished').classList.toggle('hidden',!started||!state.completed);$('liveScores').innerHTML=state.players.length?Object.entries(t).sort((a,b)=>b[1]-a[1]).map(([p,n],i)=>'<div class="score '+(i===0?'first':'')+'"><span>'+(i===0?'👑 ':'')+safe(p)+'</span><b>'+n+'</b></div>').join(''):'Add your performers to begin.';let leaders=Object.entries(records.players||{}).sort((a,b)=>b[1].points-a[1].points||b[1].wins-a[1].wins);$('alltime').innerHTML=leaders.length?leaders.map(([p,r],i)=>'<div class="score"><span>'+(i===0?'🥇 ':i===1?'🥈 ':i===2?'🥉 ':'')+safe(p)+'<div class="record">'+r.wins+' show wins</div></span><b>'+r.points+'</b></div>').join(''):'The Hall of Fame awaits its first legend.';$('stats').innerHTML='<div class="stat">'+(records.rounds||0)+' shows completed</div><div class="stat">'+uniqueMusicQuestions(QUESTIONS).length+' questions · '+musicHistoryKeys().size+' in history</div>';if(!started)return;if(state.completed){const ranked=Object.entries(t).sort((a,b)=>b[1]-a[1]),max=ranked[0]?.[1]||0;const winners=ranked.filter(x=>x[1]===max).map(x=>x[0]);$('results').innerHTML='<h2 class="trophy">'+(max?'HEADLINER: '+winners.map(safe).join(' & '):'NO WINNER TONIGHT')+'</h2>'+ranked.map(([p,n])=>'<div class="score"><span>'+safe(p)+'</span><b>'+n+'</b></div>').join('');$('commit').disabled=!!state.committed;$('commit').textContent=state.committed?'✓ RESULTS COMMITTED':'🏆 COMMIT FINAL RESULTS';return}const q=musicQuestionForTrack();if(!q){finish();return}$('progress').textContent='TRACK '+(state.index+1)+' / '+state.deck.length;$('level').textContent=q.level.toUpperCase()+' MODE';$('genre').textContent=q.genre.toUpperCase();const prompt=$('question');
 prompt.textContent=q.q;
@@ -405,18 +405,18 @@ function finish(){state.completed=true;state.pending=false;save();render()}
 function award(p){if(!state.revealed||state.pending)return;state.awards.push({index:state.index,player:p});state.pending=true;if(state.index===state.deck.length-1)finish();else{save();render();focusControl('nextTrack')}}
 function commit(){if(!state.completed||state.committed)return;records.rounds++;const t=tally(),top=Math.max(...Object.values(t));for(const p of state.players){if(!records.players[p])records.players[p]={points:0,wins:0};records.players[p].points+=t[p];if(top>0&&t[p]===top)records.players[p].wins++}state.committed=true;save();render();if(window.musicCloudSave)window.musicCloudSave(records)}
 function undo(){if(!state.awards.length)return;const last=state.awards.pop();state.index=last.index;state.revealed=true;state.pending=false;state.completed=false;save();render();$('gameNotice').textContent='Previous award reversed. Choose again.';requestAnimationFrame(()=>{const first=$('awardButtons').querySelector('button');if(first)first.focus({preventScroll:true})})}
-function savedPerformers(){try{const names=JSON.parse(localStorage.getItem('chris-music-performers')||'[]');return Array.isArray(names)?names.filter(n=>typeof n==='string'&&n.trim()):[]}catch(e){return []}}
+function savedPerformers(){try{const names=JSON.parse(GameRoomStorage.store.getItem('chris-music-performers')||'[]');return Array.isArray(names)?names.filter(n=>typeof n==='string'&&n.trim()):[]}catch(e){return []}}
 function focusControl(id){requestAnimationFrame(()=>{const el=$(id);if(el&&!el.closest('.hidden')){el.focus({preventScroll:true});const rect=el.getBoundingClientRect();if(rect.top<0||rect.bottom>window.innerHeight||rect.left<0||rect.right>window.innerWidth)el.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'})}})}
-function rememberPerformers(names){const all=[...savedPerformers(),...names].map(x=>String(x).trim()).filter(Boolean);const unique=[...new Map(all.map(x=>[x.toLowerCase(),x])).values()].slice(-80);localStorage.setItem('chris-music-performers',JSON.stringify(unique));refreshSuggestions()}
+function rememberPerformers(names){const all=[...savedPerformers(),...names].map(x=>String(x).trim()).filter(Boolean);const unique=[...new Map(all.map(x=>[x.toLowerCase(),x])).values()].slice(-80);GameRoomStorage.store.setItem('chris-music-performers',JSON.stringify(unique));refreshSuggestions()}
 function refreshSuggestions(){const names=savedPerformers();}
 let pickerSlot=0,manageSavedNames=false;
 function closeSavedPicker(){manageSavedNames=false;$('savedNamePicker').classList.add('hidden');focusControl('p'+pickerSlot)}
-function renderSavedPicker(){const names=savedPerformers();$('savedNameOptions').innerHTML='';const options=$('savedNameOptions');for(const name of names){const b=document.createElement('button');b.type='button';b.className='secondary saved-name-option';b.textContent=(manageSavedNames?'✕ Remove ':'')+name;b.onclick=()=>{if(manageSavedNames){if(!confirm('Remove '+name+' from saved performer suggestions?'))return;localStorage.setItem('chris-music-performers',JSON.stringify(savedPerformers().filter(x=>x!==name)));refreshSuggestions();renderSavedPicker()}else{$('p'+pickerSlot).value=name;closeSavedPicker()}};options.appendChild(b)}if(!names.length){const p=document.createElement('p');p.textContent='No saved performer names.';options.appendChild(p)}$('manageSavedNames').textContent=manageSavedNames?'✓ Done Managing':'⚙ Manage Saved Names';$('clearSavedNames').classList.toggle('hidden',!manageSavedNames)}
+function renderSavedPicker(){const names=savedPerformers();$('savedNameOptions').innerHTML='';const options=$('savedNameOptions');for(const name of names){const b=document.createElement('button');b.type='button';b.className='secondary saved-name-option';b.textContent=(manageSavedNames?'✕ Remove ':'')+name;b.onclick=()=>{if(manageSavedNames){if(!confirm('Remove '+name+' from saved performer suggestions?'))return;GameRoomStorage.store.setItem('chris-music-performers',JSON.stringify(savedPerformers().filter(x=>x!==name)));refreshSuggestions();renderSavedPicker()}else{$('p'+pickerSlot).value=name;closeSavedPicker()}};options.appendChild(b)}if(!names.length){const p=document.createElement('p');p.textContent='No saved performer names.';options.appendChild(p)}$('manageSavedNames').textContent=manageSavedNames?'✓ Done Managing':'⚙ Manage Saved Names';$('clearSavedNames').classList.toggle('hidden',!manageSavedNames)}
 function openNamePicker(i){pickerSlot=i;manageSavedNames=false;$('savedNamePicker').classList.remove('hidden');renderSavedPicker();requestAnimationFrame(()=>($('savedNameOptions').querySelector('button')||$('manageSavedNames')).focus({preventScroll:true}))}
 $('closeNamePicker').onclick=closeSavedPicker;
 $('manageSavedNames').onclick=()=>{manageSavedNames=!manageSavedNames;renderSavedPicker();$('manageSavedNames').focus({preventScroll:true})};
-$('clearSavedNames').onclick=()=>{if(!confirm('Clear ALL saved performer suggestions? This will NOT delete scores or game history.'))return;localStorage.removeItem('chris-music-performers');refreshSuggestions();renderSavedPicker();$('manageSavedNames').focus({preventScroll:true})};
-function init(){let names=[];try{names=JSON.parse(localStorage.getItem('chris-music-names')||'[]');if(!Array.isArray(names))names=[]}catch(e){}$('playerInputs').innerHTML=''+Array.from({length:8},(_,i)=>'<label>PERFORMER '+(i+1)+'<span class="performer-entry"><input maxlength="24" autocomplete="off" id="p'+i+'" placeholder="Name" value="'+safe(names[i]||'')+'"><button class="name-pick" id="namePick'+i+'" type="button" title="Choose saved performer" aria-label="Choose saved performer for slot '+(i+1)+'" onclick="openNamePicker('+i+')">▾</button></span></label>').join('');refreshSuggestions()}
+$('clearSavedNames').onclick=()=>{if(!confirm('Clear ALL saved performer suggestions? This will NOT delete scores or game history.'))return;GameRoomStorage.store.removeItem('chris-music-performers');refreshSuggestions();renderSavedPicker();$('manageSavedNames').focus({preventScroll:true})};
+function init(){let names=[];try{names=JSON.parse(GameRoomStorage.store.getItem('chris-music-names')||'[]');if(!Array.isArray(names))names=[]}catch(e){}$('playerInputs').innerHTML=''+Array.from({length:8},(_,i)=>'<label>PERFORMER '+(i+1)+'<span class="performer-entry"><input maxlength="24" autocomplete="off" id="p'+i+'" placeholder="Name" value="'+safe(names[i]||'')+'"><button class="name-pick" id="namePick'+i+'" type="button" title="Choose saved performer" aria-label="Choose saved performer for slot '+(i+1)+'" onclick="openNamePicker('+i+')">▾</button></span></label>').join('');refreshSuggestions()}
 $('start').onclick=()=>{const names=Array.from({length:8},(_,i)=>$('p'+i).value.trim()).filter(Boolean);if(!names.length){$('setupNotice').textContent='Enter at least one player.';return}if(new Set(names.map(x=>x.toLowerCase())).size!==names.length){$('setupNotice').textContent='Use different names for each player.';return}const n=Number($('length').value),selection={difficulty:$('difficulty').value,categories:selectedMusicCategories()},eligible=eligibleMusic(selection.difficulty,selection.categories),unused=unusedMusicQuestions(eligible).length;
  if(unused<n){
   $('setupNotice').textContent='Only '+unused+' unused questions match. '+(n===50&&unused>=25?'Choose 25 questions or add categories.':'Add categories or choose Mixed difficulty.')+(eligible.length>=n?' Repeats are off; the vault has an optional replay button.':'');
@@ -425,8 +425,8 @@ $('start').onclick=()=>{const names=Array.from({length:8},(_,i)=>$('p'+i).value.
  const picturePool=pictureEnabled?unusedMusicQuestions(selectedMusicPictures(selection)):[];
  const pictures=shuffle(picturePool).slice(0,n===50?5:3);
  const deck=shuffle([...makeDeck(n-pictures.length,eligible),...pictures.map(q=>q.id)]);
- rememberMusicQuestions(pictures);selection.pictures=pictureEnabled;localStorage.setItem('chris-music-names',JSON.stringify(Array.from({length:8},(_,i)=>$('p'+i).value.trim())));rememberPerformers(names);state={players:names,deck,selection,index:0,revealed:false,awards:[],completed:false,pending:false,committed:false};started=true;$('vaultPanel').open=false;save();render();if(matchMedia('(min-width:850px) and (orientation:landscape)').matches)window.scrollTo({top:0,left:0,behavior:'instant'});focusControl('reveal');void restockMusicVaultIfLow()};
-$('clearNames').onclick=()=>{for(let i=0;i<8;i++)$('p'+i).value='';localStorage.removeItem('chris-music-names')};
+ rememberMusicQuestions(pictures);selection.pictures=pictureEnabled;GameRoomStorage.store.setItem('chris-music-names',JSON.stringify(Array.from({length:8},(_,i)=>$('p'+i).value.trim())));rememberPerformers(names);state={players:names,deck,selection,index:0,revealed:false,awards:[],completed:false,pending:false,committed:false};started=true;$('vaultPanel').open=false;save();render();if(matchMedia('(min-width:850px) and (orientation:landscape)').matches)window.scrollTo({top:0,left:0,behavior:'instant'});focusControl('reveal');void restockMusicVaultIfLow()};
+$('clearNames').onclick=()=>{for(let i=0;i<8;i++)$('p'+i).value='';GameRoomStorage.store.removeItem('chris-music-names')};
 $('abandon').onclick=()=>{if(confirm('Abandon this show? No scores will be added to the Hall of Fame.')){started=false;state=fresh();save();render();focusControl('namePick0')}};
 $('nextTrack').onclick=()=>{if(!state.pending)return;state.index++;state.pending=false;state.revealed=false;save();render();focusControl('reveal')};
 $('commit').onclick=()=>{commit();$('commit').textContent='✓ RESULTS COMMITTED';$('commit').disabled=true};
@@ -434,7 +434,7 @@ $('discard').onclick=()=>{if(confirm('Discard this test game without recording r
 $('reveal').onclick=()=>{state.revealed=true;save();render();requestAnimationFrame(()=>{const first=$('awardButtons').querySelector('button');if(first)first.focus({preventScroll:true});else focusControl('nobody')})};$('awardButtons').onclick=e=>{const b=e.target.closest('button[data-player]');if(b)award(state.players[Number(b.dataset.player)])};$('nobody').onclick=()=>award(null);$('undo').onclick=undo;$('again').onclick=()=>{started=false;state=fresh();save();render();focusControl('namePick0')};
 $('export').onclick=()=>{const blob=new Blob([JSON.stringify({state,records,started},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='chris-music-challenge-records.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
 $('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const x=JSON.parse(await f.text());if(!x.state||!x.records||!Array.isArray(x.state.players))throw Error('Invalid file');if(confirm('Replace local music records with imported backup?')){state=x.state;records=x.records;started=!!x.started;save();render()}}catch(err){alert('Import failed: '+err.message)}e.target.value=''};init();load();if(started&&state.players.length){state.players.forEach((n,i)=>{if($('p'+i))$('p'+i).value=n})}render();updateMusicVault();void restockMusicVaultIfLow();focusControl(started?(state.completed?'commit':state.pending?'nextTrack':state.revealed?'nobody':'reveal'):'namePick0');
-</script><script>(function(){var b=document.getElementById('pageRefresh');if(b)b.addEventListener('click',function(){var u=new URL(location.href);u.searchParams.set('refresh',Date.now().toString());location.replace(u.toString())})})();</script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script>
+</script><script type="application/x-game-storage">(function(){var b=document.getElementById('pageRefresh');if(b)b.addEventListener('click',function(){var u=new URL(location.href);u.searchParams.set('refresh',Date.now().toString());location.replace(u.toString())})})();</script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script type="application/x-game-storage">
 (function(){
 const status=document.getElementById('musicCloudStatus'),upload=document.getElementById('musicCloudUpload'),reload=document.getElementById('musicCloudReload');
 const config={apiKey:"AIzaSyBbN4Qm-sTtoUE9HNEhjeNlibBKo5dPSs8",authDomain:"chris-game-room.firebaseapp.com",projectId:"chris-game-room",appId:"1:705590637292:web:89af6df7c34eb4371c2bc9"};
@@ -459,7 +459,7 @@ upload.onclick=async()=>{if(!ref)return;if(!confirm('Publish this device’s com
 reload.onclick=reloadCloud;
 try{if(!window.firebase||!firebase.firestore)throw Error('Firebase library unavailable');firebase.initializeApp(config,'music-shared');ref=firebase.app('music-shared').firestore().collection('gameRoom').doc('music');reloadCloud()}catch(e){note('Shared Hall of Fame unavailable: '+e.message)}
 })();
-</script><script>
+</script><script type="application/x-game-storage">
 /* Fire TV: one browser Back press returns directly to the Game Room. */
 (function(){
   if(window.__gameRoomBackInstalled)return;
@@ -467,11 +467,11 @@ try{if(!window.firebase||!firebase.firestore)throw Error('Firebase library unava
   try{
     history.pushState({gameRoomBackGuard:true},'',location.href);
     window.addEventListener('popstate',function(){
-      location.replace(new URL('./games.html',location.href).href);
+      GameRoomStorage.store.flush().then(()=>location.replace(new URL('./games.html',location.href).href)).catch(()=>{});
     });
   }catch(e){}
 })();
-</script></body></html>
+</script><script src="./game-room-storage.js?v=2"></script><script>GameRoomStorage.boot(["chris-music-vault-extra-v1","chris-music-vault-last-restock","chris-music-challenge-v1","chris-music-performers","chris-music-names"]);</script></body></html>
 
 
 
