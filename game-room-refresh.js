@@ -26,7 +26,8 @@
       const steps = document.createElement('ol');
       guide.slice(1).forEach(step => { const li = document.createElement('li'); li.textContent = step; steps.append(li); });
       const close = document.createElement('button'); close.type = 'button'; close.textContent = 'Got it — back to the game';
-      card.append(title, steps, close); overlay.append(card); document.body.append(overlay); nav.append(trigger);
+      const musicTip = document.createElement('p'); musicTip.textContent = "For background music: press Home on your Fire TV remote, start Spotify, then return to Game Room. Leave the music playing.";
+      card.append(title, steps, musicTip, close); overlay.append(card); document.body.append(overlay); nav.append(trigger);
       let previous;
       const dismiss = () => { overlay.hidden = true; (previous || trigger).focus(); };
       trigger.addEventListener('click', () => { previous = document.activeElement; overlay.hidden = false; close.focus(); });
@@ -58,17 +59,4 @@
     const cards = document.querySelector('.cards');
     if (cards) { const tip = document.createElement('p'); tip.className = 'gr-card-tip'; tip.textContent = '2 is low · Ace is high · Matching ranks are a push'; cards.after(tip); }
   }
-})();
-
-// Music plays on the room speakers independently of the game tab.
-(() => {
-  const nav = document.querySelector('main>.top,main>.nav') || document.querySelector('body>header');
-  if (!nav || document.getElementById('game-music-lounge')) return;
-  const link = document.createElement('a');
-  link.id = 'game-music-lounge'; link.className = 'gr-guide-button';
-  link.textContent = 'Music Lounge'; link.href = 'http://192.168.5.162:3002/?music=1#music';
-  link.target = '_blank'; link.rel = 'noopener noreferrer';
-  link.title = 'Home network only. Opens separately so your current game stays open.';
-  link.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 12px;text-decoration:none;white-space:nowrap';
-  nav.append(link);
 })();
