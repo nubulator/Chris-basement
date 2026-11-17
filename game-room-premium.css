@@ -1,0 +1,25 @@
+/* Lounge finishes; sizing remains owned by game-room-layout.css. */
+.gr-refresh{--gr-line:#c7a26448;--gr-text:#fbf1e2;--gr-muted:#d5c9b8;--gr-accent:#e8c88c}
+.gr-trivia{--gr-wash:#263b2f;--gr-surface:#172a22;--room-art:url('./assets/game-room-premium/trivia-v1.webp')}
+.gr-music{--gr-wash:#3b293a;--gr-surface:#261e2c;--room-art:url('./assets/game-room-premium/music-v1.webp')}
+.gr-casino{--gr-wash:#45252b;--gr-surface:#2b1b20;--room-art:url('./assets/game-room-premium/casino-v1.webp')}
+.gr-survey{--gr-wash:#24394f;--gr-surface:#182633;--room-art:url('./assets/game-room-premium/survey-v1.webp')}
+.gr-euchre{--gr-wash:#2b3b2a;--gr-surface:#1d2a21;--room-art:url('./assets/game-room-premium/euchre-v1.webp')}
+.gr-last-call{--gr-wash:#453021;--gr-surface:#2b221c;--room-art:url('./assets/game-room-premium/roulette-v1.webp')}
+.gr-kings{--gr-wash:#423026;--gr-surface:#242720;--room-art:url('./assets/game-room-premium/kings-v1.webp')}
+body.gr-refresh:not(.gr-games):not(.gr-kings){background:#17130f url('./assets/game-room-premium/background-v1.webp') center/100% 100% fixed no-repeat}
+.gr-refresh .hero,.gr-refresh .sign,.gr-refresh .travel-hero,.gr-last-call main>header{
+ background-image:linear-gradient(90deg,#171510f5 5%,#171510cf 55%,#17151055),var(--room-art);
+ background-size:cover;background-position:center,center 48%;border:1px solid #c5a26488;border-radius:11px;
+ box-shadow:inset 0 1px #e9c38033,0 4px 15px #0005;
+}
+.gr-refresh .hero h1,.gr-refresh .sign h1,.gr-refresh .travel-hero h1,.gr-last-call header h1{color:#f7ddb1;-webkit-text-fill-color:#f7ddb1;text-shadow:0 2px 3px #000}
+.gr-refresh .panel{background:linear-gradient(120deg,#ffffff03,transparent),var(--gr-surface);border-color:var(--gr-line);box-shadow:inset 0 1px #eac88b12,0 8px 24px #0004}
+.gr-refresh .top a,.gr-refresh .nav a{color:#e2cda9}
+.gr-refresh button.secondary,.gr-refresh button.game-refresh,.gr-refresh button.refresh-btn,.gr-refresh .gr-guide-button{border-color:#c5a26466;background:linear-gradient(#2c2924,#1d1a16);color:#f4e9d5}
+.gr-refresh .panel h2{color:#f6e5c7}
+.gr-refresh .board,.gr-refresh .stage,.gr-refresh .tablefelt{border-color:#c5a26455}
+.gr-kings>header{background:linear-gradient(100deg,#171810f5,#171810d9),var(--room-art) center 45%/cover;border-bottom-color:#c5a26477}
+.gr-kings>header>strong{color:#f7ddb1}
+.gr-kings #setup{background:linear-gradient(100deg,#19221ef5,#19221eea),var(--room-art) center/cover;border-color:#c5a26477}
+.gr-refresh .gr-help-card{border-color:#c5a26488;box-shadow:0 24px 80px #000b}
