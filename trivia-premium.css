@@ -1,0 +1,253 @@
+/* Trivia Tavern 5.0: photographic pub materials around live, accessible game text. */
+body.gr-trivia.gr-refresh{--gr-accent:#e9c58a;--gr-line:#c5a16b70;--gr-surface:#172820;color:#f6ead8;background:#1b1510 url('./assets/trivia-premium/pub-v1.webp') center/cover fixed no-repeat}
+.gr-trivia:before{display:none}
+.gr-trivia main{max-width:1720px}
+.gr-trivia .top{background:#141913e8;border:1px solid #bc98545c;border-radius:10px;padding:6px 12px;font-weight:500}
+.gr-trivia .top .version{color:#e4c48d;background:#2c3527;border-color:#b69a6670;font-weight:500;letter-spacing:.08em;font-size:10px}
+.gr-trivia .sign{background:linear-gradient(90deg,#101a14f2,#15251aeb),url('./assets/trivia-premium/pub-v1.webp') center/cover;border:1px solid #c4a367aa;border-radius:10px;box-shadow:inset 0 1px #f8dc9b22,0 6px 16px #0005}
+.gr-trivia .sign h1{font-family:Georgia,serif;font-weight:400;letter-spacing:.045em;color:#f4dba8;-webkit-text-fill-color:#f4dba8;text-shadow:0 2px 5px #000}
+.gr-trivia .sign:before,.gr-trivia .sign:after{display:none}
+.gr-trivia .panel,.gr-trivia .layout .panel{border:1px solid #bc9c6477;background:linear-gradient(135deg,#22372adf,#13241bed);border-radius:12px;box-shadow:inset 0 1px #f7d9a21a,0 9px 25px #0005}
+.gr-trivia .panel h2{font-family:Georgia,serif;font-weight:400;color:#f0d8ad;line-height:1.2}
+.gr-trivia .tavern-eyebrow{display:block;font:700 10px/1.4 system-ui,sans-serif;letter-spacing:.2em;color:#e0bb7f}
+.gr-trivia #setup{padding:18px;gap:12px;background:linear-gradient(140deg,#1b3125ee,#102118f5)}
+.gr-trivia #setup h2:after{display:none}
+.gr-trivia .tavern-welcome{flex:1 0 150px;min-height:150px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:20px 24px;border:1px solid #bb99665c;border-radius:9px;background:linear-gradient(90deg,#101a14f2 7%,#101a14ca 42%,#101a1400 85%),url('./assets/game-room-premium/trivia-v1.webp') 75% 53%/cover no-repeat;margin-bottom:6px}
+.gr-trivia #setup .tavern-welcome h2{font:400 clamp(28px,3.3vw,46px)/1.1 Georgia,serif;color:#f9e9c8;margin:8px 0 10px;text-shadow:0 2px 8px #000}
+.gr-trivia .tavern-welcome p{font:400 13px/1.5 system-ui,sans-serif;color:#e2d3b9;margin:0;text-shadow:0 2px 5px #000}
+.gr-trivia #setup>h2{font-size:clamp(23px,2.3vw,33px);margin:0}
+.gr-trivia #setup>.hint{color:#d6cbb6;font-size:13px;line-height:1.4;margin:0}
+.gr-trivia #playerInputs label{color:#cfb68a;font-size:11px;letter-spacing:.08em}
+.gr-trivia #playerInputs input{background:#0c1b13e8;border:1px solid #b99b686b;color:#faefd9;border-radius:7px;box-shadow:inset 0 2px 5px #0005}
+.gr-trivia .tavern-name-pick{background:#304332;border-color:#bb9b6588;color:#e6cc98;border-radius:6px}
+.gr-trivia #setup .round-trigger,.gr-trivia #setup select{background:#102218;border:1px solid #b99b6888;color:#f2e6ce;border-radius:7px}
+.gr-trivia #start,.gr-trivia #reveal,.gr-trivia #nextQuestion,.gr-trivia #commit{background:linear-gradient(#e8c98f,#c7a06b);color:#201b12;border:1px solid #f3d8a0;box-shadow:0 4px 12px #0004;font-weight:750;border-radius:8px}
+.gr-trivia .divider{border-color:#b99b6844;margin:8px 0}
+.gr-trivia .name-tools .hint{font-size:11px;color:#bcbaa7}
+.gr-trivia .round-setting label{color:#ddc99f;font-weight:500}
+.gr-trivia .scoreitem{border-bottom:1px solid #b5955c3d;gap:10px;color:#f5ebd8}
+.gr-trivia .scoreitem span{min-width:0;overflow-wrap:anywhere}
+.gr-trivia .scoreitem b{font-family:Georgia,serif;color:#efd09a;white-space:nowrap}
+.gr-trivia #liveScores{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;font-size:13px;max-height:none}
+.gr-trivia #liveScores .scoreitem{display:flex;align-items:center;justify-content:space-between;background:#102117a8;border:1px solid #b99b6844;border-radius:7px;padding:8px;font-size:13px;min-width:0}
+.gr-trivia #liveScores .scoreitem b{font-size:23px;flex:none}
+.gr-trivia #liveScores .scoreitem.leader{background:#b89a5638;border-color:#d6ba79b0}
+.gr-trivia .legends-panel{position:relative;isolation:isolate;overflow:hidden}
+.gr-trivia .legends-panel:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#152118f5 30%,#152118aa 72%,#152118b8),url('./assets/trivia-premium/trophy-v1.webp') right center/cover;opacity:.8;pointer-events:none}
+.gr-trivia #alltime{max-height:18vh;overflow:auto;font-size:13px;line-height:1.4}
+.gr-trivia #alltime .scoreitem{padding:7px 3px;font-size:13px}
+.gr-trivia #alltime .scoreitem b{font-size:18px}
+.gr-trivia .legends-panel .hint,.gr-trivia .cloud-sync .hint{font-size:11px;line-height:1.4;color:#d8ccb6}
+.gr-trivia .legends-panel .stats{gap:5px}
+.gr-trivia .legends-panel .stat{background:#0a160f80;border:1px solid #b99b6844;color:#e6d7bb;font-size:10px;border-radius:5px;padding:4px 6px}
+.gr-trivia .cloud-sync{border-color:#b99b6855;padding-top:7px;margin-top:6px}
+.gr-trivia .cloud-sync .controls{gap:7px}
+.gr-trivia .cloud-sync button{font-size:10px;min-height:32px;padding:6px}
+.gr-trivia .tavern-backups{border-color:#b99b6844}
+.gr-trivia .tavern-record-tools{border-top:1px solid #b99b6844;margin-top:7px;padding-top:4px}
+.gr-trivia .tavern-record-tools>summary{font:600 12px/1.3 system-ui,sans-serif;min-height:28px;padding:5px 0;color:#e4cca1}
+.gr-trivia .tavern-record-tools .cloud-sync{border:0;margin:0;padding:5px 0}
+.gr-trivia .tavern-backup-actions .footnote{font-size:10px;margin:8px 0}
+.gr-trivia .layout>aside>.panel.cellar-panel{background:linear-gradient(110deg,#322a1dec,#18261eee)!important;border-color:#b99b6866}
+.gr-trivia .cellar-panel summary{color:#e6cc9a}
+.gr-trivia #cellarDetails>summary,.gr-trivia #holidayCellarDetails>summary{min-height:32px;padding:3px 4px}
+.gr-trivia .cellar-panel .cellar-compact-count{color:#cdb98e}
+.gr-trivia #game{background:linear-gradient(135deg,#1b2c21f0,#101c15f0);gap:10px}
+.gr-trivia .roundline{font:600 12px/1.3 system-ui,sans-serif;color:#e6cd9d;letter-spacing:.07em;gap:10px;margin:0}
+.gr-trivia .roundline span{display:inline-block;border:1px solid #b99b6866;background:#07110b80;border-radius:20px;padding:6px 12px}
+.gr-trivia #game .board{background:#09251a url('./assets/trivia-premium/board-v1.webp') center/100% 100% no-repeat;border:0;border-radius:6px;box-shadow:0 5px 14px #0007,inset 0 0 25px #0004;padding:28px;text-align:center;min-width:0;overflow:auto;scrollbar-width:thin}
+.gr-trivia #game .board>*{flex-shrink:0}
+.gr-trivia #game .board>.category{font:600 10px/1.3 system-ui,sans-serif;color:#d5bd88;letter-spacing:.18em;margin:0}
+.gr-trivia #game #question{font-family:Georgia,serif;font-weight:400;color:#fff2d9;text-shadow:0 2px 4px #0009;line-height:1.18;font-size:clamp(29px,3.6vw,54px);margin:14px 0;overflow-wrap:anywhere}
+.gr-trivia #game #question[data-size="medium"]{font-size:clamp(27px,3vw,45px)}
+.gr-trivia #game #question[data-size="long"],.gr-trivia #game #question.with-details{font-size:clamp(25px,2.65vw,40px)}
+.gr-trivia #game #question[data-size="long"].with-details{font-size:clamp(22px,2.25vw,34px)}
+.gr-trivia #game .trivia-choices{gap:8px;margin:10px 0}
+.gr-trivia #game .trivia-choice{background:#071c13b5;border:1px solid #c9b27980;border-radius:7px;color:#f9ecd5;font:500 clamp(13px,1.3vw,20px)/1.35 system-ui,sans-serif;text-align:left;padding:9px 12px;overflow-wrap:anywhere}
+.gr-trivia #game .trivia-choice.correct{background:#49623bd9;border-color:#f0cc84;box-shadow:inset 3px 0 #f0cc84}
+.gr-trivia #game .answer{background:#f0dfb9;color:#172a1b;border:1px solid #ffe7a7;border-radius:7px;font:600 clamp(21px,2.3vw,33px)/1.2 Georgia,serif;padding:10px 14px;text-shadow:none;overflow-wrap:anywhere}
+.gr-trivia #game .answer:before{content:"THE ANSWER";display:block;font:700 9px/1.4 system-ui,sans-serif;letter-spacing:.17em;color:#596047;margin-bottom:4px}
+.gr-trivia #game>.controls{gap:8px;flex:none;align-items:stretch}
+.gr-trivia #game>.controls button{min-height:38px;border-radius:7px;padding:8px 12px;font-size:12px}
+.gr-trivia button.red{color:#f0d1b9;background:#4b3026;border:1px solid #be976980}
+.gr-trivia #awardArea{flex:none}
+.gr-trivia .award-heading{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.gr-trivia .award-heading #nobody{min-height:30px;font-size:11px;padding:5px 10px;border-radius:7px}
+.gr-trivia #awardArea h2{font-size:19px;margin:6px 0!important}
+.gr-trivia #awardArea>.hint{font-size:11px;margin:4px 0}
+.gr-trivia #awardArea .award{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:6px 0}
+.gr-trivia #game .award button{background:#2c4531;color:#f9e9c8;border:1px solid #c2a06d99;border-radius:7px;min-height:36px;font-size:13px;line-height:1.2;overflow-wrap:anywhere;padding:7px}
+.gr-trivia #awardArea>.controls{margin-top:5px!important}
+.gr-trivia .ready-card{background:linear-gradient(90deg,#152017f7 5%,#152017e6 50%,#15201770),url('./assets/game-room-premium/trivia-v1.webp') center/cover;border:1px solid #c7a46b99;box-shadow:0 9px 25px #0006;border-radius:10px;padding:30px 24px;margin:0}
+.gr-trivia .ready-eyebrow{font:600 11px/1.3 system-ui,sans-serif;color:#dbbb7e;letter-spacing:.2em}
+.gr-trivia .ready-card h2{font:400 clamp(28px,3.4vw,45px)/1.15 Georgia,serif;margin:16px auto;max-width:540px;color:#f9e8c8}
+.gr-trivia .ready-card .hint{color:#e7dac0;font-size:15px;line-height:1.4}
+.gr-trivia .ready-card button{max-width:400px;margin-top:18px;font-size:18px}
+.gr-trivia.tavern-ready #game .board{display:none}
+.gr-trivia #finished{padding:18px}
+.gr-trivia .tavern-finale{background:linear-gradient(90deg,#122018ee,#12201866 65%,transparent),url('./assets/trivia-premium/trophy-v1.webp') right center/cover;border:1px solid #b99b6888;border-radius:10px;padding:28px;min-height:180px;display:flex;flex-direction:column;justify-content:center;margin-bottom:16px}
+.gr-trivia .tavern-finale h2{font:400 clamp(30px,3.8vw,52px)/1.1 Georgia,serif;color:#f6dfaf;margin:10px 0}
+.gr-trivia .tavern-finale p{font-size:13px;color:#d7c6a8;margin:0;max-width:65%}
+.gr-trivia .tavern-finale,.gr-trivia .legends-panel:before{background-size:100% 100%,auto 100%;background-repeat:no-repeat;background-color:#142219}
+.gr-trivia #results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 12px}
+.gr-trivia #results>p{grid-column:1/-1;font:400 clamp(23px,2.8vw,38px)/1.2 Georgia,serif!important;margin:4px 0 10px;overflow-wrap:anywhere}
+.gr-trivia #results .scoreitem{padding:6px 8px;background:#08150f70;border:1px solid #b99b6844;border-radius:7px;font-size:14px}
+.gr-trivia #commitNotice{font-size:12px;line-height:1.4;color:#dccba7}
+.gr-trivia #finished>.controls{margin-top:12px;gap:10px}
+.gr-trivia #finished>.controls button{font-size:13px;min-height:38px;padding:8px 14px}
+@media(min-width:900px) and (orientation:landscape){
+ body.gr-trivia main{padding:14px 22px!important;gap:9px}
+ .gr-trivia .top{padding:5px 10px;min-height:42px}
+ .gr-trivia .sign{padding:10px 16px!important;flex-direction:row;gap:16px}
+ .gr-trivia .sign h1{font-size:clamp(25px,3vw,43px)!important}
+ .gr-trivia .layout{grid-template-columns:minmax(0,1.65fr) minmax(280px,1fr);gap:12px}
+ .gr-trivia .layout>div{display:flex;flex-direction:column}
+ .gr-trivia .layout .panel{padding:16px;margin-bottom:10px}
+ .gr-trivia #setup{flex:1 0 auto;min-height:calc(100% - 8px)!important;margin-bottom:0;gap:8px}
+ .gr-trivia #setup .tavern-welcome{min-height:120px;flex:1 0 120px}
+ .gr-trivia #setup #playerInputs{padding:8px 0;row-gap:12px}
+ .gr-trivia #game:not(.hidden){flex:1 1 0;min-height:0;gap:8px;margin-bottom:0}
+ .gr-trivia #game .board{flex:1 1 0;min-height:0;padding:24px;display:flex;flex-direction:column;justify-content:flex-start}
+ .gr-trivia.tavern-answer #reveal{display:none}
+ .gr-trivia #awardArea>.hint{display:none}
+ .gr-trivia.tavern-answer #game .board{padding:18px 24px}
+ .gr-trivia.tavern-answer #game #question.with-details{font-size:clamp(24px,2.4vw,36px);margin:8px 0}
+ .gr-trivia.tavern-answer #game #question[data-size="long"].with-details{font-size:clamp(20px,2.1vw,32px)}
+ .gr-trivia.tavern-answer #game .answer{font-size:clamp(21px,2vw,30px);padding:7px 10px}
+ .gr-trivia #game .board>.category{display:none}
+ .gr-trivia #liveScores .scoreitem{padding:6px 8px}
+ .gr-trivia .layout>aside .panel{padding:12px}
+ .gr-trivia .legends-panel .cloud-sync .controls{margin-top:5px}
+ .gr-trivia .legends-panel .tavern-backups summary{min-height:28px;padding:4px 0}
+ .gr-trivia #readyArea{flex:1;min-height:0;display:flex}
+ .gr-trivia #readyArea .ready-card{width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+ .gr-trivia #gameNotice:empty{display:none}
+ .gr-trivia #finished{flex:1 0 auto;margin-bottom:0}
+ .gr-trivia .tavern-finale{min-height:clamp(140px,24vh,280px)}
+}
+@media(min-width:900px) and (max-height:820px) and (orientation:landscape){
+ .gr-trivia #setup{gap:6px}
+ .gr-trivia #setup .tavern-welcome{min-height:110px;flex-basis:110px}
+ .gr-trivia.tavern-answer.tavern-long #game #question.with-details{font-size:22px;line-height:1.16;margin:6px 0}
+ .gr-trivia.tavern-answer.tavern-long #game .trivia-choice{font-size:13px;line-height:1.25;padding:6px 8px}
+ .gr-trivia.tavern-answer.tavern-long #game .answer{font-size:20px;padding:7px 10px}
+ .gr-trivia.tavern-answer.tavern-long #game .answer:before{display:none}
+ .gr-trivia.tavern-answer.tavern-long #game .board{padding:16px 20px}
+}
+@media(min-width:900px) and (max-height:700px) and (orientation:landscape){
+ body.gr-trivia main{padding:8px 14px!important;gap:6px}
+ .gr-trivia .top{min-height:34px;padding:2px 7px}
+ .gr-trivia .sign{padding:6px 12px!important}
+ .gr-trivia .sign h1{font-size:27px!important}
+ .gr-trivia .layout{gap:9px}
+ .gr-trivia .layout .panel{padding:10px;margin-bottom:7px}
+ .gr-trivia .layout>aside .panel{padding:8px}
+ .gr-trivia .layout>aside>.panel.cellar-panel{padding:3px 7px!important}
+ .gr-trivia .tavern-record-tools{margin-top:4px;padding-top:2px}
+ .gr-trivia #setup{gap:5px}
+ .gr-trivia #setup .tavern-welcome{min-height:80px;flex-basis:80px;margin-bottom:0;padding:9px 16px}
+ .gr-trivia #setup .tavern-welcome h2{font-size:29px;margin:4px 0}
+ .gr-trivia .tavern-welcome p{font-size:11px;line-height:1.3}
+ .gr-trivia .tavern-welcome .tavern-eyebrow{font-size:8px}
+ .gr-trivia #setup>h2{font-size:22px}
+ .gr-trivia #setup>.hint{font-size:11px;line-height:1.3}
+ .gr-trivia #setup #playerInputs{padding:3px 0;row-gap:6px}
+ .gr-trivia #setup #playerInputs input{min-height:32px!important;height:32px!important;font-size:12px}
+ .gr-trivia #setup .players label{font-size:9px}
+ .gr-trivia #setup .name-tools{margin:2px 0}
+ .gr-trivia #setup .divider{margin:3px 0}
+ .gr-trivia .layout .panel h2{font-size:19px}
+ .gr-trivia #liveScores{gap:4px;max-height:none}
+ .gr-trivia #liveScores .scoreitem{padding:4px 6px;font-size:11px;line-height:1.2;gap:5px}
+ .gr-trivia #liveScores .scoreitem b{font-size:18px;line-height:1}
+ .gr-trivia #alltime{max-height:12vh;font-size:11px}
+ .gr-trivia .legends-panel .hint{font-size:10px;line-height:1.25}
+ .gr-trivia .legends-panel .divider{margin:5px 0}
+ .gr-trivia .legends-panel .stats{margin:4px 0}
+ .gr-trivia .legends-panel .stat{font-size:9px;padding:3px}
+ .gr-trivia .cloud-sync{padding-top:5px;margin-top:4px}
+ .gr-trivia .cloud-sync button{font-size:9px;min-height:28px;padding:4px}
+ .gr-trivia .tavern-backups{margin-top:5px;padding-top:4px}
+ .gr-trivia .tavern-backups summary{font-size:11px;min-height:25px}
+ .gr-trivia #game:not(.hidden){gap:5px}
+ .gr-trivia .roundline{font-size:10px}
+ .gr-trivia .roundline span{padding:5px 9px}
+ .gr-trivia #game .board{padding:16px 20px}
+ .gr-trivia #game .board>.category{display:none}
+ .gr-trivia #game #question{font-size:30px;margin:7px 0}
+ .gr-trivia #game #question[data-size="medium"]{font-size:26px}
+ .gr-trivia #game #question[data-size="long"],.gr-trivia #game #question.with-details{font-size:22px}
+ .gr-trivia #game #question[data-size="long"].with-details{font-size:19px}
+ .gr-trivia.tavern-answer #game .board{padding:14px 20px}
+ .gr-trivia.tavern-answer #game #question.with-details{font-size:22px;margin:5px 0}
+ .gr-trivia.tavern-answer #game #question[data-size="long"].with-details{font-size:18px;line-height:1.15;margin:3px 0}
+ .gr-trivia.tavern-answer.tavern-long #game .trivia-choice{font-size:11px;padding:4px 6px}
+ .gr-trivia.tavern-answer.tavern-long #game .answer{font-size:17px;padding:5px 8px}
+ .gr-trivia.tavern-answer.tavern-long #game .answer:before{display:none}
+ .gr-trivia.tavern-answer.tavern-long #game .board{padding:10px 20px}
+ .gr-trivia.tavern-answer #game .answer{font-size:19px;padding:6px 9px}
+ .gr-trivia #game .trivia-choices{gap:5px;margin:6px 0}
+ .gr-trivia #game .trivia-choice{padding:6px 8px;font-size:12px;line-height:1.25}
+ .gr-trivia #game .answer{font-size:20px;padding:7px 9px}
+ .gr-trivia #game>.controls button{font-size:11px;padding:6px 8px;min-height:34px}
+ .gr-trivia #awardArea h2{font-size:16px;margin:3px 0!important}
+ .gr-trivia #awardArea>.hint{display:none}
+ .gr-trivia #awardArea .award{gap:5px;margin:4px 0}
+ .gr-trivia #game .award button{min-height:30px;padding:5px;font-size:11px}
+ .gr-trivia #awardArea .controls button{min-height:30px;font-size:11px;padding:5px 9px}
+ .gr-trivia .ready-card{padding:20px}
+ .gr-trivia .ready-card h2{font-size:30px}
+ .gr-trivia .ready-card .hint{font-size:13px}
+ .gr-trivia .ready-card button{font-size:15px}
+ .gr-trivia .tavern-finale{min-height:115px;padding:16px;margin-bottom:9px}
+ .gr-trivia .tavern-finale h2{font-size:30px;margin:5px 0}
+ .gr-trivia .tavern-finale p{font-size:11px}
+ .gr-trivia #results>p{font-size:25px!important;margin:3px 0 6px}
+ .gr-trivia #results .scoreitem{font-size:12px;padding:4px 7px}
+ .gr-trivia #results .scoreitem b{font-size:19px}
+ .gr-trivia #commitNotice{font-size:11px;margin:8px 0}
+ .gr-trivia #finished>.controls{margin-top:7px}
+}
+@media(max-width:899px){
+ .gr-trivia main{padding:12px}
+ .gr-trivia .top{padding:10px;gap:9px}
+ .gr-trivia .top a{font-size:11px}
+ .gr-trivia .sign{padding:18px 12px;margin:12px 0}
+ .gr-trivia .sign h1{font-size:30px;line-height:1.13}
+ .gr-trivia .sign p{font-size:10px;letter-spacing:.06em}
+ .gr-trivia .sign p:last-child{display:none}
+ .gr-trivia .layout{display:flex;flex-direction:column;gap:12px}
+ .gr-trivia #setup{display:flex;flex-direction:column;gap:12px;padding:14px}
+ .gr-trivia .tavern-welcome{min-height:170px;padding:20px 16px;flex:none}
+ .gr-trivia #setup #playerInputs{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 9px}
+ .gr-trivia #setup .tavern-welcome h2{font-size:30px}
+ .gr-trivia #setup .round-controls{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+ .gr-trivia #setup .round-controls #start{grid-column:1/-1;width:100%;min-height:44px}
+ .gr-trivia #setup select{width:100%;font-size:12px;padding:9px 6px}
+ .gr-trivia #game{padding:12px}
+ .gr-trivia .roundline{font-size:10px}
+ .gr-trivia .roundline span{padding:6px 8px}
+ .gr-trivia #game .board{padding:24px 18px;margin:12px 0}
+ .gr-trivia #game #question{font-size:30px}
+ .gr-trivia #game #question[data-size="medium"]{font-size:27px}
+ .gr-trivia #game #question[data-size="long"],.gr-trivia #game #question.with-details{font-size:25px}
+ .gr-trivia #game .trivia-choices{grid-template-columns:1fr}
+ .gr-trivia #game .trivia-choice{font-size:14px}
+ .gr-trivia #game .answer{font-size:24px}
+ .gr-trivia #game>.controls{display:grid;grid-template-columns:1fr 1fr}
+ .gr-trivia #game>.controls #reveal{grid-column:1/-1;min-height:44px}
+ .gr-trivia #awardArea .award{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .gr-trivia #game .award button{min-height:44px;font-size:13px}
+ .gr-trivia .ready-card{margin-top:15px;padding:24px 15px}
+ .gr-trivia .ready-card h2{font-size:30px}
+ .gr-trivia .ready-card button{font-size:15px}
+ .gr-trivia #liveScores .scoreitem{font-size:13px}
+ .gr-trivia #alltime{max-height:240px}
+ .gr-trivia .tavern-finale{padding:20px 16px;min-height:190px;background-position:65% center}
+ .gr-trivia .tavern-finale h2{font-size:32px;max-width:70%}
+ .gr-trivia #results{grid-template-columns:1fr}
+ .gr-trivia #finished>.controls{display:grid;grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){.gr-trivia *{scroll-behavior:auto}}
+
+@media(min-width:900px) and (orientation:landscape){.gr-trivia #game .board::before,.gr-trivia #game .board::after{content:"";flex:1 0 0;min-height:0}}
