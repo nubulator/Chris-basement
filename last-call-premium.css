@@ -1,0 +1,99 @@
+/* Last Call V3.0 — original photographic artwork with live, accurate game controls. */
+.gr-last-call{--lc-gold:#e0bb76;--lc-ink:#17130f;--lc-bar:url('./assets/last-call-premium/bar-v1.webp');--lc-wheel:url('./assets/last-call-premium/wheel-v1.webp')}
+.gr-last-call main>header{background-image:linear-gradient(90deg,#15100de8,#15100d6b,#15100de8),var(--lc-bar);background-position:center,center 28%;border-color:#d0ac6d88}
+.gr-last-call main>header h1{font-weight:700;letter-spacing:.04em}
+.gr-last-call .brand-wheel{filter:none;color:var(--lc-gold)}
+.gr-last-call #rouletteStage:not(.reveal-mode){position:relative;isolation:isolate;overflow:hidden;background:#19130f;border:1px solid #c5a2648c;border-radius:16px;box-shadow:inset 0 0 0 3px #e7bf6820,0 8px 24px #0006}
+.gr-last-call #rouletteStage:not(.reveal-mode)::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(#130c0745,#130c0740 60%,#130c07bd),var(--lc-bar) center/cover no-repeat;opacity:1}
+.gr-last-call #wheelStage{position:relative;display:grid;place-items:center;background:transparent;padding:10px}
+.gr-last-call #wheelStage::before,.gr-last-call #wheelStage::after{content:none}
+.gr-last-call .wheel-wrap{border-radius:50%;background:var(--lc-wheel) center/100% 100% no-repeat;filter:drop-shadow(0 12px 15px #000b);isolation:isolate}
+.gr-last-call #wheel{inset:10%;border:0;box-shadow:none;background:transparent;overflow:visible}
+.gr-last-call .wheel svg text{font-family:Georgia,'Times New Roman',serif;letter-spacing:.2px}
+.gr-last-call .hub{inset:42%;border:0;box-shadow:0 4px 8px #000a;background:var(--lc-wheel) center/625% 625% no-repeat;z-index:3}
+.gr-last-call .pointer{top:6%;width:6%;height:11%;background:linear-gradient(90deg,#8c622c,#ffedb8 42%,#bb8c41 70%,#67421c);filter:drop-shadow(0 2px 2px #000b)}
+.gr-last-call #wheelActions{gap:10px;align-items:stretch;padding:4px}
+.gr-last-call #spin{background:linear-gradient(#f4dba7,#c59a53);border:1px solid #ffe7ae;box-shadow:inset 0 1px #fff6d8,0 4px 10px #0008;color:#251a0c;letter-spacing:.08em;border-radius:8px}
+.gr-last-call #wheelSound{min-width:112px;border-radius:8px;border-color:#b99458;background:linear-gradient(#30271d,#17130f);color:#ead6b2}
+.gr-last-call #rouletteStage:not(.reveal-mode) #resultCard{border:1px solid #b8935466;border-radius:10px;background:linear-gradient(110deg,#211d15f2,#13120ff2);padding:12px 16px;box-shadow:inset 0 1px #e7c48620}
+.gr-last-call #rouletteStage:not(.reveal-mode) #resultTitle{font-family:Georgia,serif;letter-spacing:.035em;color:#f1d7a6;font-weight:700}
+.gr-last-call #rouletteStage:not(.reveal-mode) #resultText{color:#e0d2bc}
+.gr-last-call .crew-panel{background:linear-gradient(#211d17f5,#171410f7),url('./assets/game-room-premium/background-v1.webp') center/cover;border:1px solid #c5a2648c;box-shadow:inset 0 1px #e8c88b26,0 8px 24px #0006}
+.gr-last-call .crew-panel h2{font-family:Georgia,serif;font-weight:700;color:#f2d6a1;letter-spacing:.02em}
+.gr-last-call .crew-panel .muted{color:#bfb4a2}
+.gr-last-call .crew-panel .players :is(input,select){background:#11110fe8;border:1px solid #8d754d77;border-radius:7px;color:#f3e6cf;box-shadow:inset 0 2px 3px #0004}
+.gr-last-call .crew-panel .players .player-active{border-color:#f0d197!important;background:#342a18;box-shadow:0 0 0 1px #dbb97544!important}
+.gr-last-call .crew-panel .row button{background:linear-gradient(#302a20,#211c15);border:1px solid #b99b665c;color:#e3ceb0;border-radius:7px;font-weight:650}
+.gr-last-call .crew-panel .rules-details{border-top:1px solid #b7935155;margin-top:8px}
+.gr-last-call .crew-panel summary{color:#dfc49b}
+.gr-last-call .crew-panel .spins-title{font-size:17px;margin-top:8px}
+.gr-last-call .log{color:#cbb89a;scrollbar-color:#9a7945 #1b1711}
+.gr-last-call .log div{padding:7px 0;border-bottom-color:#a4844b33}
+/* The landing scenes use photographs; all prompts, timers and actions remain HTML. */
+.gr-last-call #rouletteStage.reveal-mode{border:1px solid #c9a36888;background:#17130f;border-radius:16px}
+.gr-last-call #rouletteStage.reveal-mode #resultCard{
+ --scene-photo:var(--lc-bar);--scene-accent:#f4d393;
+ align-items:flex-start;justify-content:center;text-align:left;gap:12px;
+ background:#17130f;border-radius:15px;padding:36px 6%;
+}
+.gr-last-call #rouletteStage.reveal-mode #resultCard::before{content:'';inset:0;opacity:1;background-image:linear-gradient(90deg,#0d0c0bf2 0%,#0d0c0bdf 34%,#0d0c0b85 68%,#0d0c0b40),var(--scene-photo);background-size:cover;background-position:center}
+.gr-last-call #rouletteStage.reveal-mode #resultCard::after{inset:12px;border:1px solid #d9b47766;border-radius:9px;background:none;mask-image:none;opacity:1}
+.gr-last-call #rouletteStage.reveal-mode #revealIdentity{align-items:flex-start;max-width:75%}
+.gr-last-call #rouletteStage.reveal-mode #revealIcon{display:none}
+.gr-last-call #rouletteStage.reveal-mode #revealKicker{font-size:clamp(10px,1vw,15px);font-weight:600;letter-spacing:.2em;color:var(--scene-accent)}
+.gr-last-call #rouletteStage.reveal-mode #resultTitle{font-family:Georgia,'Times New Roman',serif;font-size:clamp(30px,4vw,62px);font-weight:700;font-style:normal;letter-spacing:.015em;color:#ffe8be;text-shadow:0 3px 8px #000;max-width:80%;line-height:1.08}
+.gr-last-call #rouletteStage.reveal-mode #resultText{color:#e9c78d;font-size:clamp(15px,1.6vw,23px);font-weight:650;max-width:78%}
+.gr-last-call #rouletteStage.reveal-mode #challenge{max-width:78%;font-size:clamp(21px,2.45vw,36px);font-weight:600;line-height:1.35;margin:8px 0;color:#fff6e7;text-shadow:0 2px 5px #000}
+.gr-last-call #rouletteStage.reveal-mode #revealFooter{color:#d7c8b1;font-size:clamp(10px,1vw,14px);letter-spacing:.06em;margin-top:8px}
+.gr-last-call #rouletteStage.reveal-mode #revealActions{justify-content:flex-start;gap:10px;margin:3px 0 0}
+.gr-last-call #rouletteStage.reveal-mode :is(#revealActions button,#revealAnswer,#nextChallenge,.challenge-picker button){background:linear-gradient(#f1d49b,#c59b58);color:#25190c;border:1px solid #f3d7a5;border-radius:8px;box-shadow:inset 0 1px #fff3cc66,0 3px 10px #0005;font-size:clamp(12px,1.15vw,17px);min-height:44px;padding:10px 18px;letter-spacing:.025em}
+.gr-last-call #rouletteStage.reveal-mode #revealActions button.secondary{background:#211c16e6;color:#f2dec0;border-color:#bb9c655e}
+.gr-last-call #rouletteStage.reveal-mode #challengeTimer{top:24px;right:26px;min-width:100px;padding:12px;font-family:Georgia,serif;font-size:38px;border:1px solid #d4ae6b;border-radius:10px;background:#17130fe8;color:#ffe1a0;box-shadow:0 5px 20px #0006}
+.gr-last-call #rouletteStage.reveal-mode #challengeTimer.preparing{font-size:25px}
+.gr-last-call #rouletteStage.reveal-mode #challengeTimer.expired{font-size:23px;background:#481b1ae8;color:#ffe0d5;border-color:#dba18c}
+.gr-last-call #rouletteStage.reveal-mode #resultCard[data-theme=villa]{--scene-photo:url('./assets/last-call-premium/villa-v1.webp');--scene-accent:#ffccda}
+.gr-last-call #rouletteStage.reveal-mode #resultCard[data-theme=rockstar]{--scene-photo:url('./assets/last-call-premium/stage-v1.webp');--scene-accent:#f1d49b}
+.gr-last-call #rouletteStage.reveal-mode #resultCard[data-theme=trivia]{--scene-photo:url('./assets/game-room-premium/trivia-v1.webp')}
+.gr-last-call #rouletteStage.reveal-mode #resultCard[data-theme=gameover],.gr-last-call #rouletteStage.reveal-mode #resultCard[data-theme=escape]{--scene-photo:url('./assets/game-room-premium/roulette-v1.webp')}
+.gr-last-call #rouletteStage.reveal-mode #resultCard[data-theme=choose],.gr-last-call #rouletteStage.reveal-mode #resultCard[data-theme=duel]{--scene-photo:url('./assets/game-room-premium/casino-v1.webp')}
+.gr-last-call #rouletteStage.reveal-mode #resultCard[data-theme=gameover] #resultTitle{color:#ffc5aa}
+@media(min-width:900px) and (orientation:landscape){
+ .gr-last-call #rouletteLayout:not(.is-revealing){grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr)}
+ .gr-last-call #wheelStage{min-height:0}
+ .gr-last-call .wheel-wrap{width:min(100%,42vh,560px);width:min(100cqw,100cqh,560px)}
+ .gr-last-call #rouletteStage:not(.reveal-mode){grid-template-rows:minmax(0,1fr) auto auto;gap:10px;padding:14px}
+ .gr-last-call #rouletteStage:not(.reveal-mode) #resultCard{min-height:70px}
+ .gr-last-call .crew-panel h2{font-size:clamp(22px,2vw,30px)}
+ .gr-last-call .crew-panel .spins-title{font-size:18px}
+ .gr-last-call #rouletteStage.reveal-mode #resultCard[data-theme=trivia]{padding-top:26px;padding-bottom:26px;gap:8px}
+ .gr-last-call #rouletteStage.reveal-mode #resultCard[data-theme=trivia] #challenge{max-width:88%;font-size:clamp(20px,2vw,30px);line-height:1.3;margin:6px 0}
+}
+@media(min-width:900px) and (max-height:620px) and (orientation:landscape){
+ .gr-last-call #rouletteStage:not(.reveal-mode){padding:9px;gap:5px}
+ .gr-last-call #wheelStage{padding:4px}
+ .gr-last-call #rouletteStage:not(.reveal-mode) #resultCard{padding:8px 10px;min-height:56px}
+ .gr-last-call #rouletteStage:not(.reveal-mode) #resultTitle{font-size:18px}
+ .gr-last-call #wheelActions{padding:1px;gap:8px}.gr-last-call #spin,.gr-last-call #wheelSound{min-height:36px;padding:7px 14px;font-size:12px}
+ .gr-last-call .crew-panel h2{font-size:21px}.gr-last-call .crew-panel .spins-title{font-size:16px}
+ .gr-last-call #rouletteStage.reveal-mode #resultCard{padding:24px 5%;gap:7px}
+ .gr-last-call #rouletteStage.reveal-mode #resultTitle{font-size:34px}
+ .gr-last-call #rouletteStage.reveal-mode #challenge{font-size:23px;line-height:1.3;margin:5px 0;max-width:83%}
+ .gr-last-call #rouletteStage.reveal-mode #resultCard[data-theme=trivia]{padding-top:18px;padding-bottom:18px;gap:5px}
+ .gr-last-call #rouletteStage.reveal-mode #resultCard[data-theme=trivia] #challenge{font-size:20px;max-width:88%;margin:4px 0}
+ .gr-last-call #rouletteStage.reveal-mode #challengeTimer{font-size:30px;min-width:90px;padding:10px;top:20px;right:22px}
+ .gr-last-call #rouletteStage.reveal-mode #challengeTimer.preparing{font-size:23px}
+ .gr-last-call #rouletteStage.reveal-mode #challengeTimer.expired{font-size:19px}
+ .gr-last-call #rouletteStage.reveal-mode :is(#revealActions button,#revealAnswer,#nextChallenge,.challenge-picker button){min-height:36px;padding:8px 14px;font-size:12px}
+}
+@media(max-width:899px),(orientation:portrait){
+ .gr-last-call #wheelStage{height:min(80vw,480px);padding:8px;container-type:normal}
+ .gr-last-call .wheel-wrap{width:min(100%,440px);margin:auto}
+ .gr-last-call #wheelActions{gap:8px}.gr-last-call #spin{min-height:44px;font-size:13px;padding:10px 14px}
+ .gr-last-call #rouletteStage.reveal-mode #resultCard{padding:34px 26px;gap:12px;min-height:65vh}
+ .gr-last-call #rouletteStage.reveal-mode #resultCard::before{background-image:linear-gradient(#0d0c0ba8,#0d0c0bf2),var(--scene-photo)}
+ .gr-last-call #rouletteStage.reveal-mode :is(#revealIdentity,#resultTitle,#resultText,#challenge){max-width:100%}
+ .gr-last-call #rouletteStage.reveal-mode #resultTitle{font-size:32px}
+ .gr-last-call #rouletteStage.reveal-mode #challenge{font-size:23px}
+ .gr-last-call #rouletteStage.reveal-mode #challengeTimer{position:static;align-self:flex-start;font-size:32px;padding:10px;min-width:100px}
+ .gr-last-call #rouletteStage.reveal-mode #revealActions{width:100%}
+}
