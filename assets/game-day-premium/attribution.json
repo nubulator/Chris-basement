@@ -1,0 +1,44 @@
+[
+  {
+    "team": "browns",
+    "file": "browns-stadium.webp",
+    "title": "FirstEnergy Stadium field 2016",
+    "author": "JonRidinger",
+    "source": "https://commons.wikimedia.org/wiki/File:FirstEnergy_Stadium_field_2016.jpg",
+    "original": "https://upload.wikimedia.org/wikipedia/commons/1/11/FirstEnergy_Stadium_field_2016.jpg",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Resized to 1600 pixels wide and converted to WebP. No generative changes.",
+    "width": 1600,
+    "height": 1200,
+    "bytes": 576314
+  },
+  {
+    "team": "osu",
+    "file": "osu-stadium.webp",
+    "title": "Ohio Stadium during OSU vs Purdue 11-13-21",
+    "author": "Quintin Soloviev",
+    "source": "https://commons.wikimedia.org/wiki/File:Ohio_Stadium_during_OSU_vs_Purdue_11-13-21.jpg",
+    "original": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Ohio_Stadium_during_OSU_vs_Purdue_11-13-21.jpg",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "changes": "Resized to 1600 pixels wide and converted to WebP. No generative changes.",
+    "width": 1600,
+    "height": 1000,
+    "bytes": 401050
+  },
+  {
+    "team": "bengals",
+    "file": "bengals-stadium.webp",
+    "title": "Paul Brown Stadium interior 2017",
+    "author": "JonRidinger",
+    "source": "https://commons.wikimedia.org/wiki/File:Paul_Brown_Stadium_interior_2017.jpg",
+    "original": "https://upload.wikimedia.org/wikipedia/commons/9/9b/Paul_Brown_Stadium_interior_2017.jpg",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Resized to 1600 pixels wide and converted to WebP. No generative changes.",
+    "width": 1600,
+    "height": 930,
+    "bytes": 323312
+  }
+]

@@ -1,0 +1,9 @@
+const test=require('node:test');const assert=require('node:assert/strict');const fs=require('node:fs');const vm=require('node:vm');const path=require('node:path');
+const base=path.join(__dirname,'..');const ctx={window:{}};vm.runInNewContext(fs.readFileSync(path.join(base,'game-day-trivia-data.js'),'utf8'),ctx);const sets=ctx.window.GameDayTriviaData;
+const {draw}=require('../game-day-premium.js');
+for(const [team,cards] of Object.entries(sets)){
+ test(team+' has 25 distinct sourced questions',()=>{assert.equal(cards.length,25);assert.equal(new Set(cards.map(x=>x.id)).size,25);assert.equal(new Set(cards.map(x=>x.q)).size,25);assert.ok(cards.every(x=>x.q&&x.a&&/^https:\/\//.test(x.source)))});
+ test(team+' never repeats within a cycle or across the cycle boundary',()=>{let state={},previous;for(let cycle=0;cycle<10;cycle++){const seen=new Set();for(let i=0;i<25;i++){const result=draw(cards,state);assert.notEqual(result.card.id,previous);assert.ok(!seen.has(result.card.id));seen.add(result.card.id);previous=result.card.id;state=JSON.parse(JSON.stringify(result.state));assert.equal(result.position,i+1)}}});
+ test(team+' resumes a saved bag and recovers from malformed storage',()=>{let first=draw(cards,{});let next=draw(cards,JSON.parse(JSON.stringify(first.state)));assert.notEqual(first.card.id,next.card.id);assert.equal(next.position,2);assert.ok(draw(cards,{remaining:['missing','missing']}).card);assert.ok(draw(cards,{remaining:[cards[0].id,cards[0].id]}).card)});
+}
+test('all three team IDs and the Bengals opponent filter are configured',()=>{const core=fs.readFileSync(path.join(base,'game-day-core.js'),'utf8');const insider=fs.readFileSync(path.join(base,'game-day-insider.js'),'utf8');assert.match(core,/bengals:\{teamId:'4'/);assert.match(core,/browns:\{teamId:'5'/);assert.match(core,/osu:\{teamId:'194'/);assert.match(insider,/!cfg\[selected\]\.test\.test/);assert.ok(!insider.includes('!(/Cleveland Browns|Ohio State/i)'))});
