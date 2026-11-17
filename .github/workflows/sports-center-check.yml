@@ -1,7 +1,13 @@
 name: Verify live Sports Center feeds
 on:
   push:
-    branches: [fix/sports-center-feed-20261117]
+    branches: [main, fix/sports-center-feed-20261117]
+    paths:
+      - index-v3822.html
+      - sports-feed.js
+      - tests/sports-center-playwright.cjs
+      - tests/sports-feed.test.cjs
+      - .github/workflows/sports-center-check.yml
   workflow_dispatch:
     inputs:
       live:
@@ -22,7 +28,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: nubulator/Jim-Amys-Garage
-          ref: ${{ inputs.garage_ref || 'fix/sports-center-feed-20261117' }}
+          ref: ${{ github.ref == 'refs/heads/main' && 'main' || inputs.garage_ref || 'fix/sports-center-feed-20261117' }}
           path: .garage-verification
       - uses: actions/setup-node@v4
         with:
@@ -32,7 +38,7 @@ jobs:
           node --test tests/*.test.cjs
           python3 tools/test_daily_line_feed.py
       - name: Build fresh real ESPN odds
-        if: ${{ !inputs.live }}
+        if: ${{ !inputs.live && github.ref != 'refs/heads/main' }}
         run: python3 tools/build_daily_line_feed.py
       - name: Install browser outside published files
         run: |
@@ -44,11 +50,11 @@ jobs:
           SPORTS_REPORT_DIR: ${{ runner.temp }}/sports-results
           DAILY_LINE_REPORT_DIR: ${{ runner.temp }}/sports-results
           GARAGE_ROOT: ${{ github.workspace }}/.garage-verification
-          VERIFY_LIVE: ${{ inputs.live }}
+          VERIFY_LIVE: ${{ inputs.live || github.ref == 'refs/heads/main' }}
         run: |
           if [ "$VERIFY_LIVE" = "true" ]; then
             node tests/sports-center-playwright.cjs --live
-            node tests/daily-line-playwright.cjs --live
+            # The Daily Line workflow verifies its own exact deployed cache.
           else
             node tests/sports-center-playwright.cjs
             node tests/daily-line-playwright.cjs

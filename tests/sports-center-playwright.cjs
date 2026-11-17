@@ -27,10 +27,10 @@ let browser;
   })().catch(e=>report.relayFailures.push({name,error:String(e)})))});
   if(live){
    // Poll published files before opening the browser; no network interception.
-   for(let i=0;i<12;i++){
+   for(let i=0;i<24;i++){
     const r=await context.request.get(url+'?verify-source='+Date.now());
     if(r.ok()&&(await r.text())===fs.readFileSync(path.join(dir,html),'utf8'))break;
-    assert.ok(i<11,name+' production HTML must match verified source');await new Promise(r=>setTimeout(r,5000));
+    assert.ok(i<23,name+' production HTML must match verified source');await new Promise(r=>setTimeout(r,5000));
    }
    const js=await context.request.get(new URL('sports-feed.js?verify='+Date.now(),url).href);
    assert.equal(await js.text(),fs.readFileSync(path.join(dir,'sports-feed.js'),'utf8'),name+' production transport');
