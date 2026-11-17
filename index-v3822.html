@@ -1353,6 +1353,39 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
  };
  let lineUpcoming=[],lineLastRefresh=0,lineRankingMaps=new Map();
  async function refreshLineUpcoming(){
+  // Prefer the same-origin published cache; avoid browser-to-ESPN CORS failures.
+  // Fall back to the legacy ESPN fetch path only if the cache is unavailable or stale.
+  try {
+    const response=await fetch('./data/daily-line-feed.json?ts='+Math.floor(Date.now()/300000),{cache:'no-store'});
+    if(!response.ok)throw Error('Cached feed HTTP '+response.status);
+    const feed=await response.json();
+    const age=Date.now()-Date.parse(feed.generatedAt);
+    if(feed.schema!==1||!Array.isArray(feed.games)||!Number.isFinite(age)||age< -300000||age>3*3600000)throw Error('Cached feed stale or invalid');
+    const now=Date.now();
+    const cached=feed.games.map(g=>{
+      const date=Date.parse(g.date);
+      if(!g.id||!Number.isFinite(date)||!g.away||!g.home)return null;
+      const spread=g.odds?.spread,total=g.odds?.total;
+      const hasSpread=spread!==null&&spread!==undefined&&spread!=='';
+      const hasTotal=total!==null&&total!==undefined&&total!=='';
+      return {id:String(g.id),league:g.league,date,away:g.away,home:g.home,
+        awayLogo:g.awayLogo||'',homeLogo:g.homeLogo||'',
+        odds:hasSpread||hasTotal?'LINE: '+(hasSpread?spread:'—')+' • O/U: '+(hasTotal?total:'—'):'',
+        status:'Scheduled',final:g.state==='post',fav:/Ohio State|Buckeyes|Cleveland|Columbus|Reds|Cincinnati/i.test(g.away+' '+g.home),
+        top25:false,bigTen:false,ar:0,hr:0};
+    }).filter(g=>g&&g.date>now-3*3600000&&!g.final&&(
+      g.league==='NFL'||g.league==='NCAA FOOTBALL'||g.league==='NCAA MEN'||
+      g.league==='NBA'&&/Cavaliers|Cleveland/i.test(g.away+' '+g.home)||
+      g.league==='NHL'&&/Blue Jackets|Columbus/i.test(g.away+' '+g.home)||
+      g.league==='MLB'&&/Reds|Cincinnati/i.test(g.away+' '+g.home)
+    )).sort((a,b)=>a.date-b.date);
+    if(!cached.length)throw Error('Cached feed contains no eligible upcoming games');
+    lineUpcoming=cached;lineLastRefresh=Date.now();
+    if(dailyLineOpen)renderDailyLine();
+    return;
+  } catch(error) {
+    console.warn('Daily Line cached feed unavailable; attempting ESPN fallback:',error.message);
+  }
   const now=Date.now();
   if(now-lineLastRefresh<10*60000&&lineUpcoming.length)return;
   const fmt=d=>{const p=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);const v=k=>p.find(x=>x.type===k)?.value;return v('year')+v('month')+v('day')};
