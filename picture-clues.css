@@ -1,7 +1,7 @@
 /* Shared picture clues, scoped to the active question. */
 .picture-setting {display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
 .picture-setting p {margin:0;font-size:13px;line-height:1.35;flex:1;min-width:180px}
-#pictureToggle[aria-pressed="true"] {background:#e4bd79;color:#21180e}
+#pictureToggle[aria-pressed="true"] {background:#e4bd79!important;color:#21180e!important}
 .picture-clue {margin:8px 0;min-width:0;text-align:center}
 .picture-clue[hidden],.picture-clue [hidden] {display:none!important}
 .picture-clue img {display:block;width:100%;height:clamp(160px,39vh,430px);object-fit:contain;background:#100e0c;border-radius:12px}
@@ -22,3 +22,5 @@
  .gr-trivia .tavern-welcome,.gr-music .session-art {min-height:70px!important}
 }
 @media(max-width:650px) {.picture-setting{align-items:stretch}.picture-clue img{height:28vh}.gr-music.has-picture .picture-clue img{height:34vh}}
+
+@media(min-width:850px) and (orientation:landscape){.gr-music #setup .session-art{height:clamp(76px,12vh,140px);margin-bottom:12px}.gr-music #setup .picture-setting{margin:7px 0}.gr-music #setup #pictureStock{font-size:11px;margin:4px 0 0}}
