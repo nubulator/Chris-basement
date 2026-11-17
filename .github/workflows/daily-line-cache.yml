@@ -11,7 +11,7 @@ concurrency:
 jobs:
   cache:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - name: Generate ESPN public data cache
