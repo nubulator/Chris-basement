@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Chris's High Stakes Casino V3.1</title>
+<title>Chris's High Stakes Casino V3.2</title>
 <link rel="stylesheet" href="./game-room-refresh.css?v=20261116a">
 <script defer src="./game-room-refresh.js?v=20261117pictures">
 </script>
@@ -17,7 +17,7 @@
 <main>
 <nav class="top">
 <a href="./games.html">← GAME ROOM</a>
-<span class="version">HIGH STAKES V3.1</span>
+<span class="version">HIGH STAKES V3.2</span>
 <a href="./">CHRIS'S BASEMENT</a>
 <button id="pageRefresh" class="game-refresh" type="button">↻ REFRESH</button>
 </nav>
@@ -174,14 +174,14 @@
 </section>
 </aside>
 </div>
-<footer class="foot">CHRIS'S HIGH STAKES CASINO · V3.1 · JUST FOR FUN · NO REAL-MONEY WAGERING</footer>
-</main><script>
-const KEY='chris-high-stakes-v1';const NAME_KEY='chris-casino-saved-names';let savedNames=[];try{savedNames=JSON.parse(localStorage.getItem(NAME_KEY)||'[]');if(!Array.isArray(savedNames))savedNames=[]}catch(e){savedNames=[]}function saveNames(){try{localStorage.setItem(NAME_KEY,JSON.stringify(savedNames))}catch(e){}}function rememberNames(a){a.forEach(n=>{if(n&&!savedNames.some(v=>v.toLowerCase()===n.toLowerCase()))savedNames.push(n)});savedNames.sort((a,b)=>a.localeCompare(b));saveNames()}const $=id=>document.getElementById(id);const ranks=['2','3','4','5','6','7','8','9','10','J','Q','K','A'],suits=['♠','♥','♣','♦'];let state=null,started=false,records={players:{},games:0};const clone=o=>JSON.parse(JSON.stringify(o));const safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+<footer class="foot">CHRIS'S HIGH STAKES CASINO · V3.2 · JUST FOR FUN · NO REAL-MONEY WAGERING</footer>
+</main><script type="application/x-game-storage">
+const KEY='chris-high-stakes-v1';const NAME_KEY='chris-casino-saved-names';let savedNames=[];try{savedNames=JSON.parse(GameRoomStorage.store.getItem(NAME_KEY)||'[]');if(!Array.isArray(savedNames))savedNames=[]}catch(e){savedNames=[]}function saveNames(){try{GameRoomStorage.store.setItem(NAME_KEY,JSON.stringify(savedNames))}catch(e){}}function rememberNames(a){a.forEach(n=>{if(n&&!savedNames.some(v=>v.toLowerCase()===n.toLowerCase()))savedNames.push(n)});savedNames.sort((a,b)=>a.localeCompare(b));saveNames()}const $=id=>document.getElementById(id);const ranks=['2','3','4','5','6','7','8','9','10','J','Q','K','A'],suits=['♠','♥','♣','♦'];let state=null,started=false,records={players:{},games:0};const clone=o=>JSON.parse(JSON.stringify(o));const safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function newDeck(){return shuffle(suits.flatMap(s=>ranks.map((r,i)=>({rank:i+2,label:r,suit:s}))))}
 function draw(){if(!state.deck.length)state.deck=newDeck();return state.deck.pop()}
-function save(){try{localStorage.setItem(KEY,JSON.stringify({state,started,records}))}catch(e){alert('Storage full. Export records to back up your game.')}}
-function load(){try{const v=JSON.parse(localStorage.getItem(KEY));if(v&&v.records){state=v.state;started=!!v.started;records=v.records}}catch(e){}}
+function save(){try{GameRoomStorage.store.setItem(KEY,JSON.stringify({state,started,records}))}catch(e){alert('Storage full. Export records to back up your game.')}}
+function load(){try{const v=JSON.parse(GameRoomStorage.store.getItem(KEY));if(v&&v.records){state=v.state;started=!!v.started;records=v.records}}catch(e){}}
 function casinoHallRows(players){
  const rows=Object.entries(players||{}).map(([name,v])=>({name,best:Math.max(0,Number(v.best)||0)})).sort((a,b)=>b.best-a.best||a.name.localeCompare(b.name));
  let rank=0,last=null;
@@ -249,14 +249,14 @@ $('again').onclick=()=>{
 $('clearNames').onclick=()=>{for(let i=0;i<8;i++)$('p'+i).value='';$('setupNotice').textContent='Table names cleared. Saved names are still available.';updateRoundSummary()};$('manageNames').onclick=()=>{if(!savedNames.length){$('setupNotice').textContent='No saved names yet. Start a game to save player names.';return}const selected=prompt('Saved names (comma-separated). Edit this list to rename or remove names:',savedNames.join(', '));if(selected===null)return;savedNames=[...new Set(selected.split(',').map(x=>x.trim()).filter(Boolean))].slice(0,100);saveNames();init();$('setupNotice').textContent='Saved names updated.'};$('restart').onclick=()=>{if(confirm('End this casino game and return to the player setup? Unfinished chips will not count toward the Hall of Fame.')){state=null;started=false;save();init();render()}};$('higher').onclick=()=>guess('higher');$('lower').onclick=()=>guess('lower');$('bank').onclick=bank;$('double').onclick=()=>{if(state.phase!=='result'||!state.pot)return;state.phase='bonusPick';state.message='DOUBLE OR NOTHING! PICK HIGHER OR LOWER';save();render()};$('continue').onclick=advance;
 $('export').onclick=()=>{const b=new Blob([JSON.stringify({state,started,records},null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='high-stakes-casino-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
 $('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const x=JSON.parse(await f.text());if(!x.records||typeof x.records.players!=='object'||!x.records.players||!Number.isFinite(x.records.games)||(x.state===null?!!x.started:!x.state||!Array.isArray(x.state.players)))throw Error('Invalid backup');if(confirm('Replace this device’s casino records?')){state=x.state;records=x.records;started=!!x.started;save();render()}}catch(err){alert('Import failed: '+err.message)}e.target.value=''};init();load();render();
-</script><script>(function(){var b=document.getElementById('pageRefresh');if(b)b.addEventListener('click',function(){var u=new URL(location.href);u.searchParams.set('refresh',Date.now().toString());location.replace(u.toString())})})();</script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script>
+</script><script type="application/x-game-storage">(function(){var b=document.getElementById('pageRefresh');if(b)b.addEventListener('click',function(){var u=new URL(location.href);u.searchParams.set('refresh',Date.now().toString());location.replace(u.toString())})})();</script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script type="application/x-game-storage">
 (function(){
 const status=document.getElementById('casinoCloudStatus'),upload=document.getElementById('casinoCloudUpload'),reload=document.getElementById('casinoCloudReload');
 const config={apiKey:"AIzaSyBbN4Qm-sTtoUE9HNEhjeNlibBKo5dPSs8",authDomain:"chris-game-room.firebaseapp.com",projectId:"chris-game-room",appId:"1:705590637292:web:89af6df7c34eb4371c2bc9"};
 let ref=null,ready=false,writing=Promise.resolve();
 const note=s=>{status.textContent=s};
 function valid(x){return !!(x&&typeof x==='object'&&x.players&&typeof x.players==='object'&&Number.isFinite(x.games))}
-function adopt(shared){if(!valid(shared))return;const previous=JSON.stringify(records);if(previous!==JSON.stringify(shared)){try{localStorage.setItem(KEY+'-before-cloud',previous)}catch(e){}records=JSON.parse(JSON.stringify(shared));save();render()}}
+function adopt(shared){if(!valid(shared))return;const previous=JSON.stringify(records);if(previous!==JSON.stringify(shared)){try{GameRoomStorage.store.setItem(KEY+'-before-cloud',previous)}catch(e){}records=JSON.parse(JSON.stringify(shared));save();render()}}
 async function reloadCloud(){
  if(!ref)return;note('Loading shared Casino Hall of Fame…');
  try{const snap=await ref.get({source:'server'}),shared=snap.exists?snap.data().state:null;
@@ -274,7 +274,7 @@ upload.onclick=async()=>{if(!ref)return;if(!confirm('Publish this device’s Cas
 reload.onclick=reloadCloud;
 try{if(!window.firebase||!firebase.firestore)throw Error('Firebase library unavailable');firebase.initializeApp(config,'casino-shared');ref=firebase.app('casino-shared').firestore().collection('gameRoom').doc('casino');reloadCloud()}catch(e){note('Cloud unavailable: '+e.message)}
 })();
-</script><script>
+</script><script type="application/x-game-storage">
 /* Fire TV: one browser Back press returns directly to the Game Room. */
 (function(){
   if(window.__gameRoomBackInstalled)return;
@@ -282,9 +282,9 @@ try{if(!window.firebase||!firebase.firestore)throw Error('Firebase library unava
   try{
     history.pushState({gameRoomBackGuard:true},'',location.href);
     window.addEventListener('popstate',function(){
-      location.replace(new URL('./games.html',location.href).href);
+      GameRoomStorage.store.flush().then(()=>location.replace(new URL('./games.html',location.href).href)).catch(()=>{});
     });
   }catch(e){}
 })();
-</script></body></html>
+</script><script src="./game-room-storage.js?v=2"></script><script>GameRoomStorage.boot(["chris-high-stakes-v1","chris-casino-saved-names","chris-high-stakes-v1-before-cloud"]);</script></body></html>
 
