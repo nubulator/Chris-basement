@@ -31,7 +31,7 @@ function game(data = storage) {
     setInterval:fn=>{timers.set(++timerId,fn);return timerId},
     Date:class extends Date {static now(){return now}},URL,console
   });
-  context.window = context;
+  context.window = context;context.GameRoomNames={append(){},addOptions(){}};
   vm.runInContext(read('shared-question-banks.js'),context);
   vm.runInContext(scripts(read('last-call.html'))[0],context);
   return {run:code=>vm.runInContext(code,context),elements,context,timers,
