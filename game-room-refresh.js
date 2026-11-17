@@ -66,7 +66,7 @@
   if (!nav || document.getElementById('game-music-lounge')) return;
   const link = document.createElement('a');
   link.id = 'game-music-lounge'; link.className = 'gr-guide-button';
-  link.textContent = 'Music Lounge'; link.href = 'http://192.168.5.162:3002/?music=1#sonos';
+  link.textContent = 'Music Lounge'; link.href = 'http://192.168.5.162:3002/?music=1#music';
   link.target = '_blank'; link.rel = 'noopener noreferrer';
   link.title = 'Home network only. Opens separately so your current game stays open.';
   link.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 12px;text-decoration:none;white-space:nowrap';
