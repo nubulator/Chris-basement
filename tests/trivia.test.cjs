@@ -17,7 +17,7 @@ function element(){
 }
 let updatePresentation;
 const context=vm.createContext({document:{body:element(),getElementById(id){if(!elements.has(id))elements.set(id,element());return elements.get(id)},createElement:element,addEventListener(){},querySelectorAll(){return []}},localStorage:{getItem:k=>stored.get(k)||null,setItem:(k,v)=>stored.set(k,v),removeItem:k=>stored.delete(k)},MutationObserver:class{constructor(fn){updatePresentation=fn}observe(){}},requestAnimationFrame:fn=>fn(),confirm:()=>true,console});
-context.window=context;context.GameRoomStorage={store:context.localStorage};context.setTimeout=()=>0;context.clearTimeout=()=>{};
+context.window=context;context.GameRoomNames={append(){},addOptions(){}};context.GameRoomStorage={store:context.localStorage};context.setTimeout=()=>0;context.clearTimeout=()=>{};
 const run=code=>vm.runInContext(code,context);
 run(read('shared-question-banks.js'));run(read('picture-bank.js'));run(read('picture-clues.js'));run(scripts[0]);run(read('trivia-premium.js'));
 const update=()=>updatePresentation();
