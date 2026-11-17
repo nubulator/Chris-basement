@@ -16,6 +16,9 @@ let browser;
 (async () => {
   browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({ viewport: { width: 1920, height: 1080 }, timezoneId: 'America/New_York' });
+  // Keep this isolated test context on the dashboard during midnight–7 AM ET.
+  // Applies to Garage's shared iframe too; production screensaver behavior is unchanged.
+  await context.addInitScript(() => localStorage.setItem('chris.basement.overnightScreensaver.enabled', 'false'));
   let feed = JSON.parse(fs.readFileSync(path.join(root, 'data/daily-line-feed.json')));
   const deployedFeedTime = feed.generatedAt;
   if (live) {
@@ -109,6 +112,7 @@ let browser;
   if (!live) {
     // Prove that MY TEAMS and odds need no browser-to-ESPN requests.
     const offline = await browser.newContext({ viewport: { width: 1920, height: 1080 }, timezoneId: 'America/New_York' });
+    await offline.addInitScript(() => localStorage.setItem('chris.basement.overnightScreensaver.enabled', 'false'));
     await offline.route('**/Chris-basement/index-v3822.html*', route => route.fulfill({ contentType: 'text/html', body: fs.readFileSync(path.join(root, 'index-v3822.html'), 'utf8') }));
     await offline.route('**/site.api.espn.com/**', route => route.abort());
     await offline.route('**/Chris-basement/data/daily-line-feed.json*', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify(feed) }));
