@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chris's High Stakes Casino V3.1</title>
+<link rel="stylesheet" href="./game-room-refresh.css?v=20261116a">
+<script defer src="./game-room-refresh.js?v=20261117pictures">
+</script>
+<link rel="stylesheet" href="./game-room-layout.css?v=20261116b">
+<link rel="stylesheet" href="./game-room-premium.css?v=4.0">
+<link rel="stylesheet" href="./casino-premium.css?v=3.0a">
+<script src="./casino-premium.js?v=3.0">
+</script>
+</head>
+<body class="gr-refresh gr-casino" data-game="casino">
+<main>
+<nav class="top">
+<a href="./games.html">← GAME ROOM</a>
+<span class="version">HIGH STAKES V3.1</span>
+<a href="./">CHRIS'S BASEMENT</a>
+<button id="pageRefresh" class="game-refresh" type="button">↻ REFRESH</button>
+</nav>
+<header class="hero">
+<div>
+<span class="casino-kicker">CHRIS'S PRIVATE TABLE</span>
+<h1>High Stakes Casino</h1>
+</div>
+<p>HIGHER OR LOWER<span>PLAY CHIPS · GOOD COMPANY</span>
+</p>
+</header>
+<div class="layout">
+<div>
+<section class="panel" id="setup">
+<div class="casino-welcome" role="img" aria-label="Playing cards and casino chips on a burgundy table">
+<div>
+<span class="casino-kicker">THE HOUSE IS OPEN</span>
+<strong>A seat at<br>the finest table.</strong>
+</div>
+</div>
+<h2>Players at the Table</h2>
+<p class="hint">Up to eight players. Start with 100 play chips each turn. Guess higher or lower, then bank your chips or press your luck.</p>
+<div class="players" id="playerInputs">
+</div>
+<div class="controls name-tools">
+<button id="manageNames" class="secondary" type="button">✎ MANAGE SAVED NAMES</button>
+<button id="clearNames" class="secondary" type="button">CLEAR TABLE NAMES</button>
+</div>
+<div class="casino-start-row">
+<div class="controls">
+<label>TURNS PER PLAYER<select id="roundCount">
+<option value="5" selected>5 Turns Each — Quick Game</option>
+<option value="10">10 Turns Each — Casino Night</option>
+<option value="15">15 Turns Each — Marathon</option>
+</select>
+</label>
+</div>
+<div class="controls">
+<button id="start">🎰 OPEN THE TABLE</button>
+</div>
+</div>
+<p id="roundSummary" class="hint" aria-live="polite"></p>
+<p id="setupNotice" class="notice">
+</p>
+</section>
+<section class="panel hidden" id="game">
+<div class="roundinfo">
+<span id="turnNumber">
+</span>
+<span id="deckInfo">
+</span>
+</div>
+<div class="tablefelt">
+<div class="turn" id="turn">
+</div>
+<div class="cards">
+<div class="card-seat">
+<span class="card-caption">CURRENT CARD</span>
+<div class="card" id="currentCard">
+</div>
+</div>
+<div class="versus" aria-hidden="true">♠</div>
+<div class="card-seat">
+<span class="card-caption" id="drawCaption">NEXT CARD</span>
+<div class="card back" id="nextCard">
+</div>
+</div>
+</div>
+<div class="result" id="result" role="status">
+</div>
+<div class="money">
+<div class="chip" id="pot">
+</div>
+<div class="chip" id="streak">
+</div>
+</div>
+</div>
+<div class="controls" id="guessControls">
+<button id="higher">⬆ HIGHER</button>
+<button id="lower">⬇ LOWER</button>
+</div>
+<div class="controls" id="bankControls">
+<button id="bank">💰 BANK CHIPS</button>
+<button id="double" class="secondary">🎲 DOUBLE OR NOTHING</button>
+</div>
+<div class="controls" id="continueControls">
+<button id="continue">NEXT TURN →</button>
+</div>
+<div class="controls">
+<button id="restart" class="danger" type="button">↻ END GAME / START OVER</button>
+</div>
+</section>
+<section class="panel hidden" id="finished">
+<div class="champion-scene">
+<span class="casino-kicker">THE CHAMPION'S TABLE</span>
+<h2>A night to remember.</h2>
+</div>
+<div class="winner" id="winner">
+</div>
+<div id="finalScores">
+</div>
+<div class="controls">
+<button id="again" type="button">NEW CASINO NIGHT</button>
+</div>
+</section>
+</div>
+<aside class="casino-sidebar">
+<div class="sidebar-switcher" aria-label="Casino information">
+<button type="button" class="secondary" data-casino-pane="leaders" aria-controls="chipLeaders" aria-pressed="false">Chip Leaders</button>
+<button type="button" class="secondary" data-casino-pane="fame" aria-controls="casinoFame" aria-pressed="true">Hall of Fame</button>
+<button type="button" class="secondary" data-casino-pane="rules" aria-controls="casinoRules" aria-pressed="false">How to Play</button>
+</div>
+<section class="panel" id="chipLeaders" data-casino-panel="leaders" tabindex="0" aria-label="Tonight’s chip leaders">
+<div class="leaders-art">
+<span class="casino-kicker">THE TABLE STANDINGS</span>
+<h2>Tonight's Chip Leaders</h2>
+</div>
+<div id="liveScores" class="hint">Players will appear here.</div>
+</section>
+<section class="panel fame" id="casinoFame" data-casino-panel="fame">
+<div class="fame-art">
+<span class="casino-kicker">THE WINNERS' CIRCLE</span>
+<h2>Casino<br>Hall of Fame</h2>
+</div>
+<p class="hint">Longest correct-guess streak from completed games. Ties share a rank. Chips decide tonight’s winner.</p>
+<div id="alltime" role="region" aria-label="Hall of Fame standings" tabindex="0">
+</div>
+<details class="records-drawer">
+<summary>Shared standings &amp; backups</summary>
+<div id="casinoCloudStatus" class="hint" role="status">Connecting to shared Casino Hall of Fame…</div>
+<div class="controls">
+<button id="casinoCloudUpload" class="secondary hidden" type="button">PUBLISH THIS DEVICE’S RECORDS</button>
+<button id="casinoCloudReload" class="secondary" type="button">↻ RELOAD SHARED SCORES</button>
+</div>
+<div class="controls">
+<button id="export" class="secondary">EXPORT RECORDS</button>
+<button id="importBtn" class="secondary">IMPORT RECORDS</button>
+<input id="importFile" type="file" class="hidden" accept=".json,application/json">
+</div>
+<p class="hint">Scores are shared across your devices. Export a copy for a personal backup.</p>
+</details>
+</section>
+<section class="panel how-to" id="casinoRules" data-casino-panel="rules" tabindex="0" aria-label="How to Play">
+<span class="casino-kicker">THE HOUSE RULES</span>
+<h2>How to Play</h2>
+<p>
+<strong>Goal:</strong> Finish with the most banked chips.</p>
+<p>Each player gets <strong>5, 10, or 15 turns</strong>, selected before the game. Every turn starts with <strong>100 chips</strong>.</p>
+<p>Guess whether the next card will be <strong>higher or lower</strong> (2 low, Ace high). Each correct guess doubles your unbanked pot. Matching ranks are a push; a wrong guess loses the unbanked pot.</p>
+<p>
+<strong>Bank Chips</strong> to secure your winnings, or press your luck. <strong>Double or Nothing</strong> risks the pot on one more guess: win to double and bank automatically, or lose it all.</p>
+<p class="how-end">
+<strong>🏆 When does it end?</strong> Automatically after every player finishes their selected turns. The player with the most banked chips wins. Tied top scores share the win.</p>
+</section>
+</aside>
+</div>
+<footer class="foot">CHRIS'S HIGH STAKES CASINO · V3.1 · JUST FOR FUN · NO REAL-MONEY WAGERING</footer>
+</main><script type="application/x-game-storage">
+const KEY='storage-preview-chris-high-stakes-v1';const NAME_KEY='storage-preview-chris-casino-saved-names';let savedNames=[];try{savedNames=JSON.parse(GameRoomStorage.store.getItem(NAME_KEY)||'[]');if(!Array.isArray(savedNames))savedNames=[]}catch(e){savedNames=[]}function saveNames(){try{GameRoomStorage.store.setItem(NAME_KEY,JSON.stringify(savedNames))}catch(e){}}function rememberNames(a){a.forEach(n=>{if(n&&!savedNames.some(v=>v.toLowerCase()===n.toLowerCase()))savedNames.push(n)});savedNames.sort((a,b)=>a.localeCompare(b));saveNames()}const $=id=>document.getElementById(id);const ranks=['2','3','4','5','6','7','8','9','10','J','Q','K','A'],suits=['♠','♥','♣','♦'];let state=null,started=false,records={players:{},games:0};const clone=o=>JSON.parse(JSON.stringify(o));const safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function newDeck(){return shuffle(suits.flatMap(s=>ranks.map((r,i)=>({rank:i+2,label:r,suit:s}))))}
+function draw(){if(!state.deck.length)state.deck=newDeck();return state.deck.pop()}
+function save(){try{GameRoomStorage.store.setItem(KEY,JSON.stringify({state,started,records}))}catch(e){alert('Storage full. Export records to back up your game.')}}
+function load(){try{const v=JSON.parse(GameRoomStorage.store.getItem(KEY));if(v&&v.records){state=v.state;started=!!v.started;records=v.records}}catch(e){}}
+function casinoHallRows(players){
+ const rows=Object.entries(players||{}).map(([name,v])=>({name,best:Math.max(0,Number(v.best)||0)})).sort((a,b)=>b.best-a.best||a.name.localeCompare(b.name));
+ let rank=0,last=null;
+ return rows.map((p,i)=>{if(p.best!==last){rank=i+1;last=p.best}return '<div class="score"><span>'+(rank===1?'🏆 ':'')+'#'+rank+' '+safe(p.name)+'<div class="record">Best streak · completed games</div></span><b>'+p.best+' <small>in a row</small></b></div>'}).join('')||'<p class="hint">Finish a game to record your best streak.</p>';
+}
+function updateRoundSummary(){
+ const n=Array.from({length:8},(_,i)=>$('p'+i)?.value.trim()).filter(Boolean).length;
+ const turns=Number($('roundCount').value)||5;
+ $('roundSummary').textContent=n?n+' player'+(n===1?'':'s')+' × '+turns+' turns each = '+n*turns+' total table turns.':'Each player gets '+turns+' turns. Add names to see the table total.';
+}
+$('roundCount').addEventListener('change',updateRoundSummary);
+$('playerInputs').addEventListener('input',updateRoundSummary);
+$('playerInputs').addEventListener('change',updateRoundSummary);
+function scores(){return state?.players.map((p,i)=>({name:p,score:state.scores[i],streak:state.best[i]}))||[]}
+function card(el,c,back=false){
+ back=back||!c;
+ el.className='card'+(back?' back':c.suit==='♥'||c.suit==='♦'?' red':'');
+ el.setAttribute('role','img');
+ el.setAttribute('aria-label',back?'Face-down next card':CasinoCardArt.name(c));
+ el.innerHTML=CasinoCardArt.face(c,back);
+ if(el.id==='nextCard')$('drawCaption').textContent=back?'NEXT CARD':'LAST DRAW';
+}
+function newTurn(){state.turn++;if(state.turn>=state.players.length*state.rounds){finish();return}state.player=state.turn%state.players.length;state.deck=newDeck();state.current=draw();state.pot=100;state.streak=0;state.phase='guess';state.message='Predict the next card!';state.bonus=false;state.last=null;save();render()}
+function finish(){state.phase='done';records.games++;const max=Math.max(...state.scores);state.players.forEach((p,i)=>{records.players[p]??={wins:0,chips:0,best:0};records.players[p].chips+=state.scores[i];records.players[p].best=Math.max(records.players[p].best,state.best[i]);if(max>0&&state.scores[i]===max)records.players[p].wins++});save();render();if(window.casinoCloudSave)window.casinoCloudSave(records)}
+function guess(direction,bonus=false){if(state.phase==='result'){state.last=null;state.phase='guess'}if(state.phase!=='guess'&&state.phase!=='bonusPick')return;bonus=state.phase==='bonusPick';const c=draw();state.last=c;const correct=direction==='higher'?c.rank>state.current.rank:c.rank<state.current.rank;const push=c.rank===state.current.rank;state.current=c;if(push){state.message='PUSH! Same rank — no chips lost.';state.phase='result'}else if(correct){state.streak++;state.best[state.player]=Math.max(state.best[state.player],state.streak);state.pot*=2;state.message=bonus?'JACKPOT! DOUBLE OR NOTHING HIT!':'WINNER! Correct guess!';state.phase=bonus?'banked':'result';if(bonus){state.scores[state.player]+=state.pot;state.message+=' '+state.pot+' CHIPS BANKED!';state.pot=0}}else{state.pot=0;state.message=bonus?'BUST! DOUBLE OR NOTHING FAILED!':'BUST! Unbanked chips lost.';state.phase='bust'}save();render();focusGameAction()}
+function bank(){if(state.phase!=='guess'&&state.phase!=='result')return;state.scores[state.player]+=state.pot;state.message='BANKED '+state.pot+' CHIPS!';state.pot=0;state.phase='banked';save();render();focusGameAction()}
+const casinoSidebar=document.querySelector('.casino-sidebar');
+const casinoPaneButtons=[...casinoSidebar.querySelectorAll('[data-casino-pane]')];
+let casinoView;
+function selectCasinoPane(pane){
+ casinoSidebar.dataset.pane=pane;
+ for(const button of casinoPaneButtons){
+  button.setAttribute('aria-pressed',String(button.dataset.casinoPane===pane));
+ }
+}
+for(const button of casinoPaneButtons)button.addEventListener('click',()=>selectCasinoPane(button.dataset.casinoPane));
+
+function render(){updateRoundSummary();
+ const finished=started&&state?.phase==='done';
+ const playing=started&&state&&!finished;
+ const view=playing?'game':finished?'results':'setup';
+ if(casinoView!==view){
+  casinoView=view;
+  selectCasinoPane(playing?'leaders':'fame');
+ }
+ document.body.classList.toggle('casino-playing',!!playing);
+ document.body.classList.toggle('casino-finished',!!finished);
+ $('setup').classList.toggle('hidden',started);$('game').classList.toggle('hidden',!playing);$('finished').classList.toggle('hidden',!started||!state||state.phase!=='done');$('liveScores').innerHTML=state?scores().sort((a,b)=>b.score-a.score).map((p,i)=>'<div class="score '+(i===0?'leader':'')+'"><span>'+(i===0?'👑 ':'')+safe(p.name)+'<div class="record">Best streak: '+p.streak+'</div></span><b>'+p.score+'</b></div>').join(''):'Players will appear here.';$('alltime').innerHTML=casinoHallRows(records.players);if(!started||!state)return;if(state.phase==='done'){const max=Math.max(...state.scores),winners=state.players.filter((_,i)=>state.scores[i]===max);$('winner').textContent='🏆 '+winners.join(' & ')+' '+(winners.length===1?'WINS!':'TIE!');$('finalScores').innerHTML=scores().sort((a,b)=>b.score-a.score).map(p=>'<div class="score"><span>'+safe(p.name)+'</span><b>'+p.score+' CHIPS</b></div>').join('');return}$('turnNumber').textContent='TABLE TURN '+(state.turn+1)+' OF '+(state.players.length*state.rounds)+' · ROUND '+(Math.floor(state.turn/state.players.length)+1)+' OF '+state.rounds;$('deckInfo').textContent=state.deck.length+' CARDS IN SHOE';$('turn').textContent=state.players[state.player]+' IS AT THE TABLE';card($('currentCard'),state.current);card($('nextCard'),state.last,state.phase==='guess'||state.phase==='bonusPick');$('result').textContent=state.message;$('pot').textContent='POT: '+state.pot+' CHIPS';$('streak').textContent='STREAK: '+state.streak;$('guessControls').classList.toggle('hidden',state.phase!=='guess'&&state.phase!=='bonusPick'&&state.phase!=='result');$('bankControls').classList.toggle('hidden',state.phase!=='guess'&&state.phase!=='result');$('continueControls').classList.toggle('hidden',state.phase==='guess'||state.phase==='bonusPick'||state.phase==='result');$('higher').disabled=state.phase!=='guess'&&state.phase!=='bonusPick'&&state.phase!=='result';$('lower').disabled=state.phase!=='guess'&&state.phase!=='bonusPick'&&state.phase!=='result';$('bank').disabled=state.phase!=='guess'&&state.phase!=='result';$('double').disabled=state.phase!=='result'||state.pot===0;$('continue').textContent=state.phase==='result'?'RISK ANOTHER CARD →':'NEXT PLAYER →'}
+function focusGameAction(){const id=state?.phase==='done'?'again':state&&(['guess','result','bonusPick'].includes(state.phase))?'higher':state&&(['bust','banked'].includes(state.phase))?'continue':null;if(id){const el=$(id);if(el&&!el.disabled&&!el.closest('.hidden')){try{el.focus({preventScroll:true})}catch(e){el.focus()}}}}
+function advance(){if(state.phase==='result'){state.last=null;state.phase='guess';state.message='Bank your chips or keep going!';save();render();focusGameAction()}else if(state.phase==='banked'||state.phase==='bust'){newTurn();focusGameAction()}}
+function init(existing=Array.from({length:8},(_,i)=>document.getElementById('p'+i)?.value||'')){$('playerInputs').innerHTML=Array.from({length:8},(_,i)=>'<label>PLAYER '+(i+1)+'<span class="name-row"><input id="p'+i+'" maxlength="24" value="'+safe(existing[i]||'')+'" placeholder="Player '+(i+1)+'" autocomplete="off"><select id="saved'+i+'" aria-label="Saved player name '+(i+1)+'"><option value=""></option>'+savedNames.map(n=>'<option value="'+safe(n)+'">'+safe(n)+'</option>').join('')+'</select></span></label>').join('');for(let i=0;i<8;i++)$('saved'+i).addEventListener('change',e=>{if(e.target.value)$('p'+i).value=e.target.value;e.target.selectedIndex=0})}
+$('start').onclick=()=>{const players=Array.from({length:8},(_,i)=>$('p'+i).value.trim()).filter(Boolean);if(!players.length){$('setupNotice').textContent='Enter at least one player.';return}if(new Set(players.map(x=>x.toLowerCase())).size!==players.length){$('setupNotice').textContent='Player names must be unique.';return}state={players,scores:players.map(()=>0),best:players.map(()=>0),rounds:[5,10,15].includes(Number($('roundCount').value))?Number($('roundCount').value):5,turn:-1,deck:[],phase:'',player:0,pot:0,streak:0,current:null,last:null};started=true;rememberNames(players);newTurn();focusGameAction()};
+$('again').onclick=()=>{
+ if(!started||state?.phase!=='done')return;
+ const players=state.players;
+ $('roundCount').value=String([5,10,15].includes(state.rounds)?state.rounds:5);
+ state=null;
+ started=false;
+ save();
+ init(players);
+ $('setupNotice').textContent='';
+ render();
+ $('start').focus();
+};
+$('clearNames').onclick=()=>{for(let i=0;i<8;i++)$('p'+i).value='';$('setupNotice').textContent='Table names cleared. Saved names are still available.';updateRoundSummary()};$('manageNames').onclick=()=>{if(!savedNames.length){$('setupNotice').textContent='No saved names yet. Start a game to save player names.';return}const selected=prompt('Saved names (comma-separated). Edit this list to rename or remove names:',savedNames.join(', '));if(selected===null)return;savedNames=[...new Set(selected.split(',').map(x=>x.trim()).filter(Boolean))].slice(0,100);saveNames();init();$('setupNotice').textContent='Saved names updated.'};$('restart').onclick=()=>{if(confirm('End this casino game and return to the player setup? Unfinished chips will not count toward the Hall of Fame.')){state=null;started=false;save();init();render()}};$('higher').onclick=()=>guess('higher');$('lower').onclick=()=>guess('lower');$('bank').onclick=bank;$('double').onclick=()=>{if(state.phase!=='result'||!state.pot)return;state.phase='bonusPick';state.message='DOUBLE OR NOTHING! PICK HIGHER OR LOWER';save();render()};$('continue').onclick=advance;
+$('export').onclick=()=>{const b=new Blob([JSON.stringify({state,started,records},null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='high-stakes-casino-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
+$('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const x=JSON.parse(await f.text());if(!x.records||typeof x.records.players!=='object'||!x.records.players||!Number.isFinite(x.records.games)||(x.state===null?!!x.started:!x.state||!Array.isArray(x.state.players)))throw Error('Invalid backup');if(confirm('Replace this device’s casino records?')){state=x.state;records=x.records;started=!!x.started;save();render()}}catch(err){alert('Import failed: '+err.message)}e.target.value=''};init();load();render();
+</script><script type="application/x-game-storage">(function(){var b=document.getElementById('pageRefresh');if(b)b.addEventListener('click',function(){var u=new URL(location.href);u.searchParams.set('refresh',Date.now().toString());location.replace(u.toString())})})();</script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script type="application/x-game-storage">
+/* Fire TV: one browser Back press returns directly to the Game Room. */
+(function(){
+  if(window.__gameRoomBackInstalled)return;
+  window.__gameRoomBackInstalled=true;
+  try{
+    history.pushState({gameRoomBackGuard:true},'',location.href);
+    window.addEventListener('popstate',function(){
+      GameRoomStorage.store.flush().then(()=>location.replace(new URL('./games.html',location.href).href)).catch(()=>{});
+    });
+  }catch(e){}
+})();
+</script><script src="./game-room-storage.js?v=2"></script><script>GameRoomStorage.boot(["storage-preview-chris-high-stakes-v1","storage-preview-chris-casino-saved-names","storage-preview-storage-preview-chris-high-stakes-v1-before-cloud"],{database:"game-storage-ui-verification"});</script></body></html>
+
