@@ -14,6 +14,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+      - name: Verify feed normalization (offline)
+        run: python3 tools/test_daily_line_feed.py
       - name: Generate ESPN public data cache
         run: python3 tools/build_daily_line_feed.py
       - name: Commit updated cache only
