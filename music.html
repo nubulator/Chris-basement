@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Chris's Music Challenge V4.2</title>
+<title>Chris's Music Challenge V4.3</title>
 <link rel="stylesheet" href="./game-room-refresh.css?v=20261116a">
 <script defer src="./game-room-refresh.js?v=20261117pictures">
 </script>
@@ -15,12 +15,12 @@
 <link rel="stylesheet" href="./picture-clues.css?v=3">
 <script src="./picture-bank.js?v=2"></script>
 <script src="./picture-clues.js?v=1"></script>
-</head>
+<script src="./game-room-names.js?v=1"></script></head>
 <body class="gr-refresh gr-music" data-game="music">
 <main>
 <nav class="top">
 <a href="./games.html">← GAME ROOM</a>
-<span class="version">MUSIC CHALLENGE V4.2</span>
+<span class="version">MUSIC CHALLENGE V4.3</span>
 <a href="./">CHRIS'S BASEMENT</a>
 <button id="pageRefresh" class="game-refresh" type="button">↻ REFRESH</button>
 </nav>
@@ -201,7 +201,7 @@
 </details>
 </aside>
 </div>
-<footer class="bottom">CHRIS'S MUSIC CHALLENGE · V4.2 · THE SHOW MUST GO ON</footer>
+<footer class="bottom">CHRIS'S MUSIC CHALLENGE · V4.3 · THE SHOW MUST GO ON</footer>
 </main><script src="./shared-question-banks.js?v=1"></script><script type="application/x-game-storage">
 const QUESTIONS=[...GameRoomQuestionBanks.music];
 
@@ -411,7 +411,7 @@ function rememberPerformers(names){const all=[...savedPerformers(),...names].map
 function refreshSuggestions(){const names=savedPerformers();}
 let pickerSlot=0,manageSavedNames=false;
 function closeSavedPicker(){manageSavedNames=false;$('savedNamePicker').classList.add('hidden');focusControl('p'+pickerSlot)}
-function renderSavedPicker(){const names=savedPerformers();$('savedNameOptions').innerHTML='';const options=$('savedNameOptions');for(const name of names){const b=document.createElement('button');b.type='button';b.className='secondary saved-name-option';b.textContent=(manageSavedNames?'✕ Remove ':'')+name;b.onclick=()=>{if(manageSavedNames){if(!confirm('Remove '+name+' from saved performer suggestions?'))return;GameRoomStorage.store.setItem('chris-music-performers',JSON.stringify(savedPerformers().filter(x=>x!==name)));refreshSuggestions();renderSavedPicker()}else{$('p'+pickerSlot).value=name;closeSavedPicker()}};options.appendChild(b)}if(!names.length){const p=document.createElement('p');p.textContent='No saved performer names.';options.appendChild(p)}$('manageSavedNames').textContent=manageSavedNames?'✓ Done Managing':'⚙ Manage Saved Names';$('clearSavedNames').classList.toggle('hidden',!manageSavedNames)}
+function renderSavedPicker(){const names=savedPerformers();$('savedNameOptions').innerHTML='';const options=$('savedNameOptions');for(const name of names){const b=document.createElement('button');b.type='button';b.className='secondary saved-name-option';b.textContent=(manageSavedNames?'✕ Remove ':'')+name;b.onclick=()=>{if(manageSavedNames){if(!confirm('Remove '+name+' from saved performer suggestions?'))return;GameRoomStorage.store.setItem('chris-music-performers',JSON.stringify(savedPerformers().filter(x=>x!==name)));refreshSuggestions();renderSavedPicker()}else{$('p'+pickerSlot).value=name;closeSavedPicker()}};options.appendChild(b)}if(!names.length){const p=document.createElement('p');p.textContent='No saved performer names.';options.appendChild(p)}$('manageSavedNames').textContent=manageSavedNames?'✓ Done Managing':'⚙ Manage Saved Names';$('clearSavedNames').classList.toggle('hidden',!manageSavedNames);if(!manageSavedNames)GameRoomNames.append(options,'player',name=>{$('p'+pickerSlot).value=name;closeSavedPicker()})}
 function openNamePicker(i){pickerSlot=i;manageSavedNames=false;$('savedNamePicker').classList.remove('hidden');renderSavedPicker();requestAnimationFrame(()=>($('savedNameOptions').querySelector('button')||$('manageSavedNames')).focus({preventScroll:true}))}
 $('closeNamePicker').onclick=closeSavedPicker;
 $('manageSavedNames').onclick=()=>{manageSavedNames=!manageSavedNames;renderSavedPicker();$('manageSavedNames').focus({preventScroll:true})};
