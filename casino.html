@@ -249,17 +249,17 @@ $('again').onclick=()=>{
 $('clearNames').onclick=()=>{for(let i=0;i<8;i++)$('p'+i).value='';$('setupNotice').textContent='Table names cleared. Saved names are still available.';updateRoundSummary()};$('manageNames').onclick=()=>{if(!savedNames.length){$('setupNotice').textContent='No saved names yet. Start a game to save player names.';return}const selected=prompt('Saved names (comma-separated). Edit this list to rename or remove names:',savedNames.join(', '));if(selected===null)return;savedNames=[...new Set(selected.split(',').map(x=>x.trim()).filter(Boolean))].slice(0,100);saveNames();init();$('setupNotice').textContent='Saved names updated.'};$('restart').onclick=()=>{if(confirm('End this casino game and return to the player setup? Unfinished chips will not count toward the Hall of Fame.')){state=null;started=false;save();init();render()}};$('higher').onclick=()=>guess('higher');$('lower').onclick=()=>guess('lower');$('bank').onclick=bank;$('double').onclick=()=>{if(state.phase!=='result'||!state.pot)return;state.phase='bonusPick';state.message='DOUBLE OR NOTHING! PICK HIGHER OR LOWER';save();render()};$('continue').onclick=advance;
 $('export').onclick=()=>{const b=new Blob([JSON.stringify({state,started,records},null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='high-stakes-casino-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
 $('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const x=JSON.parse(await f.text());if(!x.records||typeof x.records.players!=='object'||!x.records.players||!Number.isFinite(x.records.games)||(x.state===null?!!x.started:!x.state||!Array.isArray(x.state.players)))throw Error('Invalid backup');if(confirm('Replace this device’s casino records?')){state=x.state;records=x.records;started=!!x.started;save();render()}}catch(err){alert('Import failed: '+err.message)}e.target.value=''};init();load();render();
-</script><script type="application/x-game-storage">(function(){var b=document.getElementById('pageRefresh');if(b)b.addEventListener('click',function(){var u=new URL(location.href);u.searchParams.set('refresh',Date.now().toString());location.replace(u.toString())})})();</script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script type="application/x-game-storage">
+</script><script type="application/x-game-storage">(function(){var b=document.getElementById('pageRefresh');if(b)b.addEventListener('click',function(){var u=new URL(location.href);u.searchParams.set('refresh',Date.now().toString());location.replace(u.toString())})})();</script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script><script src="./game-room-cloud.js?v=1"></script><script type="application/x-game-storage">
 (function(){
 const status=document.getElementById('casinoCloudStatus'),upload=document.getElementById('casinoCloudUpload'),reload=document.getElementById('casinoCloudReload');
 const config={apiKey:"AIzaSyBbN4Qm-sTtoUE9HNEhjeNlibBKo5dPSs8",authDomain:"chris-game-room.firebaseapp.com",projectId:"chris-game-room",appId:"1:705590637292:web:89af6df7c34eb4371c2bc9"};
-let ref=null,ready=false,writing=Promise.resolve();
+let secure=null,ref=null,ready=false,writing=Promise.resolve();
 const note=s=>{status.textContent=s};
 function valid(x){return !!(x&&typeof x==='object'&&x.players&&typeof x.players==='object'&&Number.isFinite(x.games))}
 function adopt(shared){if(!valid(shared))return;const previous=JSON.stringify(records);if(previous!==JSON.stringify(shared)){try{GameRoomStorage.store.setItem(KEY+'-before-cloud',previous)}catch(e){}records=JSON.parse(JSON.stringify(shared));save();render()}}
 async function reloadCloud(){
  if(!ref)return;note('Loading shared Casino Hall of Fame…');
- try{const snap=await ref.get({source:'server'}),shared=snap.exists?snap.data().state:null;
+ try{const snap=await ref.get({source:'server'}),shared=snap.exists?GameRoomCloud.decode(snap.data()).state:null;
  if(valid(shared)){adopt(shared);ready=true;upload.classList.add('hidden');note('✓ Shared Casino Hall of Fame loaded. Completed games sync automatically.')}
  else{ready=false;upload.classList.remove('hidden');note('No shared casino scores yet. Publish from the device with the correct history.')}}
  catch(e){ready=false;note('Cloud unavailable: '+e.message)}
@@ -267,12 +267,12 @@ async function reloadCloud(){
 window.casinoCloudSave=function(next){
  if(!ready||!ref){note('Game saved on this device. Connect or publish the Hall of Fame to sync.');return}
  const snapshot=JSON.parse(JSON.stringify(next));
- writing=writing.then(()=>ref.set({state:snapshot,updatedAt:firebase.firestore.FieldValue.serverTimestamp()})).then(()=>note('✓ Completed game saved to shared Casino Hall of Fame.')).catch(e=>note('Cloud save failed: '+e.message));
+ writing=writing.then(()=>secure.set({state:snapshot,updatedAt:firebase.firestore.FieldValue.serverTimestamp()})).then(()=>note('✓ Completed game saved to shared Casino Hall of Fame.')).catch(e=>note('Cloud save failed: '+e.message));
 };
 upload.onclick=async()=>{if(!ref)return;if(!confirm('Publish this device’s Casino Hall of Fame to the shared cloud? Only do this from the device with the correct records.'))return;
- try{note('Publishing casino standings…');await ref.set({state:JSON.parse(JSON.stringify(records)),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});ready=true;upload.classList.add('hidden');note('✓ Shared Casino Hall of Fame created. Future completed games sync.')}catch(e){note('Publish failed: '+e.message)}};
+ try{note('Publishing casino standings…');await secure.set({state:JSON.parse(JSON.stringify(records)),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});ready=true;upload.classList.add('hidden');note('✓ Shared Casino Hall of Fame created. Future completed games sync.')}catch(e){note('Publish failed: '+e.message)}};
 reload.onclick=reloadCloud;
-try{if(!window.firebase||!firebase.firestore)throw Error('Firebase library unavailable');firebase.initializeApp(config,'casino-shared');ref=firebase.app('casino-shared').firestore().collection('gameRoom').doc('casino');reloadCloud()}catch(e){note('Cloud unavailable: '+e.message)}
+try{if(!window.firebase||!firebase.firestore)throw Error('Firebase library unavailable');secure=GameRoomCloud.connect(config,'casino',status,reloadCloud);ref=secure.ref}catch(e){note('Cloud unavailable: '+e.message)}
 })();
 </script><script type="application/x-game-storage">
 /* Fire TV: one browser Back press returns directly to the Game Room. */

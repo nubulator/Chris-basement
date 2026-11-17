@@ -434,17 +434,17 @@ $('discard').onclick=()=>{if(confirm('Discard this test game without recording r
 $('reveal').onclick=()=>{state.revealed=true;save();render();requestAnimationFrame(()=>{const first=$('awardButtons').querySelector('button');if(first)first.focus({preventScroll:true});else focusControl('nobody')})};$('awardButtons').onclick=e=>{const b=e.target.closest('button[data-player]');if(b)award(state.players[Number(b.dataset.player)])};$('nobody').onclick=()=>award(null);$('undo').onclick=undo;$('again').onclick=()=>{started=false;state=fresh();save();render();focusControl('namePick0')};
 $('export').onclick=()=>{const blob=new Blob([JSON.stringify({state,records,started},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='chris-music-challenge-records.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
 $('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const x=JSON.parse(await f.text());if(!x.state||!x.records||!Array.isArray(x.state.players))throw Error('Invalid file');if(confirm('Replace local music records with imported backup?')){state=x.state;records=x.records;started=!!x.started;save();render()}}catch(err){alert('Import failed: '+err.message)}e.target.value=''};init();load();if(started&&state.players.length){state.players.forEach((n,i)=>{if($('p'+i))$('p'+i).value=n})}render();updateMusicVault();void restockMusicVaultIfLow();focusControl(started?(state.completed?'commit':state.pending?'nextTrack':state.revealed?'nobody':'reveal'):'namePick0');
-</script><script type="application/x-game-storage">(function(){var b=document.getElementById('pageRefresh');if(b)b.addEventListener('click',function(){var u=new URL(location.href);u.searchParams.set('refresh',Date.now().toString());location.replace(u.toString())})})();</script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script type="application/x-game-storage">
+</script><script type="application/x-game-storage">(function(){var b=document.getElementById('pageRefresh');if(b)b.addEventListener('click',function(){var u=new URL(location.href);u.searchParams.set('refresh',Date.now().toString());location.replace(u.toString())})})();</script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script><script src="./game-room-cloud.js?v=1"></script><script type="application/x-game-storage">
 (function(){
 const status=document.getElementById('musicCloudStatus'),upload=document.getElementById('musicCloudUpload'),reload=document.getElementById('musicCloudReload');
 const config={apiKey:"AIzaSyBbN4Qm-sTtoUE9HNEhjeNlibBKo5dPSs8",authDomain:"chris-game-room.firebaseapp.com",projectId:"chris-game-room",appId:"1:705590637292:web:89af6df7c34eb4371c2bc9"};
-let ref=null,ready=false,writing=Promise.resolve();
+let secure=null,ref=null,ready=false,writing=Promise.resolve();
 const note=s=>status.textContent=s;
 function valid(x){return x&&typeof x==='object'&&x.players&&typeof x.players==='object'&&typeof x.rounds==='number'}
 function adopt(shared){if(!valid(shared))return;records.players=shared.players;records.rounds=shared.rounds;save();render()}
 async function reloadCloud(){
  if(!ref)return;note('Loading shared Music Hall of Fame…');
- try{const snap=await ref.get({source:'server'}),shared=snap.exists?snap.data().standings:null;
+ try{const snap=await ref.get({source:'server'}),shared=snap.exists?GameRoomCloud.decode(snap.data()).standings:null;
  if(valid(shared)){adopt(shared);ready=true;upload.classList.add('hidden');note('✓ Shared Hall of Fame loaded. Committed shows sync automatically.')}
  else{ready=false;upload.classList.remove('hidden');note('No shared music standings yet. Publish from the device with the correct history.')}}
  catch(e){ready=false;note('Shared Hall of Fame unavailable: '+e.message)}
@@ -452,12 +452,12 @@ async function reloadCloud(){
 window.musicCloudSave=function(next){
  if(!ready||!ref){note('Results saved on this device. Publish or reconnect to sync across devices.');return}
  const standings={players:JSON.parse(JSON.stringify(next.players||{})),rounds:next.rounds||0};
- writing=writing.then(()=>ref.set({standings,updatedAt:firebase.firestore.FieldValue.serverTimestamp()})).then(()=>note('✓ Committed results saved to shared Hall of Fame.')).catch(e=>note('Shared save failed: '+e.message));
+ writing=writing.then(()=>secure.set({standings,updatedAt:firebase.firestore.FieldValue.serverTimestamp()})).then(()=>note('✓ Committed results saved to shared Hall of Fame.')).catch(e=>note('Shared save failed: '+e.message));
 };
 upload.onclick=async()=>{if(!ref)return;if(!confirm('Publish this device’s completed Music Challenge standings? This replaces any existing shared standings.'))return;
- try{note('Publishing music standings…');await ref.set({standings:{players:records.players||{},rounds:records.rounds||0},updatedAt:firebase.firestore.FieldValue.serverTimestamp()});ready=true;upload.classList.add('hidden');note('✓ Shared Hall of Fame created. Future committed results sync.')}catch(e){note('Publish failed: '+e.message)}};
+ try{note('Publishing music standings…');await secure.set({standings:{players:records.players||{},rounds:records.rounds||0},updatedAt:firebase.firestore.FieldValue.serverTimestamp()});ready=true;upload.classList.add('hidden');note('✓ Shared Hall of Fame created. Future committed results sync.')}catch(e){note('Publish failed: '+e.message)}};
 reload.onclick=reloadCloud;
-try{if(!window.firebase||!firebase.firestore)throw Error('Firebase library unavailable');firebase.initializeApp(config,'music-shared');ref=firebase.app('music-shared').firestore().collection('gameRoom').doc('music');reloadCloud()}catch(e){note('Shared Hall of Fame unavailable: '+e.message)}
+try{if(!window.firebase||!firebase.firestore)throw Error('Firebase library unavailable');secure=GameRoomCloud.connect(config,'music',status,reloadCloud);ref=secure.ref}catch(e){note('Shared Hall of Fame unavailable: '+e.message)}
 })();
 </script><script type="application/x-game-storage">
 /* Fire TV: one browser Back press returns directly to the Game Room. */

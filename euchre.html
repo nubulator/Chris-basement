@@ -95,17 +95,17 @@ $('crown').onclick=()=>{const s=current();if(!s.nights.length){alert('Record at 
 $('newSeason').onclick=()=>{if(!confirm('Start a new season? The current season and its results will remain saved.'))return;const id=Math.max(...db.seasons.map(s=>s.id))+1;db.seasons.push({id,label:'Season '+id,nights:[],champion:null,trip:''});db.current=id;save();resetForm();render()};
 if($('export'))$('export').onclick=()=>{const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='gehrig-ison-euchre-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
 if($('import'))$('import').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!d||!Array.isArray(d.seasons)||!d.seasons.every(s=>Array.isArray(s.nights)))throw Error('Invalid backup');if(!confirm('Replace all scores on this device with the imported backup?'))return;db=d;save();resetForm();render();$('status').textContent='Backup imported.'}catch(err){alert('Could not import backup: '+err.message)}finally{e.target.value=''}};
-</script><script>document.getElementById('pageRefresh').onclick=function(){var u=new URL(location.href);u.searchParams.set('refresh',Date.now().toString());location.replace(u.toString())};</script><script>(function(){var buttons=Array.from(document.querySelectorAll('.euchre-tabs .tab'));window.showPanel=function(id){document.querySelectorAll('.tab-panel').forEach(function(p){p.hidden=p.id!==id});buttons.forEach(function(b){var on=b.dataset.panel===id;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))});};buttons.forEach(function(b){b.addEventListener('click',function(){showPanel(b.dataset.panel)})});showPanel('standingsPanel')})();</script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script>
+</script><script>document.getElementById('pageRefresh').onclick=function(){var u=new URL(location.href);u.searchParams.set('refresh',Date.now().toString());location.replace(u.toString())};</script><script>(function(){var buttons=Array.from(document.querySelectorAll('.euchre-tabs .tab'));window.showPanel=function(id){document.querySelectorAll('.tab-panel').forEach(function(p){p.hidden=p.id!==id});buttons.forEach(function(b){var on=b.dataset.panel===id;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))});};buttons.forEach(function(b){b.addEventListener('click',function(){showPanel(b.dataset.panel)})});showPanel('standingsPanel')})();</script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script><script src="./game-room-cloud.js?v=1"></script><script>
 (function(){
 const status=document.getElementById('cloudSyncStatus'),upload=document.getElementById('cloudUpload'),reload=document.getElementById('cloudReload');
 if(!status)return;
 const config={apiKey:"AIzaSyBbN4Qm-sTtoUE9HNEhjeNlibBKo5dPSs8",authDomain:"chris-game-room.firebaseapp.com",projectId:"chris-game-room",appId:"1:705590637292:web:89af6df7c34eb4371c2bc9"};
-let ref=null,ready=false,writing=Promise.resolve(),loading=false;
+let secure=null,ref=null,ready=false,writing=Promise.resolve(),loading=false;
 const note=s=>status.textContent=s;
 function valid(x){return x&&Array.isArray(x.seasons)&&x.seasons.every(s=>Array.isArray(s.nights))}
 async function fetchShared(){
  const snap=await ref.get({source:'server'});if(!snap.exists)return null;
- const data=snap.data();return valid(data&&data.state)?data.state:null;
+ const data=GameRoomCloud.decode(snap.data());return valid(data&&data.state)?data.state:null;
 }
 function adopt(shared){
  if(!valid(shared))return;
@@ -121,15 +121,15 @@ async function reloadCloud(){
 }
 window.euchreCloudSave=function(next){
  if(!ready||loading||!ref)return;
- const snapshot=JSON.parse(JSON.stringify(next));writing=writing.then(()=>ref.set({state:snapshot,updatedAt:firebase.firestore.FieldValue.serverTimestamp()})).then(()=>note('✓ Saved to shared cloud')).catch(e=>note('Cloud save failed: '+e.message));
+ const snapshot=JSON.parse(JSON.stringify(next));writing=writing.then(()=>secure.set({state:snapshot,updatedAt:firebase.firestore.FieldValue.serverTimestamp()})).then(()=>note('✓ Saved to shared cloud')).catch(e=>note('Cloud save failed: '+e.message));
 };
 upload.onclick=async()=>{
  if(!ref)return;
  if(!confirm('Make THIS device’s Euchre history the shared history for everyone? This replaces existing shared scores.'))return;
- try{loading=true;note('Uploading shared history…');await ref.set({state:JSON.parse(JSON.stringify(db)),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});ready=true;upload.hidden=true;note('✓ Shared history created. Changes now sync.')}catch(e){note('Upload failed: '+e.message)}finally{loading=false}
+ try{loading=true;note('Uploading shared history…');await secure.set({state:JSON.parse(JSON.stringify(db)),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});ready=true;upload.hidden=true;note('✓ Shared history created. Changes now sync.')}catch(e){note('Upload failed: '+e.message)}finally{loading=false}
 };
 reload.onclick=reloadCloud;
-try{if(!window.firebase||!firebase.firestore)throw Error('Firebase library unavailable on this browser');firebase.initializeApp(config,'euchre-shared');ref=firebase.app('euchre-shared').firestore().collection('gameRoom').doc('euchre');reloadCloud()}catch(e){note('Cloud unavailable: '+e.message)}
+try{if(!window.firebase||!firebase.firestore)throw Error('Firebase library unavailable on this browser');secure=GameRoomCloud.connect(config,'euchre',status,reloadCloud);ref=secure.ref}catch(e){note('Cloud unavailable: '+e.message)}
 })();
 </script><style>
 /* V2.4 Fire TV remote keyboard focus */
