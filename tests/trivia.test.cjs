@@ -5,7 +5,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 const root = path.join(__dirname, '..');
 const read = p => fs.readFileSync(path.join(root,p),'utf8');
-const scripts = [...read('trivia.html').matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
+const scripts = [...read('trivia.html').matchAll(/<script(?: type="application\/x-game-storage")?>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
 for(const script of scripts)new vm.Script(script);
 const elements = new Map();
 const stored = new Map([['chris-trivia-tavern-last-restock',String(Date.now())]]);
@@ -13,13 +13,13 @@ function element(){
   const classes = new Set();
   return {value:'',textContent:'',innerHTML:'',children:[],style:{},dataset:{},
     classList:{add:k=>classes.add(k),remove:k=>classes.delete(k),contains:k=>classes.has(k),toggle:(k,on)=>on?classes.add(k):classes.delete(k)},
-    appendChild(c){this.children.push(c)},append(c){this.children.push(c)},focus(){},addEventListener(){},setAttribute(){},querySelectorAll(){return []}};
+    appendChild(c){this.children.push(c)},append(c){this.children.push(c)},after(){},replaceChildren(...c){this.children=c},removeAttribute(){},focus(){},addEventListener(){},setAttribute(){},querySelectorAll(){return []}};
 }
 let updatePresentation;
 const context=vm.createContext({document:{body:element(),getElementById(id){if(!elements.has(id))elements.set(id,element());return elements.get(id)},createElement:element,addEventListener(){},querySelectorAll(){return []}},localStorage:{getItem:k=>stored.get(k)||null,setItem:(k,v)=>stored.set(k,v),removeItem:k=>stored.delete(k)},MutationObserver:class{constructor(fn){updatePresentation=fn}observe(){}},requestAnimationFrame:fn=>fn(),confirm:()=>true,console});
-context.window=context;
+context.window=context;context.GameRoomStorage={store:context.localStorage};context.setTimeout=()=>0;context.clearTimeout=()=>{};
 const run=code=>vm.runInContext(code,context);
-run(read('shared-question-banks.js'));run(scripts[0]);run(read('trivia-premium.js'));
+run(read('shared-question-banks.js'));run(read('picture-bank.js'));run(read('picture-clues.js'));run(scripts[0]);run(read('trivia-premium.js'));
 const update=()=>updatePresentation();
 run("$('start').onclick()");assert.equal(run("$('setupNotice').textContent"),'Enter at least one player.');
 run("$('player0').value='Ada';$('player1').value='Ada';$('start').onclick()");assert.equal(run("$('setupNotice').textContent"),'Each player needs a unique name.');
