@@ -1,0 +1,116 @@
+name: Verify and publish Daily Line
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, fix/daily-line-cached-feed-20261116]
+    paths:
+      - 'index-v3822.html'
+      - 'data/daily-line-feed.json'
+      - 'tools/*daily_line*'
+      - 'tests/daily-line-playwright.cjs'
+      - '.github/workflows/daily-line-cache.yml'
+  schedule:
+    - cron: '7,37 * * * *'
+permissions:
+  contents: read
+concurrency:
+  group: daily-line-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    outputs:
+      commit: ${{ steps.commit.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check feed failure handling and existing game tests
+        run: |
+          python3 tools/test_daily_line_feed.py
+          node --test tests/*.test.cjs
+      - name: Generate real ESPN feed
+        run: python3 tools/build_daily_line_feed.py
+      - name: Install Playwright outside published files
+        run: |
+          npm install --prefix "$RUNNER_TEMP/daily-line-browser" playwright@1.56.1
+          "$RUNNER_TEMP/daily-line-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Verify candidate in Chris and Garage with Playwright
+        env:
+          NODE_PATH: ${{ runner.temp }}/daily-line-browser/node_modules
+          DAILY_LINE_REPORT_DIR: ${{ runner.temp }}/daily-line-results
+        run: node tests/daily-line-playwright.cjs
+      - name: Commit only verified feed on main
+        id: commit
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/daily-line-feed.json
+          if ! git diff --cached --quiet; then
+            git commit -m "data: refresh verified ESPN Daily Line cache"
+            git push origin HEAD:main
+          fi
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Prepare exact tracked Pages files
+        if: github.ref == 'refs/heads/main'
+        run: |
+          mkdir "$RUNNER_TEMP/daily-line-site"
+          git archive HEAD | tar -x -C "$RUNNER_TEMP/daily-line-site"
+          rm -rf "$RUNNER_TEMP/daily-line-site/.github"
+      - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/daily-line-site
+      - name: Save verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-line-verification
+          path: ${{ runner.temp }}/daily-line-results
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: verify
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      # GITHUB_TOKEN cache commits do not trigger the legacy Pages build.
+      - name: Publish the verified cache and unchanged dashboard assets
+        id: deployment
+        uses: actions/deploy-pages@v4
+  live:
+    needs: [verify, deploy]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.verify.outputs.commit }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright
+        run: |
+          npm install --prefix "$RUNNER_TEMP/daily-line-browser" playwright@1.56.1
+          "$RUNNER_TEMP/daily-line-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Verify deployed pages without interception
+        env:
+          NODE_PATH: ${{ runner.temp }}/daily-line-browser/node_modules
+          DAILY_LINE_REPORT_DIR: ${{ runner.temp }}/daily-line-results
+        run: node tests/daily-line-playwright.cjs --live
+      - name: Save live results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-line-live-results
+          path: ${{ runner.temp }}/daily-line-results
