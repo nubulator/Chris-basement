@@ -19,3 +19,66 @@ window.GameRoomPictures = {
  {id:'pic-m-album-2',genre:'Picture · Album cover',level:'Medium',tags:['classic'],q:'Name this album.',a:'Abbey Road — The Beatles (1969)',image:'https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/The_Beatles_Abbey_Road_album_cover.jpg/500px-The_Beatles_Abbey_Road_album_cover.jpg',source:'https://en.wikipedia.org/wiki/File:Beatles_-_Abbey_Road.jpg',credit:'Cover photo: Iain Macmillan · Shown for album identification; artwork rights remain with their owners'}
  ]
 };
+
+window.GameRoomPictures.music.push(...[
+  {
+    "id": "pic-m-artist-5",
+    "a": "Freddie Mercury",
+    "level": "Medium",
+    "tags": [
+      "classic",
+      "80s"
+    ],
+    "genre": "Picture · Artist",
+    "q": "Who is this artist?",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/9/96/Freddie_Mercury_%281977_Press_Kit_Photo%29.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Freddie_Mercury_(1977_Press_Kit_Photo).jpg",
+    "credit": "Christopher Hopper / Elektra Records · Public domain in the US"
+  },
+  {
+    "id": "pic-m-artist-6",
+    "a": "Michael Jackson",
+    "level": "Easy",
+    "tags": [
+      "pop",
+      "80s",
+      "90s"
+    ],
+    "genre": "Picture · Artist",
+    "q": "Who is this artist?",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/2/27/Michael_Jackson_1984_%28Cropped%29.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Michael_Jackson_1984_(Cropped).jpg",
+    "credit": "White House Photo Office · Public domain in the US"
+  },
+  {
+    "id": "pic-m-artist-7",
+    "a": "Tina Turner",
+    "level": "Medium",
+    "tags": [
+      "pop",
+      "classic",
+      "80s"
+    ],
+    "genre": "Picture · Artist",
+    "q": "Who is this artist?",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/7/74/Tina_Turner_1970.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Tina_Turner_1970.jpg",
+    "credit": "Al Kaplan / Jay Bernstein Public Relations · Public domain in the US"
+  },
+  {
+    "id": "pic-m-artist-8",
+    "a": "Elton John",
+    "level": "Easy",
+    "tags": [
+      "pop",
+      "classic",
+      "80s",
+      "90s"
+    ],
+    "genre": "Picture · Artist",
+    "q": "Who is this artist?",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/9/97/Elton_john_rock_music_awards_1975.JPG",
+    "source": "https://commons.wikimedia.org/wiki/File:Elton_john_rock_music_awards_1975.JPG",
+    "credit": "CBS Television · Public domain in the US"
+  }
+]);
