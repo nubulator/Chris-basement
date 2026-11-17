@@ -107,7 +107,7 @@
     const a = document.createElement('a'); a.href = url; a.download = 'game-room-backup-' + new Date().toISOString().replace(/[:.]/g, '-') + '.json'; a.click();
     setTimeout(() => URL.revokeObjectURL(url), 30000);
   }
-  async function boot(keys) {
+  async function boot(keys, options = {}) {
     const panel = document.createElement('details');
     panel.style.cssText = 'position:fixed;bottom:4px;right:8px;z-index:99999;max-width:min(580px,90vw);max-height:75vh;overflow:auto;background:#18251f;color:#fff;padding:7px 12px;border:1px solid #baa370;border-radius:8px;font:13px system-ui';
     panel.innerHTML = '<summary style="cursor:pointer">Opening saved game.</summary><p>Expanded device storage � IndexedDB</p><p data-capacity></p><button type="button" data-export>Export storage backup</button> <button type="button" data-retry>Retry save</button> <button type="button" data-persist>Protect offline saves</button><p data-note>Keep a backup of important scores. Clearing browser site data removes device saves.</p>';
@@ -116,10 +116,25 @@
     const overlay = document.createElement('div'); overlay.style.cssText = 'position:fixed;inset:0;z-index:99998;background:#111d;color:#fff;display:grid;place-items:center;font:20px system-ui'; overlay.textContent = 'Opening your saved game.'; document.body.append(overlay);
     const note = panel.querySelector('[data-note]');
     try {
-      const storage = await open(keys, { notify(message, error) { summary.textContent = message; if (error) panel.open = true; } });
+      const storage = await open(keys, { ...options, notify(message, error) { summary.textContent = message; if (error) panel.open = true; } });
       window.GameRoomStorage.store = storage;
       panel.querySelector('[data-export]').onclick = async () => { try { download(await storage.backup()); } catch(e) { note.textContent = 'Backup failed: ' + e.message; } };
       panel.querySelector('[data-retry]').onclick = () => storage.flush().catch(() => {});
+      const restoreLabel = document.createElement('label'); restoreLabel.textContent = ' Restore storage backup: ';
+      const restore = document.createElement('input'); restore.type = 'file'; restore.accept = '.json,application/json'; restoreLabel.append(restore); panel.append(restoreLabel);
+      restore.onchange = async () => {
+        try {
+          if (!restore.files[0]) return;
+          const data = JSON.parse(await restore.files[0].text());
+          if (data.format !== 'chris-game-room-storage-backup-v1' || !data.values || typeof data.values !== 'object') throw new Error('Choose an exported storage backup.');
+          const entries = Object.entries(data.values).filter(([k]) => keys.includes(k));
+          if (!entries.length || entries.some(([,v]) => v !== null && typeof v !== 'string')) throw new Error('This backup does not match this game.');
+          if (!confirm('Replace this game's device saves with this backup? Export the current backup first if you want to keep both.')) return;
+          for (const [k,v] of entries) v === null ? storage.removeItem(k) : storage.setItem(k,v);
+          await storage.flush(); location.reload();
+        } catch(e) { note.textContent = 'Restore failed: ' + e.message; }
+        restore.value = '';
+      };
       panel.querySelector('[data-persist]').onclick = async () => {
         try { const ok = navigator.storage && navigator.storage.persist && await navigator.storage.persist(); note.textContent = ok ? 'Persistent storage enabled. Keep exported backups too.' : 'Browser did not grant persistence. Saves still work; keep exported backups.'; } catch(e) { note.textContent = e.message; }
       };
