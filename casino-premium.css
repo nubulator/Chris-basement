@@ -44,6 +44,6 @@ html{background:#160e0d}body.gr-refresh.gr-casino{margin:0;--gr-accent:#e6c185;-
  .gr-casino.gr-refresh #setup .players{grid-template-columns:repeat(4,minmax(0,1fr))}.gr-casino.gr-refresh #setup .name-row{grid-template-columns:minmax(0,1fr) 34px}
 }
 @media(min-width:900px) and (max-height:620px) and (orientation:landscape){.gr-casino.gr-refresh #setup .name-row{grid-template-columns:minmax(0,1fr) 28px}}
-@media(min-width:900px) and (min-height:621px) and (max-height:820px) and (orientation:landscape){
+@media(min-width:900px) and (min-height:621px) and (max-height:1000px) and (orientation:landscape){
  .gr-casino #liveScores{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 14px}.gr-casino #liveScores .score,.gr-casino #liveScores .score.leader{padding:12px 7px;gap:8px}
 }
