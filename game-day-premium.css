@@ -28,3 +28,22 @@
 #pregame-daily-line{width:100%;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
 .daily-line-heading{font-size:11px;letter-spacing:.13em;font-weight:800;color:var(--accent);margin-bottom:12px}.daily-line-values{display:grid;grid-template-columns:1fr 1fr;gap:8px}.daily-line-values span{display:block;font-size:9px;letter-spacing:.06em;color:#aeb9c9}.daily-line-values strong{display:block;font-size:clamp(15px,1.3vw,25px);margin-top:6px;overflow-wrap:anywhere}#gdl-source{font-size:9px;color:#aeb9c9;line-height:1.4;margin-top:12px}
 @media(min-width:900px) and (min-aspect-ratio:4/3) and (max-height:800px){#pregame-daily-line{margin-top:12px;padding-top:10px}.daily-line-heading{margin-bottom:8px}#gdl-source{margin-top:8px}#game-day-countdown-panel #countdown{margin:8px 0}#game-day-countdown-panel #countdown-message{font-size:11px}}
+/* Reserve a separate logo column; the team name can wrap without colliding. */
+.fan-identity{display:grid;grid-template-columns:minmax(0,1fr) 44px;column-gap:12px;align-items:center;flex-shrink:0}
+#dogg-sign .fan-team-logo{position:static;grid-column:2;grid-row:1/4;width:44px;height:44px;align-self:center;justify-self:end}
+#dogg-sign #fan-eyebrow,#dogg-sign #fan-title,#dogg-sign #fan-sub{grid-column:1;padding-right:0;min-width:0;overflow-wrap:normal}
+#dogg-sign #fan-title{font-size:clamp(18px,1.65vw,30px);margin:5px 0;line-height:1.12}
+#fan-trivia{overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;gap:6px;--trivia-scale:1}
+#fan-trivia>*{flex-shrink:0}
+#fan-trivia .trivia-question{font-size:calc(clamp(15px,1.28vw,23px)*var(--trivia-scale));line-height:1.22}
+#fan-trivia .trivia-answer{font-size:calc(clamp(12px,1vw,18px)*var(--trivia-scale));line-height:1.2;min-height:0}
+#fan-trivia .trivia-progress{line-height:1.2}
+@media(min-width:900px) and (min-aspect-ratio:4/3) and (max-height:800px){
+ #dogg-sign{padding:12px}
+ #fan-trivia{margin-top:8px;padding-top:8px;gap:4px}
+ #fan-trivia .trivia-label{font-size:9px}
+ #fan-trivia .trivia-progress{font-size:9px}
+ #fan-trivia .trivia-controls button{min-height:28px;padding:4px 7px;font-size:10px}
+ .game-live #fan-trivia .trivia-question{font-size:calc(14px*var(--trivia-scale))}
+ .game-live #fan-trivia .trivia-answer{font-size:calc(12px*var(--trivia-scale))}
+}
