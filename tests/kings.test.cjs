@@ -17,6 +17,7 @@ function element(tag = 'div') {
   return e;
 }
 const context = vm.createContext({document:{getElementById(id){if(!elements.has(id))elements.set(id,element());return elements.get(id)},createElement:element,querySelectorAll(){return []},addEventListener(){}},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},requestAnimationFrame:fn=>fn(),window:{addEventListener(){}},console});
+context.GameRoomNames={append(){},addOptions(){}};
 const run = code => vm.runInContext(code,context);
 run(scripts[0]);
 run('start()');
