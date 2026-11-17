@@ -1067,7 +1067,7 @@ async function refreshFavoriteOdds(g,path){
 
 function teamPlaceholder(t,label){return {id:'',league:t.name,away:t.name,home:label,awayLogo:t.logo,homeLogo:'',as:'',hs:'',ar:0,hr:0,odds:'',status:label,live:false,final:false,date:0,fav:true}}
 
-// ESPN resilient transport: short retry, last-good local cache, and offline fallback.
+// ESPN resilient transport: short retry and a bounded IndexedDB cache with offline fallback.
 // Cache keys are scoped to the exact ESPN URL to avoid cross-league mixups.
 async function basementEspnJSON(url){
  const key='basement.espn.v1.'+url;
