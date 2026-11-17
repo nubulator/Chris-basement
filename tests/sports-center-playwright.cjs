@@ -3,7 +3,7 @@ const {chromium}=require('playwright');
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const root=path.resolve(__dirname,'..'),live=process.argv.includes('--live');
 const output=process.env.SPORTS_REPORT_DIR||'/tmp/sports-center-results';fs.mkdirSync(output,{recursive:true});
-const report={mode:live?'production':'candidate',at:new Date().toISOString(),dashboards:[],errors:[],directESPN:[],relayFailures:[]};
+const report={mode:live?'production':'candidate',at:new Date().toISOString(),dashboards:[],errors:[],directESPN:[],relayFailures:[],relayHTTP:[],consoleErrors:[]};
 let browser;
 (async()=>{
  browser=await chromium.launch({headless:true});
@@ -18,10 +18,12 @@ let browser;
  }
  for(const [name,url,html,dir]of [['Chris','https://nubulator.github.io/Chris-basement/index-v3822.html','index-v3822.html',root],['Garage','https://nubulator.github.io/Jim-Amys-Garage/','index.html',garageRoot]]){
   const p=await context.newPage(),responses=[],pending=[];
+  p.on('console',m=>{if(m.type()==='error'&&report.consoleErrors.length<15)report.consoleErrors.push(m.text())});
   p.on('pageerror',e=>report.errors.push({name,error:String(e)}));
   p.on('request',r=>{if(r.url().startsWith('https://site.api.espn.com/apis/site/v2/sports/'))report.directESPN.push(r.url())});
   p.on('requestfailed',r=>{if(r.url().includes('/api/sports?'))report.relayFailures.push({name,url:r.url(),error:r.failure()?.errorText})});
   p.on('response',r=>{if(r.url().includes('/api/sports?'))pending.push((async()=>{
+   if(report.relayHTTP.length<10)report.relayHTTP.push({url:r.url(),status:r.status(),location:r.headers().location,cors:r.headers()['access-control-allow-origin'],type:r.headers()['content-type']});
    if(!r.ok()){report.relayFailures.push({name,url:r.url(),status:r.status(),body:(await r.text()).slice(0,150)});return}
    responses.push({url:r.url(),fetchedAt:r.headers()['x-sports-fetched-at'],data:await r.json()});
   })().catch(e=>report.relayFailures.push({name,error:String(e)})))});
