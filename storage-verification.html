@@ -1,4 +1,4 @@
-<!doctype html><meta charset="utf-8"><title>Game storage verification</title><body style="background:#14251e;color:white;font:18px system-ui;padding:30px"><h1>Game storage verification</h1><pre id="results">Running…</pre><button id="reload">Verify after refresh</button><button id="cleanup">Remove test data</button><h2>Existing browser storage sizes (no record contents)</h2><pre id="sizes"></pre><script src="./game-room-storage.js?v=1"></script><script>
+<!doctype html><meta charset="utf-8"><title>Game storage verification</title><body style="background:#14251e;color:white;font:18px system-ui;padding:30px"><h1>Game storage verification</h1><pre id="results">Running…</pre><button id="reload">Verify after refresh</button><button id="cleanup">Remove test data</button><h2>Existing browser storage sizes (no record contents)</h2><pre id="sizes"></pre><script src="./game-room-storage.js?v=2"></script><script>
 const out=document.getElementById('results');out.textContent='';
 function log(t){out.textContent+=t+'\n'}
 function assert(ok,t){if(!ok)throw Error(t);log('PASS '+t)}
