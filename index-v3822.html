@@ -1494,7 +1494,10 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBeach()
   if(lineFilter==='MY'){
    const ids=new Set(fav.map(g=>(favoriteTeams.find(t=>t.name===g.league)?.league||g.league)+':'+g.id));
    // The cached team IDs also work when browser schedule requests are blocked.
-   for(const team of favoriteTeams){
+   const month=new Date().getMonth();
+   let activeFavorites=favoriteTeams.filter(t=>t.league!=='MLB'||(month>=2&&month<=9));
+   if(activeFavorites.some(t=>t.league==='MLB'))activeFavorites=activeFavorites.filter(t=>t.league!=='NHL');
+   for(const team of activeFavorites){
     if(fav.some(g=>g.league===team.name))continue;
     const next=list.find(g=>g.league===team.league&&[g.awayId,g.homeId].includes(team.id));
     if(next)ids.add(next.league+':'+next.id);

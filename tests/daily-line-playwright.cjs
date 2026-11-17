@@ -17,12 +17,16 @@ let browser;
   browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({ viewport: { width: 1920, height: 1080 }, timezoneId: 'America/New_York' });
   let feed = JSON.parse(fs.readFileSync(path.join(root, 'data/daily-line-feed.json')));
+  const deployedFeedTime = feed.generatedAt;
   if (live) {
     // GitHub Pages edges can take a short time to serve a newly deployed file.
     for (let attempt = 0; attempt < 12; attempt++) {
       const response = await context.request.get(chris + 'data/daily-line-feed.json?verify=' + Date.now());
-      if (response.ok()) { feed = await response.json(); break; }
-      if (attempt === 11) throw Error('Production cache HTTP ' + response.status());
+      if (response.ok()) {
+        const candidate = await response.json();
+        if (candidate.generatedAt === deployedFeedTime) { feed = candidate; break; }
+      }
+      if (attempt === 11) throw Error('Production cache has not reached the deployed commit: HTTP ' + response.status());
       await new Promise(resolve => setTimeout(resolve, 5000));
     }
   } else {
@@ -59,6 +63,8 @@ let browser;
   assert.match(await page.locator('#line-auto').innerText(), /OFF/);
   const favorites = await checkCards(page);
   assert.ok(favorites.length >= 1, 'MY TEAMS must load from cached team IDs');
+  const month = new Date().getMonth();
+  assert.ok(favorites.every(c => c.league !== ((month >= 2 && month <= 9) ? 'NHL' : 'MLB')), 'preserve seasonal favorite selection');
   report.checks.push({ check: 'Chris MY TEAMS exact spreads and totals', cards: favorites });
   let verified = 0, published = 0;
   for (const league of ['NFL', 'NCAA FOOTBALL', 'NCAA MEN', 'NBA', 'NHL', 'MLB']) {
