@@ -1,0 +1,62 @@
+/* Artwork is served locally; typography and controls stay crisp, live HTML. */
+:root{color-scheme:dark;--gold:#dfb768;--cream:#fff1d8;--muted:#d7c5ab}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#17130f}
+body{color:var(--cream);font-family:Georgia,'Times New Roman',serif;background:#17130f url('./assets/game-room-premium/background-v1.webp') center/100% 100% fixed no-repeat}
+.lounge-shell{width:min(100%,1920px);height:100vh;height:100dvh;margin:auto;padding:22px 2.8vw 15px;display:flex;flex-direction:column;gap:12px;position:relative;z-index:1}
+.lounge-header{text-align:center;flex:none}
+.eyebrow{font:600 clamp(9px,.85vw,15px)/1.3 system-ui,sans-serif;letter-spacing:.32em;color:#e7d3ad}
+.eyebrow::before,.eyebrow::after{content:'';display:inline-block;vertical-align:middle;width:4vw;height:1px;margin:0 20px;background:linear-gradient(90deg,transparent,var(--gold))}
+.eyebrow::after{transform:rotate(180deg)}
+h1{margin:5px 0 0;font-size:clamp(30px,3.9vw,72px);line-height:1.05;letter-spacing:-.025em;color:#f5d69f;text-shadow:0 2px 0 #5e391c,0 5px 12px #000}
+.lounge-header p{margin:5px 0 0;font-style:italic;font-size:clamp(13px,1.35vw,23px);color:#f0e3cf;line-height:1.25}
+.lounge-nav{display:flex;align-items:center;justify-content:center;gap:16px;flex:none;padding:3px 0}
+.lounge-nav a,.lounge-nav button{border:1px solid #c79b52;border-radius:8px;background:linear-gradient(#24231f,#11110f);color:var(--cream);font:700 clamp(10px,.95vw,17px)/1.2 system-ui,sans-serif;letter-spacing:.035em;text-decoration:none;padding:12px 25px;min-height:42px;box-shadow:inset 0 1px #fce8bb5c,0 3px 7px #0009;cursor:pointer}
+.lounge-nav button span{font-size:1.2em}
+.lounge-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:16px;flex:1;min-height:0;padding:4px}
+.lounge-tile{display:flex;flex-direction:column;min-height:0;min-width:0;text-align:center;text-decoration:none;color:var(--cream);border:1px solid var(--gold);border-radius:15px;background:#141410;box-shadow:inset 0 0 0 2px #e6b96822,0 5px 12px #000b;position:relative;transition:border-color .15s,box-shadow .15s;overflow:hidden}
+.tile-art{position:relative;flex:1 1 0;min-height:0;overflow:hidden;background:#27231c}
+.tile-art img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 53%}
+.tile-art::after{content:'';position:absolute;inset:65% 0 0;background:linear-gradient(transparent,#14141088);pointer-events:none}
+.tile-meta{position:absolute;top:9px;left:10px;padding:4px 7px;border-radius:4px;background:#11110ed6;color:#f5e4cb;font:500 clamp(8px,.65vw,12px)/1.2 system-ui,sans-serif;letter-spacing:.025em}
+.tile-info{flex:none;display:grid;gap:5px;padding:9px 12px 10px;background:linear-gradient(110deg,#29251d55,transparent);min-width:0}
+.tile-info h2{font-size:clamp(16px,1.65vw,31px);line-height:1.1;margin:0;font-weight:700;letter-spacing:-.02em;white-space:nowrap;text-shadow:0 2px 3px #000}
+.tile-info p{margin:0;font-style:italic;font-size:clamp(11px,1.05vw,19px);line-height:1.25;color:#e7dac5;white-space:nowrap}
+.tile-action{display:block;border-top:1px solid #99713866;margin:3px 10px 0;padding-top:6px;color:#f2cb77;font:700 clamp(10px,.9vw,16px)/1.2 system-ui,sans-serif;letter-spacing:.13em}
+.lounge-tile:hover{border-color:#fff0b5;box-shadow:0 0 0 1px #fff0b5,0 8px 20px #000a}
+:is(a,button):focus-visible{outline:3px solid #fff2aa;outline-offset:4px;box-shadow:0 0 0 7px #211b11,0 0 24px #ecc97d77}
+footer{position:relative;display:flex;align-items:center;justify-content:center;gap:24px;flex:none;min-height:18px;font:500 clamp(9px,.65vw,12px)/1.2 system-ui,sans-serif;letter-spacing:.25em;color:#dfc69b}
+footer::before,footer::after{content:'';width:15%;height:1px;background:linear-gradient(90deg,transparent,#b79255)}
+footer::after{transform:rotate(180deg)}
+.corner-version{position:absolute;right:4px;letter-spacing:.05em;color:#d0bb96}
+.holiday-lights{position:fixed;top:0;left:0;width:100%;height:22px;opacity:.4;z-index:0;pointer-events:none}
+.bulb-twinkle{animation:soft-glow var(--twinkle-speed,5s) ease-in-out var(--delay,0s) infinite alternate}
+@keyframes soft-glow{from{opacity:.55}to{opacity:1}}
+@media(min-width:900px) and (max-height:620px) and (orientation:landscape){
+ .lounge-shell{padding:14px 20px 9px;gap:7px}
+ .eyebrow{font-size:9px}.lounge-header h1{font-size:33px}.lounge-header p{font-size:12px;margin-top:3px}
+ .lounge-nav{gap:12px;padding:0}.lounge-nav a,.lounge-nav button{min-height:32px;padding:8px 18px;font-size:10px}
+ .lounge-grid{gap:10px}.lounge-tile{border-radius:11px}
+ .tile-info{padding:6px 7px 7px;gap:3px}.tile-info h2{font-size:16px}.tile-info p{font-size:11px}
+ .tile-action{padding-top:4px;margin-top:2px;font-size:9px}.tile-meta{top:6px;left:6px;font-size:8px;padding:3px 5px}
+ footer{font-size:8px;min-height:13px}
+}
+@media(max-width:899px),(orientation:portrait){
+ body{background-size:auto 100vh;background-position:center top}
+ .lounge-shell{height:auto;min-height:100vh;padding:26px 18px 20px;gap:17px}
+ .lounge-header h1{font-size:clamp(30px,5vw,48px)}.lounge-header p{font-size:15px}
+ .lounge-nav{flex-wrap:wrap;gap:9px}.lounge-nav a,.lounge-nav button{padding:12px;font-size:11px;min-height:44px}
+ .lounge-grid{flex:none;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto;gap:18px}
+ .lounge-tile{min-height:280px}.tile-art{flex:none;height:180px}.tile-info{flex:1;padding:12px}
+ .tile-info h2{font-size:20px}.tile-info p{font-size:14px}.tile-action{font-size:11px;margin-top:5px;padding-top:8px}.tile-meta{font-size:10px}
+ footer{font-size:8px;letter-spacing:.15em;gap:8px}footer::before,footer::after{width:5%}
+}
+@media(max-width:540px){
+ .lounge-grid{grid-template-columns:minmax(0,1fr)}
+ .lounge-header h1{font-size:30px;white-space:nowrap;letter-spacing:-.04em}
+ .lounge-header p{font-size:13px}.eyebrow{font-size:9px;letter-spacing:.2em}.eyebrow::before,.eyebrow::after{display:none}
+ .lounge-nav a{flex:1;text-align:center}.lounge-nav button{padding:9px 25px;min-height:40px}
+ .tile-art{height:190px}.tile-info h2{font-size:24px}.tile-info p{font-size:16px}
+ footer{justify-content:flex-start}footer::before,footer::after{display:none}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
