@@ -1,0 +1,61 @@
+name: Verify live Sports Center feeds
+on:
+  push:
+    branches: [fix/sports-center-feed-20261117]
+  workflow_dispatch:
+    inputs:
+      live:
+        description: Verify published dashboards without interception
+        type: boolean
+        default: false
+      garage_ref:
+        description: Garage source ref to verify
+        default: fix/sports-center-feed-20261117
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: nubulator/Jim-Amys-Garage
+          ref: ${{ inputs.garage_ref || 'fix/sports-center-feed-20261117' }}
+          path: .garage-verification
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Existing game tests and sports transport tests
+        run: |
+          node --test tests/*.test.cjs
+          python3 tools/test_daily_line_feed.py
+      - name: Build fresh real ESPN odds
+        if: ${{ !inputs.live }}
+        run: python3 tools/build_daily_line_feed.py
+      - name: Install browser outside published files
+        run: |
+          npm install --prefix "$RUNNER_TEMP/sports-browser" playwright@1.56.1
+          "$RUNNER_TEMP/sports-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Real-feed Playwright verification
+        env:
+          NODE_PATH: ${{ runner.temp }}/sports-browser/node_modules
+          SPORTS_REPORT_DIR: ${{ runner.temp }}/sports-results
+          DAILY_LINE_REPORT_DIR: ${{ runner.temp }}/sports-results
+          GARAGE_ROOT: ${{ github.workspace }}/.garage-verification
+          VERIFY_LIVE: ${{ inputs.live }}
+        run: |
+          if [ "$VERIFY_LIVE" = "true" ]; then
+            node tests/sports-center-playwright.cjs --live
+            node tests/daily-line-playwright.cjs --live
+          else
+            node tests/sports-center-playwright.cjs
+            node tests/daily-line-playwright.cjs
+          fi
+      - name: Save verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sports-center-results
+          path: ${{ runner.temp }}/sports-results
