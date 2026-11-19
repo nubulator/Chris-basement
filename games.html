@@ -8,6 +8,11 @@
   <title>Chris’s Game Room V4.1</title>
   <link rel="stylesheet" href="./game-room-lounge.css?v=4.0">
   <script defer src="./game-room-lounge.js?v=4.0.1"></script>
+  <style>
+    .lounge-nav{position:relative}
+    .lounge-nav .games-lab-button{position:absolute;right:0;top:3px;border-color:#d9c594;background:linear-gradient(#403625,#1e1a14);color:#f4d69c}
+    @media(max-width:899px){.lounge-nav .games-lab-button{position:static;top:auto;right:auto}}
+  </style>
 </head>
 <body class="gr-refresh gr-games gr-lounge" data-game="games">
   <svg class="holiday-lights" id="holidayLights" viewBox="0 0 2000 90" preserveAspectRatio="none" aria-hidden="true"></svg>
@@ -22,6 +27,7 @@
       <a href="https://nubulator.github.io/Jim-Amys-Garage/">JIM &amp; AMY’S GARAGE</a>
       <a href="./house-rules.html" style="background:#364638;color:#fff0d4;border-color:#bfab79">HOUSE RULES · FAMILY ROOM</a>
       <button id="refreshPage" type="button"><span aria-hidden="true">↻</span> REFRESH</button>
+      <a class="games-lab-button" href="./test-games.html">✦ GAMES TO TEST</a>
     </nav>
     <p style="margin:0;text-align:center;color:#e7dac5;font:400 clamp(12px,1vw,17px)/1.35 system-ui,sans-serif">For background music: press Home on your Fire TV remote, start Spotify, then return to Game Room. Leave the music playing.</p>
     <main class="lounge-grid" aria-label="Choose a game">
