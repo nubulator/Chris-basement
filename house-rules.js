@@ -1,6 +1,7 @@
 "use strict";
 const board = document.querySelector("#board");
 const restartButton = document.querySelector("#restartGame");
+const refreshButton = document.querySelector("#refreshPage");
 const storageKey = "game-room.house-rules.v1";
 const roundMs = 600000;
 let game;
@@ -192,6 +193,11 @@ function tick() {
   else updateClock();
 }
 restartButton.addEventListener("click", () => showPanel("restart"));
+refreshButton.addEventListener("click", () => {
+  const url = new URL(location.href);
+  url.searchParams.set("refresh", Date.now().toString());
+  location.replace(url);
+});
 document.addEventListener("keydown",event => {
   if (!["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(event.key)) return;
   if (event.target.tagName === "TEXTAREA" && event.key !== "ArrowDown") return;
