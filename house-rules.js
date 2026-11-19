@@ -140,20 +140,27 @@ function render() {
     button(row, "Keep playing", () => showPanel(""), true);
     button(row, "Finish the night", finishGame);
   } else if (panel === "holders" || game.phase === "opponent") {
-    title("Choose a challenger", "Who will take the Bar Bet?", "The chip holder picks one willing opponent.");
+    const opponent = game.phase === "opponent";
+    title(opponent ? "Bar Bet" : "House rule", opponent ? "Choose an opponent." : "Who broke the rule?", opponent ? "The chip holder picks one willing opponent." : "Everyone follows the active rule. Pass the chip to the player who slipped.");
     const row = actions();
     game.names.forEach((name,i) => {
       if (i === game.holder) return;
-      button(row,name,() => question(i));
+      button(row,name,() => {
+        if (opponent) question(i);
+        else { pass(i); save(); showPanel(""); }
+      });
     });
-    button(actions(),"Back",() => { game.phase="offer"; save(); showPanel(""); },true);
+    button(actions(),"Back",() => {
+      if (opponent) { game.phase="offer"; save(); }
+      showPanel("");
+    },true);
   } else if (game.phase === "rule") {
     title("House rule",houseRules[game.rule]);
-    node("p","If you’re holding the chip, catch someone breaking the rule to pass it.");
+    node("p","Everyone in the room follows this rule. Catch someone slipping and pass the real chip to them.");
     if (game.names.length) node("p",game.holder === null ? "Chip on the table" : "Chip holder · " + game.names[game.holder]);
     node("div","",board,"label").id="timer";
     const row = actions();
-    if (game.names.length) button(row,game.holder === null ? "First catch" : "Pass the chip",() => showPanel("holders"),true);
+    if (game.names.length) button(row,game.holder === null ? "First catch" : "Pass chip to rule-breaker",() => showPanel("holders"),true);
     button(row,"Skip rule",() => nextRule());
     button(row,"Keep this rule",() => {game.until=Date.now()+roundMs;save();updateClock();});
     button(row,"End game",() => showPanel("end"));

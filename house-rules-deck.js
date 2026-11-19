@@ -22,7 +22,13 @@ const houseRules = [
   "Don’t fidget with what you’re holding.",
   "No finger tapping or drumming.",
   "No foot tapping or leg bouncing.",
-  "Drinks: left hand only."
+  "Drinks: left hand only.",
+  "Whenever you address someone, say Mr. or Mrs. followed by their first name.",
+  "Talk about yourself in third person. Use your first name instead of “I” or “me.”",
+  "Start every answer with “Certainly.”",
+  "End every sentence with “Over.”",
+  "End every request with “please.”",
+  "Address the chip holder as “Your Honor.”"
 ];
 const barBets = [
   {difficulty:"Easy",question:"How many sides does a standard six-sided die have?",answer:6},
