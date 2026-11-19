@@ -117,7 +117,7 @@ function render() {
       }, true);
       button(row,"Back",() => showPanel(""));
     } else {
-      title("The Family Room", "House Rules", "Pass a chip when someone breaks the rule. Every ten minutes, the chip holder can offer a Bar Bet.");
+      title("The Family Room", "House Rules", "Each round uses one everyday word, phrase, or habit for everyone to watch for while you sit and hang out. Catch a natural slip, then pass the chip.");
       const row = actions();
       button(row, "Casual Play", () => start([]), true);
       button(row, "Keep Score", () => showPanel("names"));
