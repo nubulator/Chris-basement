@@ -1,8 +1,8 @@
 "use strict";
 const board = document.querySelector("#board");
+const restartButton = document.querySelector("#restartGame");
 const storageKey = "game-room.house-rules.v1";
 const roundMs = 600000;
-const offerMs = 30000;
 let game;
 let panel = "";
 try { game = JSON.parse(localStorage.getItem(storageKey)); } catch { game = null; }
@@ -17,12 +17,12 @@ function draw(deck, count, previous) {
       const j = Math.floor(Math.random() * (i + 1));
       [deck[i], deck[j]] = [deck[j], deck[i]];
     }
-    if (deck[count - 1] === previous) [deck[0], deck[count - 1]] = [deck[count - 1], deck[0]];
+    if (deck[count - 1] === previous && count > 1) [deck[0], deck[count - 1]] = [deck[count - 1], deck[0]];
   }
   return deck.pop();
 }
 function start(names) {
-  game = {names, totals:names.map(() => 0), holder:null, since:0, rules:[], bets:[], final:false};
+  game = {names, totals:names.map(() => 0), holder:null, since:0, rules:[], phase:"rule"};
   nextRule();
 }
 function nextRule(at = Date.now()) {
@@ -38,25 +38,31 @@ function pass(to, at = Date.now()) {
   game.holder = to;
   game.since = at;
 }
-function offer(final, at = Date.now()) {
+function offer(at = Date.now()) {
   panel = "";
-  game.final = final;
   game.phase = "offer";
-  game.until = at + offerMs;
+  game.until = at;
   save();
   render();
 }
-function settle() {
-  if (!game.final) return nextRule();
-  pass(null);
+function finishGame() {
+  if (game.holder !== null) pass(null);
   game.phase = "done";
   panel = "";
   save();
   render();
 }
+function settle() {
+  nextRule();
+}
 function question(opponent) {
   game.opponent = opponent;
-  game.bet = draw(game.bets, barBets.length, game.bet);
+  const difficulty = ["Easy","Medium","Hard"][Math.floor(Math.random() * 3)];
+  const choices = barBets.map((bet,index) => ({bet,index})).filter(item => item.bet.difficulty === difficulty);
+  let picked = choices[Math.floor(Math.random() * choices.length)];
+  if (choices.length > 1 && picked.index === game.bet) picked = choices[(choices.findIndex(item => item.index === picked.index) + 1) % choices.length];
+  game.bet = picked.index;
+  game.betDifficulty = difficulty;
   game.phase = "question";
   save();
   render();
@@ -86,7 +92,13 @@ function seconds(ms) {
 function showPanel(name) { panel = name; render(); }
 function render() {
   board.replaceChildren();
-  if (!game) {
+  restartButton.hidden = !game;
+  if (panel === "restart") {
+    title("Start over", "Restart this game?", "The current names and chip-time scores will be cleared.");
+    const row = actions();
+    button(row, "Keep playing", () => showPanel(""), true);
+    button(row, "Start a new game", () => { game = null; save(); showPanel(""); });
+  } else if (!game) {
     if (panel === "names") {
       title("Keep Score", "Who’s playing?", "Enter first names or nicknames, separated by commas or new lines. The clock starts with the first catch.");
       const label = node("label", "Players");
@@ -104,14 +116,13 @@ function render() {
       }, true);
       button(row,"Back",() => showPanel(""));
     } else {
-      title("The Family Room", "House Rules", "Put a chip on the table. First person caught breaking the rule takes it. Holding the chip? Catch someone else to pass it.");
-      node("p", "Every ten minutes, the holder can challenge someone to a Bar Bet.");
+      title("The Family Room", "House Rules", "Pass a chip when someone breaks the rule. Every ten minutes, the chip holder can offer a Bar Bet.");
       const row = actions();
       button(row, "Casual Play", () => start([]), true);
       button(row, "Keep Score", () => showPanel("names"));
     }
   } else if (game.phase === "done") {
-    title("Last Call", game.names.length ? "Time on the chip" : "That’s the night.", game.names.length ? "Least time wins. Most time loses. Equal times share a place." : "Who ended up with the chip?");
+    title("Night complete", game.names.length ? "Time on the chip" : "That’s the night.", game.names.length ? "Least time wins. Most time loses. Equal times share a place." : "Who ended up with the chip?");
     if (game.names.length) {
       const ranking = game.names.map((name,i) => ({name, time:Math.floor(game.totals[i]/1000)})).sort((a,b) => a.time-b.time);
       const list = node("ol","");
@@ -122,56 +133,49 @@ function render() {
       });
     }
     button(actions(),"New night",() => {game=null;save();showPanel("");},true);
-  } else if (panel === "last") {
-    title("Last Call","One last challenge?", "Offer the chip holder a final Bar Bet, then end the night.");
+  } else if (panel === "end") {
+    title("End game", "Finish the night now?", "Your chip-time totals will be saved on the final screen.");
     const row = actions();
-    button(row,"Return to game",() => showPanel(""),true);
-    button(row,"Call last round",() => offer(true));
+    button(row, "Keep playing", () => showPanel(""), true);
+    button(row, "Finish the night", finishGame);
   } else if (panel === "holders" || game.phase === "opponent") {
-    const opponent = game.phase === "opponent";
-    title("The chip", opponent ? "Pick your opponent." : "Who has the chip?");
+    title("Choose a challenger", "Who will take the Bar Bet?", "The chip holder picks one willing opponent.");
     const row = actions();
     game.names.forEach((name,i) => {
       if (i === game.holder) return;
-      button(row,name,() => {
-        if (opponent) question(i);
-        else { pass(i); save(); showPanel(""); }
-      });
+      button(row,name,() => question(i));
     });
-    button(actions(),"Back",() => {
-      if (opponent) { game.phase="offer";game.until=Date.now()+offerMs;save(); }
-      showPanel("");
-    });
+    button(actions(),"Back",() => { game.phase="offer"; save(); showPanel(""); },true);
   } else if (game.phase === "rule") {
     title("House rule",houseRules[game.rule]);
-    node("p","Holding the chip? Catch someone breaking the rule to pass it.");
+    node("p","If you’re holding the chip, catch someone breaking the rule to pass it.");
     if (game.names.length) node("p",game.holder === null ? "Chip on the table" : "Chip holder · " + game.names[game.holder]);
     node("div","",board,"label").id="timer";
     const row = actions();
     if (game.names.length) button(row,game.holder === null ? "First catch" : "Pass the chip",() => showPanel("holders"),true);
     button(row,"Skip rule",() => nextRule());
     button(row,"Keep this rule",() => {game.until=Date.now()+roundMs;save();updateClock();});
-    button(row,"Last Call",() => showPanel("last"));
+    button(row,"End game",() => showPanel("end"));
   } else if (game.phase === "offer") {
-    title(game.final ? "Last Call" : "End of round","Bar Bet?", "Chip holder: choose one willing opponent before you see the question. Closest guess wins. A tie stays with the holder.");
-    node("div","",board,"label").id="timer";
+    title("10-minute check-in","Bar Bet?", "The chip holder may choose someone for a quick challenge, or skip ahead to the next house rule.");
     const row = actions();
-    if (!game.names.length || game.holder !== null) button(row,game.names.length ? "Choose opponent" : "Opponent ready",() => {
-      if (!game.names.length) return question(null);
-      game.phase="opponent";save();render();
-    },true);
-    button(row,game.final ? "Finish night" : "Next rule",settle);
-  } else {
-    const [prompt,answer] = barBets[game.bet];
+    if (!game.names.length) button(row,"Choose a willing opponent",() => question(null),true);
+    else if (game.holder !== null) button(row,"Choose opponent",() => {game.phase="opponent";save();render();},true);
+    else node("p","The chip is on the table, so there’s no holder to call the Bar Bet.");
+    button(row,"Skip Bar Bet · Next rule",settle);
+    button(row,"End game",() => showPanel("end"));
+  } else if (game.phase === "question" || game.phase === "answer") {
+    const bet = barBets[game.bet];
     const card = node("section","",board,"paper");
-    title("Bar Bet",prompt,game.names.length ? game.names[game.holder]+" vs. "+game.names[game.opponent] : "Both players guess out loud.",card);
+    title(game.betDifficulty + " Bar Bet",bet.question,game.names.length ? game.names[game.holder]+" vs. "+game.names[game.opponent] : "Both players guess out loud.",card);
     const row = actions();
     if (game.phase === "question") button(row,"Reveal answer",() => {game.phase="answer";save();render();},true);
     else {
-      node("p","Answer · "+answer.toLocaleString("en-US"),card);
+      node("p","Answer · "+bet.answer.toLocaleString("en-US"),card);
       button(row,"Holder wins · pass chip",() => {if(game.names.length) pass(game.opponent);settle();},true);
-      button(row,"Loss or tie · keep chip",settle);
+      button(row,"Opponent wins · holder keeps chip",settle);
     }
+    button(actions(),"End game",() => showPanel("end"));
   }
   updateClock();
   const first = board.querySelector("textarea,button");
@@ -179,30 +183,32 @@ function render() {
 }
 function updateClock() {
   const timer = document.getElementById("timer");
-  if (timer) timer.textContent = (game.phase === "rule" ? "Next rule in " : "Offer closes in ") + seconds(game.until-Date.now());
+  if (timer && game && game.phase === "rule") timer.textContent = "Bar Bet check-in in " + seconds(game.until-Date.now());
 }
 function tick() {
-  if (!game || panel || !["rule","offer"].includes(game.phase)) return;
+  if (!game || panel || game.phase !== "rule") return;
   const now = Date.now();
-  if (now < game.until) {updateClock();return;}
-  if (game.phase === "offer") {settle();return;}
-  if (now >= game.until+offerMs) {nextRule();return;}
-  offer(false,game.until);
+  if (now >= game.until) offer(now);
+  else updateClock();
 }
+restartButton.addEventListener("click", () => showPanel("restart"));
 document.addEventListener("keydown",event => {
   if (!["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(event.key)) return;
   if (event.target.tagName === "TEXTAREA" && event.key !== "ArrowDown") return;
-  const controls = Array.from(document.querySelectorAll("a, button, textarea"));
-  const current = document.activeElement.getBoundingClientRect();
+  const controls = Array.from(document.querySelectorAll("a, button, textarea")).filter(control => !control.hidden);
+  const current = document.activeElement;
+  if (!current || !current.getBoundingClientRect) return;
+  const origin=current.getBoundingClientRect();
+  const ox=origin.left+origin.width/2,oy=origin.top+origin.height/2;
   const horizontal = ["ArrowLeft","ArrowRight"].includes(event.key);
   const sign = ["ArrowRight","ArrowDown"].includes(event.key) ? 1 : -1;
   let target, best = Infinity;
   for (const control of controls) {
+    if(control===current)continue;
     const rect = control.getBoundingClientRect();
-    const dx = rect.left+rect.width/2-current.left-current.width/2;
-    const dy = rect.top+rect.height/2-current.top-current.height/2;
-    const along = sign*(horizontal?dx:dy);
-    const cost = along+3*Math.abs(horizontal?dy:dx);
+    const dx=rect.left+rect.width/2-ox,dy=rect.top+rect.height/2-oy;
+    const along=sign*(horizontal?dx:dy);
+    const cost=along+3*Math.abs(horizontal?dy:dx);
     if (along>1 && cost<best) {best=cost;target=control;}
   }
   if(target){event.preventDefault();target.focus();}
