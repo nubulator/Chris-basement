@@ -117,7 +117,7 @@ function render() {
       }, true);
       button(row,"Back",() => showPanel(""));
     } else {
-      title("The Family Room", "House Rules", "Each round uses one everyday word, phrase, or habit for everyone to watch for while you sit and hang out. Catch a natural slip, then pass the chip.");
+      title("The Family Room", "House Rules", "One simple rule stays active all round—common words, conversational habits, and little everyday behaviors. Catch a natural slip while everyone hangs out and pass the chip.");
       const row = actions();
       button(row, "Casual Play", () => start([]), true);
       button(row, "Keep Score", () => showPanel("names"));
