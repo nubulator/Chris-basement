@@ -881,6 +881,38 @@ function syncMyTeamsOdds(){
   favorite.homeRecord=favorite.homeRecord||match.homeRecord;
  }
 }
+const hockeyShotCache=new Map();
+function readHockeyShots(statistics){
+ for(const stat of statistics||[]){
+  const isShots=[stat.name,stat.abbreviation,stat.label,stat.displayName].some(label=>/^(shotsongoal|sog|shotstotal|totalshots|shots)$/i.test(String(label||'').replace(/[^a-z]/gi,'')));
+  if(!isShots)continue;
+  const value=String(stat.value??stat.displayValue??'').trim();
+  if(/^\d+$/.test(value))return Number(value);
+ }
+ return null;
+}
+function refreshHockeyShots(g){
+ const d=g.hockey;
+ if(!g.id||!d||(d.awayShots!=null&&d.homeShots!=null))return;
+ const previous=hockeyShotCache.get(g.id);
+ if(previous?.pending||Date.now()-(previous?.at||0)<30000)return;
+ const entry={...previous,pending:true,at:Date.now()};
+ hockeyShotCache.set(g.id,entry);
+ if(hockeyShotCache.size>32)hockeyShotCache.delete(hockeyShotCache.keys().next().value);
+ fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/summary?event='+encodeURIComponent(g.id),{cache:'no-store',signal:AbortSignal.timeout(10000)})
+  .then(response=>response.ok?response.json():null)
+  .then(data=>{
+   const teams=data?.boxscore?.teams||[];
+   for(const side of ['away','home']){
+    const team=teams.find(item=>String(item.team?.id)===d[side+'Id'])||teams.find(item=>item.homeAway===side);
+    const shots=readHockeyShots(team?.statistics);
+    if(shots!==null)entry[side]=shots;
+   }
+   if(entry.away!=null||entry.home!=null)display();
+  })
+  .catch(()=>{})
+  .finally(()=>{entry.pending=false;});
+}
 function display(){
  syncMyTeamsOdds();
  window.applyCachedLineOdds?.();
@@ -914,12 +946,11 @@ function display(){
 }
 function basketballLivePanel(g){return '';}
 function hockeyLivePanel(g){
- if(!g.live||g.league!=='NHL')return '';
- const d=g.hockey||{};
- const num=v=>v!==null&&v!==undefined&&v!==''&&Number.isFinite(Number(v))&&Number(v)>=0?String(v):'—';
- const a=num(d.awayShots),h=num(d.homeShots);
- const pp=String(d.powerPlay||'').trim();
- return '<div class="live-rink" aria-label="Live hockey game details"><div class="rink-art"><span class="rink-goal left">▣</span><span class="rink-faceoff">●</span><span class="rink-goal right">▣</span></div><div class="rink-info"><strong>SHOTS ON GOAL</strong><span>'+safe(d.awayAbbr||'AWAY')+' '+a+' · '+safe(d.homeAbbr||'HOME')+' '+h+'</span>'+(pp?'<span class="rink-pp">POWER PLAY '+safe(pp)+'</span>':'')+'</div></div>';
+ if(!g.live||!g.hockey)return '';
+ const d=g.hockey,cached=hockeyShotCache.get(g.id);
+ const away=d.awayShots??cached?.away,home=d.homeShots??cached?.home;
+ const totals=away==null&&home==null?'Unavailable':safe(d.awayAbbr||'AWAY')+' '+(away??'—')+' · '+safe(d.homeAbbr||'HOME')+' '+(home??'—');
+ return '<div class="hockey-shots"><strong>SHOTS ON GOAL</strong> '+totals+(d.powerPlay?' <span>· POWER PLAY '+safe(d.powerPlay)+'</span>':'')+'</div>';
 }
 function baseballLiveDiamond(g){
  if(!g.live||g.league!=='MLB')return '';
@@ -928,7 +959,7 @@ function baseballLiveDiamond(g){
  const b=(v,cls)=>'<span class="baseball-base '+cls+(v===true?' occupied':'')+'"></span>';
  return '<div class="live-baseball" aria-label="Live baseball situation"><div class="baseball-count"><span>B '+num(d.balls)+'</span><span>S '+num(d.strikes)+'</span><span>O '+num(d.outs)+'</span></div><div class="baseball-diamond">'+b(d.second,'second')+b(d.third,'third')+b(d.first,'first')+'<span class="baseball-home"></span></div><div class="baseball-pitches">PITCHES '+num(d.pitchCount)+'</div></div>';
 }
-const nextGamesHtml=current.map(g=>`<div class="game ${g.fav?'favorite':''}" ${showingMyTeams?`style="--team-watermark:url('${safe(favoriteTeams.find(t=>t.name===g.league)?.logo||g.awayLogo)}')"`:``}><div class="meta"><span>${safe(g.league)} ${g.live?'● LIVE':''}</span><span>${safe(g.status)}</span></div><div class="teams"><span style="min-width:0"><span class="teamline"><img decoding="async" src="${safe(g.awayLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.ar?`<span class="rank">#${g.ar}</span>`:''}<span class="team-label">${safe(g.away)}</span>${g.awayRecord?`<small class="team-record">(${safe(g.awayRecord)})</small>`:''}</span></span><span class="teamline"><img decoding="async" src="${safe(g.homeLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.hr?`<span class="rank">#${g.hr}</span>`:''}<span class="team-label">${safe(g.home)}</span>${g.homeRecord?`<small class="team-record">(${safe(g.homeRecord)})</small>`:''}</span></span></span>${footballLiveDrive(g)}${basementFinalFootball(g)}${basketballLivePanel(g)}${hockeyLivePanel(g)}${baseballLiveDiamond(g)}<span class="score">${!g.live&&!g.final?'VS':safe(g.as)+'<br>'+safe(g.hs)}</span></div>${!g.live&&!g.final&&g.id?'<div class="sports-card-odds">'+safe(g.odds||'LINE: Unavailable  •  O/U: Unavailable')+'</div>':''}${showingMyTeams&&g.id?'<div class="basement-game-location"><span class="location-city">'+safe(g.venueCity||('Home: '+g.home))+'</span><span class="location-stadium">'+safe(g.venue||'Venue to be announced')+'</span></div>':''}</div>`).join('');
+const nextGamesHtml=current.map(g=>`<div class="game ${g.fav?'favorite':''}" ${showingMyTeams?`style="--team-watermark:url('${safe(favoriteTeams.find(t=>t.name===g.league)?.logo||g.awayLogo)}')"`:``}><div class="meta"><span>${safe(g.league)} ${g.live?'● LIVE':''}</span><span>${safe(g.status)}</span></div><div class="teams"><span style="min-width:0"><span class="teamline"><img decoding="async" src="${safe(g.awayLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.ar?`<span class="rank">#${g.ar}</span>`:''}<span class="team-label">${safe(g.away)}</span>${g.awayRecord?`<small class="team-record">(${safe(g.awayRecord)})</small>`:''}</span></span><span class="teamline"><img decoding="async" src="${safe(g.homeLogo)}" alt="" onerror="this.style.display='none'"><span class="teamname">${g.hr?`<span class="rank">#${g.hr}</span>`:''}<span class="team-label">${safe(g.home)}</span>${g.homeRecord?`<small class="team-record">(${safe(g.homeRecord)})</small>`:''}</span></span></span>${footballLiveDrive(g)}${basementFinalFootball(g)}${basketballLivePanel(g)}${baseballLiveDiamond(g)}<span class="score">${!g.live&&!g.final?'VS':safe(g.as)+'<br>'+safe(g.hs)}</span></div>${hockeyLivePanel(g)}${!g.live&&!g.final&&g.id?'<div class="sports-card-odds">'+safe(g.odds||'LINE: Unavailable  •  O/U: Unavailable')+'</div>':''}${showingMyTeams&&g.id?'<div class="basement-game-location"><span class="location-city">'+safe(g.venueCity||('Home: '+g.home))+'</span><span class="location-stadium">'+safe(g.venue||'Venue to be announced')+'</span></div>':''}</div>`).join('');
  // V70: Keep existing game DOM and decoded team logos when visible content is unchanged.
  const gamesNode=$('games');
  // V74 rollback: restore the original Sports Center grid and card sizing.
@@ -950,6 +981,7 @@ const nextGamesHtml=current.map(g=>`<div class="game ${g.fav?'favorite':''}" ${s
  $('updated').textContent=showingMyTeams?'MY TEAMS • next games':`${filtered.length} ${leagueFilter==='ALL'?'games':leagueFilter+' games'} • page ${page+1}/${pages}`;
  updateLeagueButtons();if(dailyLineOpen)renderDailyLine();
  basementFetchFinalStats(current);
+ current.forEach(g=>{if(g.live)refreshHockeyShots(g);});
  const tickerText=games.concat(myTeams.filter(g=>g.id)).map(g=>`${g.league}: ${g.away} ${!g.live&&!g.final?'VS':g.as+' —'} ${g.home} ${g.live||g.final?g.hs:''} (${g.status})${g.odds?' • '+g.odds:''}`).join('     ✦     ');const tickerNode=$('ticker');if(tickerNode&&tickerNode.textContent!==tickerText)tickerNode.textContent=tickerText;
 }
 const leagues=[
@@ -990,7 +1022,7 @@ function readGame(e,league,query){
  let bs=c?.situation||e?.situation||{};
  let stats=(x,key)=>{const v=(x?.statistics||[]).find(z=>String(z.name||z.abbreviation||z.displayName||'').toLowerCase()===key.toLowerCase());return v?.value??v?.displayValue??null;};
  let basketball=st.state==='in'&&['NBA','NCAA MEN'].includes(league)?{period:e.status?.period?((league==='NBA'?'Q':'H')+e.status.period):'',shotClock:situation.shotClock??null,awayFouls:stats(a,'fouls'),homeFouls:stats(h,'fouls'),awayAbbr:a.team?.abbreviation,homeAbbr:h.team?.abbreviation}:null;
- let hockey=st.state==='in'&&league==='NHL'?{awayShots:stats(a,'shotsOnGoal')??stats(a,'shots'),homeShots:stats(h,'shotsOnGoal')??stats(h,'shots'),awayAbbr:a.team?.abbreviation,homeAbbr:h.team?.abbreviation,powerPlay:bs.powerPlay?.team?.abbreviation||''}:null;
+ let hockey=st.state==='in'&&league==='NHL'?{awayShots:readHockeyShots(a.statistics),homeShots:readHockeyShots(h.statistics),awayId:String(a.team?.id||''),homeId:String(h.team?.id||''),awayAbbr:a.team?.abbreviation,homeAbbr:h.team?.abbreviation,powerPlay:bs.powerPlay?.team?.abbreviation||''}:null;
  let runner=v=>v===true||v===1||v==='1'||(v&&typeof v==='object');
  let baseball=st.state==='in'&&league==='MLB'?{first:runner(bs.onFirst),second:runner(bs.onSecond),third:runner(bs.onThird),balls:bs.balls??bs.count?.balls,strikes:bs.strikes??bs.count?.strikes,outs:bs.outs??bs.count?.outs,pitchCount:bs.pitchCount??bs.pitcher?.pitchCount}:null;
  let odds=publishedOdds(e);
@@ -3020,20 +3052,18 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 #games .drive-endzone.left{left:0}#games .drive-endzone.right{right:0}
 #games .drive-first{position:absolute;top:0;bottom:0;border-left:2px dashed #ffd34d;filter:drop-shadow(0 0 2px #ffbd00)}
 #games .drive-marker{z-index:2}
-</style><style id="basement-live-court-rink-v1">
-#games .game:has(.live-court) .teams,#games .game:has(.live-rink) .teams{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(125px,40%) auto!important;align-items:center!important;column-gap:clamp(4px,.5vw,10px)!important}
-#games .live-court,#games .live-rink{min-width:0;text-align:center;color:#f6faff;display:flex;flex-direction:column;gap:3px;align-items:stretch}
+</style><style id="basement-live-court-v1">
+#games .game:has(.live-court) .teams{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(125px,40%) auto!important;align-items:center!important;column-gap:clamp(4px,.5vw,10px)!important}
+#games .live-court{min-width:0;text-align:center;color:#f6faff;display:flex;flex-direction:column;gap:3px;align-items:stretch}
 #games .court-art{height:clamp(26px,3.1vh,44px);position:relative;border:2px solid #eabf80;border-radius:3px;background:linear-gradient(90deg,#b97837,#e3ac65,#b97837);box-shadow:inset 0 0 6px #0008}
 #games .court-art:before{content:'';position:absolute;top:0;bottom:0;left:50%;border-left:2px solid #fff9}
 #games .court-art:after{content:'';position:absolute;left:50%;top:50%;width:22px;height:22px;border:1px solid #fff9;border-radius:50%;transform:translate(-50%,-50%)}
 #games .court-hoop{position:absolute;top:50%;transform:translateY(-50%);color:#fff;font-size:16px}.court-hoop.left{left:6%}.court-hoop.right{right:6%}
 #games .court-mid{display:none}
-#games .rink-art{height:clamp(26px,3.1vh,44px);position:relative;border:2px solid #9cdaff;border-radius:30%/40%;background:linear-gradient(90deg,#cceefb 0%,#e9f8ff 48%,#cceefb 100%);box-shadow:inset 0 0 6px #0005}
-#games .rink-art:before{content:'';position:absolute;top:0;bottom:0;left:50%;border-left:2px solid #e33}
-#games .rink-art:after{content:'';position:absolute;left:50%;top:50%;width:25px;height:25px;border:2px solid #d45b5b;border-radius:50%;transform:translate(-50%,-50%)}
-#games .rink-goal{position:absolute;top:50%;transform:translateY(-50%);color:#c33;font-size:15px}.rink-goal.left{left:5%}.rink-goal.right{right:5%}.rink-faceoff{display:none}
-#games .court-info,#games .rink-info{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 7px;font-size:clamp(8px,.7vw,12px);font-weight:800;line-height:1.2}
-#games .rink-pp{color:#ffe173}
+#games .court-info{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 7px;font-size:clamp(8px,.7vw,12px);font-weight:800;line-height:1.2}
+#games .hockey-shots{margin-top:.25vh;color:#c5d5e8;font-size:clamp(10px,.8vw,15px);line-height:1.2}
+#games .hockey-shots strong{margin-right:.35em}
+#games .hockey-shots span{color:#ffe173}
 #games .baseball-base.occupied{background:#ffdc38!important}
 </style><style id="daily-line-v32-final-layout">
 /* Last stylesheet intentionally overrides historical two-column Daily Line rules. */
