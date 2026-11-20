@@ -4,6 +4,19 @@ const restartButton = document.querySelector("#restartGame");
 const refreshButton = document.querySelector("#refreshPage");
 const storageKey = "game-room.house-rules.v1";
 const roundMs = 600000;
+const starterPrompts = [
+  "Oldest player",
+  "Youngest player",
+  "First name comes first alphabetically",
+  "First name comes last alphabetically",
+  "Middle name comes first alphabetically",
+  "Middle name comes last alphabetically",
+  "Next birthday",
+  "Most recent birthday",
+  "Longest first name",
+  "Shortest first name"
+];
+let playMode = "score";
 let game;
 let panel = "";
 try { game = JSON.parse(localStorage.getItem(storageKey)); } catch { game = null; }
@@ -23,8 +36,22 @@ function draw(deck, count, previous) {
   return deck.pop();
 }
 function start(names) {
-  game = {names, totals:names.map(() => 0), holder:null, since:0, rules:[], phase:"rule"};
-  nextRule();
+  game = {
+    names, totals:names.map(() => 0), holder:null, since:0, rules:[],
+    scored:playMode === "score", phase:"starter",
+    starters:[], starter:null
+  };
+  drawStarter();
+}
+function drawStarter() {
+  game.starter = draw(game.starters, starterPrompts.length, game.starter);
+  save();
+  showPanel("");
+}
+function beginRound(holder) {
+  const now = Date.now();
+  pass(holder, now);
+  nextRule(now);
 }
 function nextRule(at = Date.now()) {
   panel = "";
@@ -94,6 +121,7 @@ function showPanel(name) { panel = name; render(); }
 function render() {
   board.replaceChildren();
   restartButton.hidden = !game;
+  board.classList.toggle("active-rule", game?.phase === "rule" && !panel);
   if (panel === "restart") {
     title("Start over", "Restart this game?", "The current names and chip-time scores will be cleared.");
     const row = actions();
@@ -101,7 +129,8 @@ function render() {
     button(row, "Start a new game", () => { game = null; save(); showPanel(""); });
   } else if (!game) {
     if (panel === "names") {
-      title("Keep Score", "Who’s playing?", "Enter first names or nicknames, separated by commas or new lines. The clock starts with the first catch.");
+      const casual = playMode === "casual";
+      title(casual ? "Casual Play" : "Keep Score", "Who’s playing?", "Enter first names or nicknames, separated by commas or new lines, to use the virtual chip.");
       const label = node("label", "Players");
       label.htmlFor = "players";
       const input = node("textarea", "");
@@ -115,16 +144,29 @@ function render() {
         }
         start(names);
       }, true);
+      if (casual) button(row, "Use a physical chip", () => start([]));
       button(row,"Back",() => showPanel(""));
     } else {
       title("The Family Room", "House Rules", "One simple rule stays active all round—common words, conversational habits, and little everyday behaviors. Catch a natural slip while everyone hangs out and pass the chip.");
       const row = actions();
-      button(row, "Casual Play", () => start([]), true);
-      button(row, "Keep Score", () => showPanel("names"));
+      button(row, "Casual Play", () => { playMode = "casual"; showPanel("names"); }, true);
+      button(row, "Keep Score", () => { playMode = "score"; showPanel("names"); });
     }
-  } else if (game.phase === "done") {
-    title("Night complete", game.names.length ? "Time on the chip" : "That’s the night.", game.names.length ? "Least time wins. Most time loses. Equal times share a place." : "Who ended up with the chip?");
+  } else if (game.phase === "starter") {
+    title("Who gets the chip first?", starterPrompts[game.starter],
+      "If there’s a tie or the prompt doesn’t fit your group, draw again.");
+    const row = actions();
     if (game.names.length) {
+      game.names.forEach((name, i) => button(row, name, () => beginRound(i), true));
+    } else {
+      button(row, "Start first rule", () => beginRound(null), true);
+    }
+    button(row, "Draw another", drawStarter);
+  } else if (game.phase === "done") {
+    const scored = game.scored !== false && game.names.length > 0;
+    title("Night complete", scored ? "Time on the chip" : "That’s the night.",
+      scored ? "Least time wins. Most time loses. Equal times share a place." : "");
+    if (scored) {
       const ranking = game.names.map((name,i) => ({name, time:Math.floor(game.totals[i]/1000)})).sort((a,b) => a.time-b.time);
       const list = node("ol","");
       let place = 1;
@@ -135,7 +177,8 @@ function render() {
     }
     button(actions(),"New night",() => {game=null;save();showPanel("");},true);
   } else if (panel === "end") {
-    title("End game", "Finish the night now?", "Your chip-time totals will be saved on the final screen.");
+    title("End game", "Finish the night now?",
+      game.scored !== false && game.names.length ? "Your chip-time totals will be saved on the final screen." : "");
     const row = actions();
     button(row, "Keep playing", () => showPanel(""), true);
     button(row, "Finish the night", finishGame);
@@ -156,8 +199,12 @@ function render() {
     },true);
   } else if (game.phase === "rule") {
     title("House rule",houseRules[game.rule]);
-    node("p","Everyone in the room follows this rule. Catch someone slipping and pass the real chip to them.");
-    if (game.names.length) node("p",game.holder === null ? "Chip on the table" : "Chip holder · " + game.names[game.holder]);
+    node("p","Everyone follows the rule. Catch someone slipping and pass them the chip.");
+    if (game.names.length) {
+      const chip = node("div","",board,"chip-holder");
+      node("span","",chip,"chip-icon").setAttribute("aria-hidden","true");
+      node("span",game.holder === null ? "Chip on the table" : "Chip holder · " + game.names[game.holder],chip);
+    }
     node("div","",board,"label").id="timer";
     const row = actions();
     if (game.names.length) button(row,game.holder === null ? "First catch" : "Pass chip to rule-breaker",() => showPanel("holders"),true);
