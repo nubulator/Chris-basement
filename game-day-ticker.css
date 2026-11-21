@@ -1,0 +1,14 @@
+/* Game Day league scores ticker */
+body{padding-bottom:46px}
+.gd-ticker{position:fixed;z-index:1000;left:0;right:0;bottom:0;height:40px;display:flex;align-items:center;background:#0c1421;border-top:2px solid #b9c7d6;color:#fff;box-shadow:0 -3px 16px #0008;font:700 15px/1.2 system-ui,-apple-system,sans-serif}
+.gd-ticker-label{height:100%;display:flex;align-items:center;justify-content:center;flex:none;padding:0 17px;min-width:110px;background:#253a53;color:white;font-size:12px;letter-spacing:.08em;white-space:nowrap}
+body.osu .gd-ticker-label{background:#b51528}body.browns .gd-ticker-label{background:#d6531d}body.bengals .gd-ticker-label{background:#e26c17}
+.gd-ticker-viewport{overflow:hidden;min-width:0;flex:1;white-space:nowrap}
+.gd-ticker-track{display:flex;width:max-content;align-items:center;animation:gd-ticker-scroll 60s linear infinite}
+.gd-ticker-group{display:flex;align-items:center;flex:none}
+.gd-ticker-game{display:inline-flex;align-items:center;gap:9px;flex:none;padding:0 24px;border-right:1px solid #3a4656;font-variant-numeric:tabular-nums}
+.gd-ticker-game strong{color:#fff}.gd-ticker-game .gd-ranked{color:#ffd46b}.gd-ticker-game .gd-time{color:#b7c9dc;font-size:12px}
+.gd-ticker-empty{padding:0 18px;color:#d0d8e2;font-size:13px;font-weight:500}
+@keyframes gd-ticker-scroll{to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.gd-ticker-track{animation:none}}
+@media(max-width:600px){.gd-ticker{height:36px;font-size:13px}.gd-ticker-label{min-width:82px;padding:0 9px;font-size:10px}body{padding-bottom:42px}.gd-ticker-game{padding:0 12px}}
