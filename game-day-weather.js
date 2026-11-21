@@ -19,9 +19,9 @@ function textFor(code){
  return '';
 }
 function cityFor(e){
- const venue=e?.competitions?.[0]?.venue||{};
+ const venue=e?.competitions?.[0]?.venue||window.gameDaySummaryVenue||{};
  const address=venue.address||{};
- const more=window.gameDayEvent?.competitions?.[0]?.venue?.address||{};
+ const more=window.gameDaySummaryVenue?.address||{};
  return {city:address.city||more.city||'',region:address.state||''};
 }
 function notify(value){
