@@ -70,3 +70,10 @@
   .game-live #live-field .field-surface{flex:1 1 auto;min-height:0}
   .info-weather #weather-tile{font-size:clamp(16px,1.25vw,23px);line-height:1.15}
 }
+
+
+/* Readable down & distance above live field, especially across the room. */
+.game-live #field-down{font-size:clamp(16px,1.5vw,23px);font-weight:900;line-height:1.15;letter-spacing:.015em;text-align:right;color:#fff;font-variant-numeric:tabular-nums}
+.game-live #field-possession{font-size:clamp(13px,1.1vw,17px);font-weight:700;line-height:1.15}
+.game-live #live-field .field-head{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:23px}
+@media(max-width:520px){.game-live #field-down{font-size:clamp(14px,3.5vw,18px)}.game-live #field-possession{font-size:12px}}
