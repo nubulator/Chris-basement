@@ -54,3 +54,19 @@
  .game-live #fan-trivia .trivia-question{font-size:calc(14px*var(--trivia-scale))}
  .game-live #fan-trivia .trivia-answer{font-size:calc(12px*var(--trivia-scale))}
 }
+
+
+/* Game Day TV readability: compact score strip, larger points, taller field. */
+@media(min-width:900px) and (min-aspect-ratio:4/3){
+  .game-live .hero>.score{gap:5px}
+  .game-live #period-scoreboard{flex:0 0 auto;min-height:0;max-height:69px;gap:8px;line-height:1}
+  .game-live #period-scoreboard .period-team{gap:9px;min-height:0}
+  .game-live #period-scoreboard .period-team img{width:clamp(30px,4vh,45px);height:clamp(30px,4vh,45px)}
+  .game-live #period-scoreboard .period-abbr{font-size:clamp(18px,1.6vw,28px)}
+  .game-live #period-scoreboard .period-points{font-size:clamp(48px,5.8vh,72px);line-height:1}
+  .game-live #period-scoreboard .period-middle strong{font-size:clamp(19px,2.5vh,30px);line-height:1}
+  .game-live #period-scoreboard .period-detail{margin-top:1px}
+  .game-live #live-field{flex:1 1 auto;min-height:0;gap:4px}
+  .game-live #live-field .field-surface{flex:1 1 auto;min-height:0}
+  .info-weather #weather-tile{font-size:clamp(16px,1.25vw,23px);line-height:1.15}
+}
