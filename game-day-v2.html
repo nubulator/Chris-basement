@@ -175,4 +175,4 @@ tick();setInterval(()=>{if(answer){index=(index+1)%10;answer=false}else answer=t
 const cards=document.getElementById('insider-cards');if(!cards)return;
 function update(){const n=cards.children.length;cards.style.setProperty('--gd-cards',String(Math.max(1,Math.min(n,4))));}
 new MutationObserver(update).observe(cards,{childList:true});update();
-})();</script><link rel="stylesheet" href="game-day-snacks.css?v=1"></body></html>
+})();</script><link rel="stylesheet" href="game-day-snacks.css?v=1"><script defer src="./ison-navigation.js" data-page="exception" data-anchor="header a"></script></body></html>
