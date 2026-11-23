@@ -131,7 +131,7 @@ document.addEventListener("pointermove",showControls,{passive:true});
 document.addEventListener("pointerdown",showControls,{passive:true});
 document.addEventListener("keydown",function(e){showControls();if(e.key===" "&&e.target===document.body){e.preventDefault();togglePause()}else if(e.key.toLowerCase()==="f"){e.preventDefault();toggleFullscreen()}else if(e.key==="Escape"||e.key==="Backspace"){if(document.fullscreenElement){document.exitFullscreen()}else if(document.body.classList.contains("controls-visible")){document.body.classList.remove("controls-visible")}else{location.href="screensaver-player.html"}}});
 try{const saved=localStorage.getItem("ison.aquarium.fishCount");if(saved!==null)slider.value=saved}catch{}
-resize();setCount(slider.value);requestAnimationFrame(frame);setTimeout(function(){document.body.classList.remove("controls-visible")},6500);
+resize();setCount(slider.value);requestAnimationFrame(frame);
 })();
 </script>
 </body>
