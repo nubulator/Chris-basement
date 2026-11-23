@@ -57,7 +57,7 @@ input[type=range]{width:100%;accent-color:#a8e5dc;cursor:pointer}
 </head>
 <body>
 <main id="reef" aria-label="Full-screen aquarium scene">
-<img src="/Chris-basement/assets/aquarium/aquarium-reef.png" alt="" fetchpriority="high">
+<img src="./reef-v2/reef.webp" alt="" fetchpriority="high">
 <canvas id="fishCanvas" aria-hidden="true"></canvas>
 </main>
 <div id="ambientHint">Press OK or any key for aquarium controls</div>
@@ -96,35 +96,100 @@ const slider=document.getElementById("fishSlider"),countOut=document.getElementB
 const lowMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 let width=0,height=0,dpr=1,fish=[],paused=lowMotion,last=0,idleTimer=0,statusTimer=0;
 if(lowMotion){pauseBtn.textContent="Resume motion";pauseBtn.setAttribute("aria-pressed","true")}
-const palettes=[
- {body:"#f4b52e",belly:"#ffe1a1",accent:"#143d84",stripe:"#f8e8a6"},
- {body:"#ef7c31",belly:"#ffc279",accent:"#f4f3e7",stripe:"#f8f2df"},
- {body:"#e7c948",belly:"#f8e990",accent:"#507f6f",stripe:"#e3db96"},
- {body:"#61aeb8",belly:"#c7eee8",accent:"#204a64",stripe:"#c9efe7"}
+const assetBase = document.querySelector("#reef img").src.replace(/reef\.webp$/, "");
+let elapsed = 0;
+let dirty = true;
+function artwork(name) {
+  const img = new Image();
+  img.onload = () => { dirty = true; };
+  img.src = assetBase + name + ".webp";
+  return img;
+}
+const species = [0, 1, 2, 3].map(i => artwork("fish" + i));
+const shells = [artwork("clam0"), artwork("clam1")];
+// Tight source bounds keep the visible animal at the requested screen size.
+const bounds = [[12,109,603,391],[19,88,589,432],[20,127,579,349],[11,66,595,482]];
+const shellBounds = [[18,59,591,515],[6,4,609,577]];
+const heroes = [
+  {kind:0, size:.225, lane:.34, start:.25, speed:.036, phase:.3},
+  {kind:1, size:.163, lane:.56, start:.72, speed:-.029, phase:2},
+  {kind:2, size:.132, lane:.66, start:.19, speed:.024, phase:4},
+  {kind:3, size:.17, lane:.24, start:.83, speed:-.031, phase:5}
 ];
-function resize(){dpr=Math.min(window.devicePixelRatio||1,1.35);width=window.innerWidth;height=window.innerHeight;canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);canvas.style.width=width+"px";canvas.style.height=height+"px";ctx.setTransform(dpr,0,0,dpr,0,0)}
-function makeFish(){const p=palettes[Math.floor(Math.random()*palettes.length)],depth=.36+Math.random()*.72,dir=Math.random()<.5?1:-1;return{x:Math.random()*width,y:height*(.22+Math.random()*.65),speed:(15+Math.random()*25)*depth,phase:Math.random()*Math.PI*2,scale:(.24+Math.random()*.3)*Math.min(width/1200,1.5)*depth,dir:dir,palette:p,depth:depth,wave:.7+Math.random()*1.1}}
-function setCount(n){const target=Math.max(0,Math.min(16,Number(n)||0));while(fish.length<target)fish.push(makeFish());if(fish.length>target)fish.length=target;countOut.value=String(target);countOut.textContent=String(target);try{localStorage.setItem("ison.aquarium.fishCount",String(target))}catch{}}
-function drawFish(f,t){const s=f.scale,swim=Math.sin(t*.004+f.phase)*.1;ctx.save();ctx.translate(f.x,f.y+Math.sin(t*.0007*f.wave+f.phase)*12*f.depth);ctx.scale(f.dir*s,s);ctx.rotate(Math.sin(t*.0005+f.phase)*.045);ctx.globalAlpha=.76+.18*f.depth;
-const g=ctx.createLinearGradient(-45,-18,42,20);g.addColorStop(0,f.palette.accent);g.addColorStop(.34,f.palette.body);g.addColorStop(.72,f.palette.belly);g.addColorStop(1,f.palette.body);
-ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(-38,0);ctx.quadraticCurveTo(-5,-24,27,-11);ctx.quadraticCurveTo(44,0,27,12);ctx.quadraticCurveTo(-8,23,-38,0);ctx.closePath();ctx.fill();
-ctx.fillStyle=f.palette.accent;ctx.beginPath();ctx.moveTo(-34,0);ctx.quadraticCurveTo(-50,-17,-55,-21);ctx.quadraticCurveTo(-52,-5,-47,0);ctx.quadraticCurveTo(-52,8,-55,21);ctx.quadraticCurveTo(-46,15,-34,0);ctx.closePath();ctx.fill();
-ctx.globalAlpha*=.7;ctx.fillStyle=f.palette.stripe;ctx.beginPath();ctx.moveTo(-9,-17);ctx.quadraticCurveTo(-3,0,-9,18);ctx.lineTo(-14,17);ctx.quadraticCurveTo(-8,0,-15,-15);ctx.closePath();ctx.fill();
-ctx.fillStyle=f.palette.accent;ctx.beginPath();ctx.moveTo(2,-18);ctx.quadraticCurveTo(9,-3,6,16);ctx.lineTo(1,17);ctx.quadraticCurveTo(6,0,-3,-16);ctx.closePath();ctx.fill();
-ctx.globalAlpha*=.72;ctx.fillStyle="#d8fff4";ctx.beginPath();ctx.moveTo(-4,-14);ctx.quadraticCurveTo(4,-31,16,-20);ctx.quadraticCurveTo(7,-15,-4,-14);ctx.fill();
-ctx.fillStyle=f.palette.body;ctx.beginPath();ctx.moveTo(-13,14);ctx.quadraticCurveTo(-2,28,8,17);ctx.lineTo(-4,12);ctx.closePath();ctx.fill();
-ctx.globalAlpha=1;ctx.strokeStyle="rgba(255,255,255,.24)";ctx.lineWidth=1.15;ctx.beginPath();ctx.arc(13,-1,9,-1.05,1.12);ctx.stroke();
-ctx.fillStyle="rgba(12,25,33,.8)";ctx.beginPath();ctx.arc(28,-3,2.05,0,Math.PI*2);ctx.fill();ctx.fillStyle="rgba(255,255,255,.82)";ctx.beginPath();ctx.arc(28.7,-3.8,.75,0,Math.PI*2);ctx.fill();
-ctx.strokeStyle="rgba(7,25,34,.44)";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(34,1);ctx.quadraticCurveTo(38,3,41,1);ctx.stroke();
-ctx.restore()}
-function frame(now){if(!width||!height)return;const delta=last?Math.min((now-last)/1000,.06):0;last=now;if(!paused){ctx.clearRect(0,0,width,height);for(const f of fish){f.x+=f.dir*f.speed*delta;if(f.dir>0&&f.x>width+100)f.x=-100;if(f.dir<0&&f.x<-100)f.x=width+100;drawFish(f,now)}}requestAnimationFrame(frame)}
+function resize() {
+  width = innerWidth; height = innerHeight;
+  dpr = Math.min(devicePixelRatio || 1, 1.5);
+  canvas.width = Math.round(width*dpr); canvas.height = Math.round(height*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0); dirty = true;
+}
+function setCount(n) {
+  const target = Math.max(0, Math.min(16, Math.round(Number(n)||0)));
+  while (fish.length < target) {
+    const i = fish.length;
+    fish.push({kind:i%4, size:.055 + .036*Math.random(), lane:.18 + .48*Math.random(),
+      start:(.42+i*.618)%1, speed:(i%2?1:-1)*(.016+.011*Math.random()), phase:Math.random()*6.28});
+  }
+  fish.length = target; dirty = true;
+  countOut.value = String(target);
+  try { localStorage.setItem("ison.aquarium.fishCount",String(target)); } catch {}
+}
+function drawSwimmer(f,t) {
+  const img = species[f.kind];
+  if (!img.naturalWidth) return;
+  const [sx,sy,sw,sh] = bounds[f.kind];
+  const w = Math.min(width,height*1.98)*f.size, h = w*sh/sw;
+  const span = width+w*1.2;
+  const x = ((f.start*span+t*f.speed*width)%span+span)%span - w*.6;
+  const y = height*(f.lane+.043*Math.sin(t*.17+f.phase)+.015*Math.sin(t*.36+2*f.phase));
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.scale(Math.sign(f.speed),1);
+  ctx.rotate(.042*Math.cos(t*.17+f.phase));
+  const beat = t*(2.8+f.kind*.42)+f.phase;
+  // Oscillation tapers from the caudal fin to the head.
+  const strips = 12;
+  const edge = u => (u-.5)*w + .052*w*(1-u)**3*Math.sin(beat);
+  for (let k=0;k<strips;k++) {
+    const u=k/strips, v=(k+1)/strips;
+    const lift=.025*h*(1-u)**3*Math.cos(beat);
+    ctx.drawImage(img,sx+u*sw,sy,sw/strips,sh,edge(u),-h/2+lift,edge(v)-edge(u)+.45/dpr,h);
+  }
+  ctx.restore();
+}
+function drawClam(t) {
+  const w=Math.min(width*.19,height*.34), x=width*.61-w/2, bottom=height*.94;
+  const openness=(1+Math.cos(t*.27))*.5;
+  const mix=Math.max(0,Math.min(1,(openness-.22)/.54));
+  function shell(i,alpha) {
+    if (!shells[i].naturalWidth || !alpha) return;
+    const [sx,sy,sw,sh]=shellBounds[i], h=w*sh/sw;
+    ctx.globalAlpha=alpha;
+    ctx.drawImage(shells[i],sx,sy,sw,sh,x,bottom-h,w,h);
+  }
+  ctx.save();
+  ctx.fillStyle="rgba(16,43,40,.23)";
+  ctx.beginPath();ctx.ellipse(x+w*.5,bottom-w*.025,w*.47,w*.066,0,0,Math.PI*2);ctx.fill();
+  shell(0,1-mix); shell(1,mix); ctx.restore();
+}
+function frame(now) {
+  if (!paused || dirty) {
+    if (!paused && last) elapsed+=Math.min((now-last)/1000,.1);
+    ctx.clearRect(0,0,width,height);
+    fish.forEach(f => drawSwimmer(f,elapsed));
+    drawClam(elapsed);
+    heroes.forEach(f => drawSwimmer(f,elapsed));
+    dirty=false;
+  }
+  last=now;
+  requestAnimationFrame(frame);
+}
 function showControls(){document.body.classList.add("controls-visible");clearTimeout(idleTimer);idleTimer=setTimeout(function(){if(!document.activeElement||document.activeElement===document.body)document.body.classList.remove("controls-visible")},9000)}
 function toast(message){status.textContent=message;status.classList.add("show");clearTimeout(statusTimer);statusTimer=setTimeout(function(){status.classList.remove("show")},1700)}
 function togglePause(){paused=!paused;pauseBtn.textContent=paused?"Resume motion":"Pause motion";pauseBtn.setAttribute("aria-pressed",String(paused));toast(paused?"Motion paused":"Motion resumed")}
 async function toggleFullscreen(){try{if(!document.fullscreenElement){await document.documentElement.requestFullscreen();fullBtn.setAttribute("aria-label","Exit full screen")}else{await document.exitFullscreen();fullBtn.setAttribute("aria-label","Enter full screen")}}catch{toast("Full screen isn’t available in this browser")}}
 slider.addEventListener("input",function(){setCount(slider.value);showControls()});
 pauseBtn.addEventListener("click",togglePause);fullBtn.addEventListener("click",toggleFullscreen);
-resetBtn.addEventListener("click",function(){paused=false;pauseBtn.textContent="Pause motion";pauseBtn.setAttribute("aria-pressed","false");slider.value="8";setCount(8);toast("Aquarium scene reset")});
+resetBtn.addEventListener("click",function(){paused=false;pauseBtn.textContent="Pause motion";pauseBtn.setAttribute("aria-pressed","false");elapsed=0;slider.value="8";setCount(8);toast("Aquarium scene reset")});
 document.addEventListener("fullscreenchange",function(){fullBtn.setAttribute("aria-label",document.fullscreenElement?"Exit full screen":"Enter full screen")});
 window.addEventListener("resize",resize,{passive:true});
 document.addEventListener("pointermove",showControls,{passive:true});
