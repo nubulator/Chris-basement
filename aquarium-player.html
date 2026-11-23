@@ -156,6 +156,66 @@ function drawSwimmer(f,t) {
   }
   ctx.restore();
 }
+// The school follows one broad turn, with a slight delay for each follower.
+function drawSchool(t) {
+  const img = species[0];
+  if (!img.naturalWidth) return;
+  const [sx, sy, sw, sh] = bounds[0];
+  ctx.save();
+  for (let i = 0; i < 9; i++) {
+    const phase = t * .075 + .32 - i * .043;
+    const row = (i % 3) - 1;
+    const x = width * (.46 + .35 * Math.sin(phase) + row * .016);
+    const y = height * (.41 + .105 * Math.cos(phase) + row * .033 + .008 * Math.sin(t * .85 + i));
+    const w = Math.min(width, height * 1.95) * (.036 + (i % 4) * .003);
+    const h = w * sh / sw * .78;
+    const turn = Math.cos(phase);
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale((turn < 0 ? -1 : 1) * (.19 + .81 * Math.abs(turn)), 1);
+    ctx.rotate(-.09 * Math.sin(phase) * Math.sign(turn));
+    ctx.globalAlpha = .76 + .07 * Math.sin(phase);
+    ctx.drawImage(img, sx, sy, sw, sh, -w/2, -h/2, w * (1 + .027*Math.sin(t*4+i)), h);
+    ctx.restore();
+  }
+  ctx.restore();
+}
+function bubbleArtwork() {
+  const stamp = document.createElement("canvas");
+  stamp.width = stamp.height = 64;
+  const g = stamp.getContext("2d");
+  const sheen = g.createRadialGradient(30,29,3,32,32,29);
+  sheen.addColorStop(0,"rgba(206,249,255,.04)");
+  sheen.addColorStop(.72,"rgba(119,211,234,.10)");
+  sheen.addColorStop(.91,"rgba(178,231,245,.44)");
+  sheen.addColorStop(1,"rgba(230,254,255,.87)");
+  g.fillStyle = sheen;
+  g.beginPath(); g.arc(32,32,29,0,Math.PI*2); g.fill();
+  g.strokeStyle = "rgba(255,255,255,.92)"; g.lineWidth = 3.4;
+  g.beginPath(); g.arc(32,32,23,3.7,4.72); g.stroke();
+  return stamp;
+}
+const bubble = bubbleArtwork();
+function drawBubbles(t, shellWidth, bottom) {
+  // Derive both the current bubbles and the emission time from scene time so
+  // that pause, reset, and reduced motion keep the shell and bubbles in sync.
+  const spacing = .39, newest = Math.floor(t / spacing);
+  ctx.save();
+  for (let i = newest - 20; i <= newest; i++) {
+    const born = i * spacing, age = t - born;
+    if (Math.cos(born * .27) < -.05) continue;
+    const seed = Math.sin(i * 31.77);
+    const progress = age / (6.7 + seed);
+    if (progress >= 1) continue;
+    const drift = Math.sin(age * 1.8 + seed * 4) - Math.sin(seed * 4);
+    const x = width*.61 + seed*shellWidth*.065 + width*(.004*drift + .019*progress);
+    const y = bottom - shellWidth*.49 - height*.77*progress;
+    const size = Math.min(width,height*2)*(.009 + .0035*seed)*(.82 + progress*.5);
+    ctx.globalAlpha = .94 * Math.min(1,age*5,(1-progress)*6);
+    ctx.drawImage(bubble,x-size/2,y-size/2,size,size);
+  }
+  ctx.restore();
+}
 function drawClam(t) {
   const w=Math.min(width*.19,height*.34), x=width*.61-w/2, bottom=height*.94;
   const openness=(1+Math.cos(t*.27))*.5;
@@ -170,11 +230,13 @@ function drawClam(t) {
   ctx.fillStyle="rgba(16,43,40,.23)";
   ctx.beginPath();ctx.ellipse(x+w*.5,bottom-w*.025,w*.47,w*.066,0,0,Math.PI*2);ctx.fill();
   shell(0,1-mix); shell(1,mix); ctx.restore();
+  drawBubbles(t,w,bottom);
 }
 function frame(now) {
   if (!paused || dirty) {
     if (!paused && last) elapsed+=Math.min((now-last)/1000,.1);
     ctx.clearRect(0,0,width,height);
+    drawSchool(elapsed);
     fish.forEach(f => drawSwimmer(f,elapsed));
     drawClam(elapsed);
     heroes.forEach(f => drawSwimmer(f,elapsed));
