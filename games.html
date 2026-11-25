@@ -9,9 +9,10 @@
   <link rel="stylesheet" href="./game-room-lounge.css?v=4.0">
   <script defer src="./game-room-lounge.js?v=4.0.1"></script>
   <style>
+    .lounge-nav { flex-wrap:wrap; }
     .lounge-nav a,
     .lounge-nav button,
-    .lounge-nav [data-ison-home-nav] a {
+    .lounge-nav [data-ison-home-nav] a:not([hidden]) {
       box-sizing:border-box;
       display:inline-flex;
       align-items:center;
@@ -51,6 +52,7 @@
     <nav class="lounge-nav" aria-label="Game Room navigation">
       <a href="./">CHRIS’S BASEMENT</a>
       <a href="https://nubulator.github.io/Jim-Amys-Garage/">JIM &amp; AMY’S GARAGE</a>
+      <a href="https://isonfamilyhome.com/living-scenes/">LIVING SCENES</a>
       <button id="refreshPage" type="button"><span aria-hidden="true">↻</span> REFRESH</button>
       <a class="games-lab-button" href="./test-games.html">✦ GAMES TO TEST</a>
     </nav>
